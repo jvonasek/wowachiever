@@ -1,10 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import {
-  Row,
-  Col,
-} from 'reactstrap';
+import { Row, Col } from 'reactstrap';
 
 import { getRecentAchievements } from '../reducers';
 
@@ -19,11 +16,13 @@ const RecentAchievements = ({ recentAchievements }) => {
     <div>
       <Row>
         <Col>
-          <h2>Recent achievements</h2>
+          <h2 className="mb-4">Recent achievements</h2>
         </Col>
       </Row>
       <Row>
-        {recentAchievements.map((ach) => <Achievement key={ach.id} {...ach} />)}
+        <Col>
+          {recentAchievements.map((ach) => <Achievement key={ach.id} {...ach} />)}
+        </Col>
       </Row>
     </div>
   );

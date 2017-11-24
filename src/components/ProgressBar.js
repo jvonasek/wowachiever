@@ -3,27 +3,31 @@ import PropTypes from 'prop-types';
 import { Progress } from 'reactstrap';
 
 const ProgressBar = ({
-  current,
-  max,
   height,
+  value,
+  max,
+  ...rest
 }) => (
   <Progress
-    style={{ height }}
-    value={current}
+    style={height && { height }}
+    value={value}
     max={max}
-  />
+    {...rest}
+  >
+    {value > 0 && `${value} / ${max}`}
+  </Progress>
 );
 
 ProgressBar.defaultProps = {
-  current: 0,
-  height: 20,
+  height: null,
   max: 1,
+  value: 0,
 };
 
 ProgressBar.propTypes = {
-  current: PropTypes.number,
   height: PropTypes.number,
   max: PropTypes.number,
+  value: PropTypes.number,
 };
 
 export default ProgressBar;

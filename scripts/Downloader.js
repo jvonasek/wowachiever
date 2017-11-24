@@ -17,14 +17,16 @@ class Downloader {
     this.file = file;
     this.processFn = processFn;
     this.request = unirest('GET', this.endpoint);
-    this.fullFilePath = `${ROOT_APP_PATH}${this.file}`;
   }
 
   /**
    * Setup request and fetch the data
    */
   download() {
-    this.request.end((res) => this.writeFile(res, this.file));
+    this.request.end((res) => this.constructor.writeFile(
+      this.processData(res.body),
+      this.file,
+    ));
   }
 
   /**
@@ -33,27 +35,28 @@ class Downloader {
    */
   processData(data) {
     if (typeof this.processFn === 'function') {
-      return JSON.stringify(this.processFn(data));
+      return this.processFn(data);
     }
 
-    return JSON.stringify(data);
+    return data;
   }
 
   /**
    * Save the file to filesystem
    * @param {Object} result
+   * @param {String} filePath
    */
-  writeFile(result) {
+  static writeFile(result, file) {
     fs.writeFile(
-      this.fullFilePath,
-      this.processData(result.body),
+      `${ROOT_APP_PATH}${file}`,
+      JSON.stringify(result),
       'utf8',
       (err) => {
         if (err) {
           throw new Error(result.error);
         }
         // eslint-disable-next-line
-        console.log(`File saved to ${this.fullFilePath}`);
+        console.log(`File saved to ${file}`);
       },
     );
   }

@@ -1,5 +1,5 @@
-import local from './local';
-import global from './global';
+import local from './local.json';
+import global from './global.json';
 
 export default {
   ...global,

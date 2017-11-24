@@ -1,4 +1,4 @@
-const { omit } = require('lodash');
+const { omit, keyBy } = require('lodash');
 
 /**
  * Processor for achievement data.
@@ -43,7 +43,12 @@ const processRealmData = (data) =>
       'connected_realms',
     ]));
 
+const processCriteriaData = (data) => {
+  return keyBy(JSON.parse(data), 'id')
+};
+
 module.exports = {
   processAchData,
   processRealmData,
+  processCriteriaData,
 };

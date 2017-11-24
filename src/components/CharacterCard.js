@@ -1,29 +1,41 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Row, Col } from 'reactstrap';
+
+import BattlenetImage from '../containers/BattlenetImage';
 
 const CharacterCard = ({
+  achievementPoints,
   name,
   realm,
   thumbnail,
 }) => (
-  <div>
-    <img
-      className="float-left mr-3"
-      src={`https://render-eu.worldofwarcraft.com/character/${thumbnail}`}
-      alt={`${name} - ${realm}`}
-    />
-    <h2 className="display-5">{name}</h2>
-    <p className="lead">{realm}</p>
-  </div>
+  <Row>
+    <Col sm={6}>
+      <BattlenetImage
+        width={60}
+        alt={`${name} - ${realm}`}
+        className="float-left mr-3 rounded"
+        resourcePath={`character/${thumbnail}`}
+      />
+      <span className="h4">{name}</span><br />
+      <span className="h6">{realm}</span>
+    </Col>
+    <Col sm={6}>
+      <div className="text-right h5 mt-2">Points: {achievementPoints}</div>
+    </Col>
+  </Row>
 );
 
 CharacterCard.defaultProps = {
+  achievementPoints: 0,
   name: '',
   realm: '',
   thumbnail: '',
 };
 
 CharacterCard.propTypes = {
+  achievementPoints: PropTypes.number,
   name: PropTypes.string,
   realm: PropTypes.string,
   thumbnail: PropTypes.string,

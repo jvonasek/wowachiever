@@ -38,7 +38,23 @@ export const importCategories = (data) => {
   };
 };
 
+export const importCriteria = (criteria) => ({
+  type: ActionTypes.IMPORT_CRITERIA,
+  payload: criteria,
+});
+
 export const importRealms = (realms) => ({
   type: ActionTypes.IMPORT_REALMS,
   payload: realms,
 });
+
+export const setBaseUrl = (url) => ({
+  type: ActionTypes.SET_BASE_URL,
+  payload: url,
+});
+
+export const setRegion = (region) => ({
+  type: ActionTypes.SET_REGION,
+  payload: region,
+});
+

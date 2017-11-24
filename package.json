@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "bootstrap": "^4.0.0-beta",
+    "classnames": "^2.2.5",
     "lodash": "^4.17.4",
     "moment": "^2.19.2",
     "normalizr": "^3.2.4",

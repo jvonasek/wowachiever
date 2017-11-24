@@ -2,53 +2,101 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import {
+  Row,
   Col,
   Card,
-  CardText,
   CardBody,
   CardTitle,
-  CardSubtitle,
-  CardHeader,
+  CardText,
+  CardFooter,
 } from 'reactstrap';
 
 import config from '../config';
 
+import CriteriaList from './CriteriaList';
+import BattlenetImage from '../containers/BattlenetImage';
+
 const { DATE_FORMAT } = config;
 
+// temporary for debugging purposes
+const factionIdToText = (factionId) => {
+  switch (factionId) {
+    case 0: return 'alliance';
+    case 1: return 'horde';
+    case 2:
+    default: return 'all';
+  }
+};
+
 const Achievement = ({
+  accountWide,
   completed,
+  criteria,
+  factionId,
   description,
+  icon,
+  id,
+  metaCriteria,
   points,
+  reward,
   timestamp,
   title,
 }) => (
-  <Col sm={6} md={4} lg={3}>
-    <Card className="mb-4">
-      <CardHeader className={completed ? 'text-white bg-success' : ''}>
-        {completed
-          ? <span>COMPLETED {timestamp && moment(timestamp).format(DATE_FORMAT)}</span>
-          : <span>IN PROGRESS</span>
-        }
-      </CardHeader>
-      <CardBody>
-        <CardTitle className="text-truncate">{title}</CardTitle>
-        <CardSubtitle className="text-truncate mb-2">{description}</CardSubtitle>
-        <CardText>Points: <strong>{points}</strong></CardText>
-      </CardBody>
-    </Card>
-  </Col>
+  <Card className={completed ? 'border-success mb-4' : 'mb-4'}>
+    <CardBody>
+      <Row>
+        <Col sm={1}>
+          <BattlenetImage
+            className="rounded"
+            alt={title}
+            resourcePath={`icons/56/${icon}.jpg`}
+          />
+        </Col>
+        <Col sm={11}>
+          <CardTitle className="mb-1">{title}</CardTitle>
+          <CardText>{description}</CardText>
+          <CriteriaList criteria={criteria} metaCriteria={metaCriteria} />
+        </Col>
+      </Row>
+    </CardBody>
+    <CardFooter>
+      <Row>
+        <Col>
+          <span>id: <strong>{id}</strong></span>{' | '}
+          <span>Points: <strong>{points}</strong></span>{' | '}
+          <span>Faction: <strong>{factionIdToText(factionId)}</strong></span>{' | '}
+          <span>Account wide: <strong>{accountWide ? 'yes' : 'no'}</strong></span>
+          {reward && <strong><br />{reward}</strong>}
+        </Col>
+        <Col className="text-right text-success">
+          {timestamp > 0 && <strong>{moment(timestamp).format(DATE_FORMAT)}</strong>}
+        </Col>
+      </Row>
+    </CardFooter>
+  </Card>
 );
 
 Achievement.defaultProps = {
+  accountWide: false,
   completed: false,
+  criteria: [],
+  metaCriteria: [],
   points: 0,
+  reward: null,
   timestamp: null,
 };
 
 Achievement.propTypes = {
+  accountWide: PropTypes.bool,
   completed: PropTypes.bool,
+  criteria: PropTypes.arrayOf(PropTypes.any),
+  factionId: PropTypes.number.isRequired,
   description: PropTypes.string.isRequired,
+  icon: PropTypes.string.isRequired,
+  id: PropTypes.number.isRequired,
+  metaCriteria: PropTypes.arrayOf(PropTypes.object),
   points: PropTypes.number,
+  reward: PropTypes.string,
   timestamp: PropTypes.number,
   title: PropTypes.string.isRequired,
 };

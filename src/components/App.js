@@ -1,29 +1,19 @@
 import React from 'react';
-import { Route } from 'react-router-dom';
+import { Switch, Route } from 'react-router-dom';
 
-import {
-  Container,
-  Row,
-  Col,
-} from 'reactstrap';
+import { Container } from 'reactstrap';
 
-import Header from '../containers/Header';
-import Menu from '../containers/Menu';
-import Content from '../containers/Content';
-import RecentAchievements from '../containers/RecentAchievements';
+import CharacterPage from '../pages/CharacterPage';
+import CharacterSelectPage from '../pages/CharacterSelectPage';
+import NotFound from '../pages/NotFound';
 
 const App = () => (
-  <Container fluid>
-    <Header />
-    <RecentAchievements />
-    <Row>
-      <Col sm={3}>
-        <Menu />
-      </Col>
-      <Col sm={9}>
-        <Route path="/:group/:category?" component={Content} />
-      </Col>
-    </Row>
+  <Container>
+    <Switch>
+      <Route path="/" exact component={CharacterSelectPage} />
+      <Route path="/:region/:realm/:character" component={CharacterPage} />
+      <Route path="*" component={NotFound} />
+    </Switch>
   </Container>
 );
 

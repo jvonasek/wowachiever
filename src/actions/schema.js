@@ -3,7 +3,6 @@ import kebabCase from 'lodash/kebabCase';
 
 const achievementProcessStrategy = (entity, parent) => ({
   ...entity,
-  completed: false,
   categoryId: parent.id,
 });
 
@@ -19,18 +18,12 @@ const categoryProcessStrategy = (entity, parent) => {
   return {
     ...entity,
     url: chunks.join('/'),
-    progress: {
-      current: 0,
-      max: entity.achievements.length,
-    },
+    slug: kebabCase(entity.name),
+    achievementsCompleted: [],
   };
 };
 
-
-const criteria = new schema.Entity('criteria');
-const achievements = new schema.Entity('achievements', {
-  criteria: [criteria],
-}, {
+const achievements = new schema.Entity('achievements', {}, {
   processStrategy: achievementProcessStrategy,
 });
 const categories = new schema.Entity('categories', {
@@ -40,6 +33,8 @@ const categories = new schema.Entity('categories', {
 });
 const groups = new schema.Entity('groups', {
   categories: [categories],
+}, {
+  processStrategy: categoryProcessStrategy,
 });
 
 export const groupSchema = [groups];

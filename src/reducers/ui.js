@@ -1,6 +1,8 @@
 import { combineReducers } from 'redux';
 import zipObject from 'lodash/fp/zipObject';
-import zip from 'lodash/fp/zip';
+import zip from 'lodash/zip';
+import zipWith from 'lodash/zipWith';
+import keyBy from 'lodash/keyBy';
 import flatMap from 'lodash/fp/flatMap';
 import sortBy from 'lodash/fp/sortBy';
 import flow from 'lodash/fp/flow';
@@ -62,7 +64,7 @@ const recentAchievementsIds = (state = [], action) => {
   }
 };
 
-const criteriaQuantity = (state = {}, action) => {
+/* const criteriaQuantity = (state = {}, action) => {
   switch (action.type) {
     case ActionTypes.FETCH_CHARACTER_SUCCESS:
       return {
@@ -75,16 +77,69 @@ const criteriaQuantity = (state = {}, action) => {
     default:
       return state;
   }
+}; */
+
+const zipCharacterCriteria = (state, action) => {
+  const {
+    criteria,
+    criteriaQuantity,
+    criteriaTimestamp,
+    criteriaCreated,
+  } = action.payload.achievements;
+
+  const zippedCriteria = zipWith(
+    criteria, criteriaQuantity, criteriaTimestamp, criteriaCreated,
+    (id, quantity, timestamp, created) => ({
+      id,
+      quantity,
+      timestamp,
+      created,
+    }),
+  );
+
+  return [
+    ...state,
+    ...zippedCriteria,
+  ];
+};
+
+const characterCriteria = (state = {}, action) => {
+  switch (action.type) {
+    case ActionTypes.FETCH_CHARACTER_SUCCESS:
+      return keyBy(zipCharacterCriteria(state, action), 'id');
+    default:
+      return state;
+  }
+};
+
+const baseUrl = (state = '/', action) => {
+  if (action.type === ActionTypes.SET_BASE_URL && action.payload) {
+    return action.payload;
+  }
+
+  return state;
+};
+
+const region = (state = '', action) => {
+  if (action.type === ActionTypes.SET_REGION && action.payload) {
+    return action.payload;
+  }
+
+  return state;
 };
 
 export default combineReducers({
   groupIds,
   achievementsTimestamp,
   recentAchievementsIds,
-  criteriaQuantity,
+  characterCriteria,
+  baseUrl,
+  region,
 });
 
 export const getGroupIds = (state) => state.groupIds;
 export const getAchievementsTimestamp = (state) => state.achievementsTimestamp;
 export const getRecentAchievementsIds = (state) => state.recentAchievementsIds;
-export const getCriteriaQuantity = (state) => state.criteriaQuantity;
+export const getCharacterCriteria = (state) => state.characterCriteria;
+export const getBaseUrl = (state) => state.baseUrl;
+export const getRegion = (state) => state.region;

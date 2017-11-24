@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { withRouter } from 'react-router-dom';
 import { Field, reduxForm } from 'redux-form';
 import { connect } from 'react-redux';
 import flowRight from 'lodash/fp/flowRight';
@@ -9,6 +10,7 @@ import {
 } from 'reactstrap';
 
 import { getRealms } from '../reducers';
+import { createUrl } from '../utils';
 
 // temporary values for development
 const initialValues = {
@@ -19,6 +21,35 @@ const initialValues = {
 
 const CharacterSelectForm = ({ handleSubmit, realms }) => (
   <form onSubmit={handleSubmit}>
+    <FormGroup>
+      <div className="form-check">
+        <label htmlFor="region-eu" className="form-check-label">
+          <Field
+            name="region"
+            component="input"
+            type="radio"
+            id="region-eu"
+            value="eu"
+            className="form-check-input"
+          />{' '}
+          EU
+        </label>
+      </div>
+      <div className="form-check">
+        <label htmlFor="region-us" className="form-check-label">
+          <Field
+            name="region"
+            component="input"
+            type="radio"
+            id="region-us"
+            value="us"
+            className="form-check-input"
+          />{' '}
+          US
+        </label>
+      </div>
+
+    </FormGroup>
     <FormGroup>
       <Label for="character">Character</Label>
       <Field
@@ -64,8 +95,14 @@ const mapStateToProps = (state) => ({
 });
 
 export default flowRight(
+  withRouter,
   connect(mapStateToProps),
   reduxForm({
     form: 'characterSelect',
+    onSubmitSuccess: (res, dispatch, { history, values }) => {
+      const { region, realm, character } = values;
+      const redirectUrl = createUrl([region, realm, character, 'achievements']);
+      history.push(redirectUrl);
+    },
   }),
 )(CharacterSelectForm);

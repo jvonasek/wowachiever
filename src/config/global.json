@@ -1,4 +1,12 @@
 {
-  "RECENT_ACHIEVEMENTS_COUNT": 12,
-  "DATE_FORMAT": "Do MMMM YYYY"
+  "RECENT_ACHIEVEMENTS_COUNT": 4,
+  "DATE_FORMAT": "Do MMMM YYYY",
+  "REGIONS": {
+    "eu": {
+      "locale": "en_GB"
+    },
+    "us": {
+      "locale": "en_US"
+    }
+  }
 }

@@ -9,15 +9,18 @@ import ScrollToTop from '../components/ScrollToTop';
 import {
   importCategories,
   importRealms,
+  importCriteria,
 } from '../actions';
 
 import achievementData from '../data/achievements.json';
 import realmsData from '../data/realms.json';
+import criteriaData from '../data/criteria.json';
 
 class Root extends Component {
   componentWillMount() {
     this.props.importCategories(achievementData);
     this.props.importRealms(realmsData);
+    this.props.importCriteria(criteriaData);
   }
   render() {
     return (
@@ -33,6 +36,7 @@ class Root extends Component {
 Root.propTypes = {
   importCategories: PropTypes.func.isRequired,
   importRealms: PropTypes.func.isRequired,
+  importCriteria: PropTypes.func.isRequired,
 };
 
 export default connect(
@@ -40,5 +44,6 @@ export default connect(
   {
     importCategories,
     importRealms,
+    importCriteria,
   },
 )(Root);

@@ -10,42 +10,6 @@ const initialState = {
   groups: {},
 };
 
-const updateEntities = (state, action) => {
-  const completedAchievements = {};
-  const updatedCategories = {};
-
-  action.payload.achievements.achievementsCompleted.forEach((id) => {
-    const achievement = state.achievements[id];
-    const { categoryId } = achievement;
-    const category = state.categories[categoryId];
-
-    completedAchievements[id] = {
-      ...achievement,
-      completed: true,
-    };
-
-    updatedCategories[categoryId] = {
-      ...category,
-      progress: {
-        ...category.progress,
-        current: category.progress.current += 1,
-      },
-    };
-  });
-
-  return {
-    ...state,
-    character: action.payload,
-    achievements: {
-      ...state.achievements,
-      ...completedAchievements,
-    },
-    categories: {
-      ...state.categories,
-      ...updatedCategories,
-    },
-  };
-};
 
 const entities = (state = initialState, action) => {
   switch (action.type) {
@@ -59,8 +23,19 @@ const entities = (state = initialState, action) => {
         ...state,
         realms: [...state.realms, ...action.payload],
       };
+    case ActionTypes.IMPORT_CRITERIA:
+      return {
+        ...state,
+        criteria: {
+          ...state.criteria,
+          ...action.payload,
+        },
+      };
     case ActionTypes.FETCH_CHARACTER_SUCCESS:
-      return updateEntities(state, action);
+      return {
+        ...state,
+        character: action.payload,
+      };
     default:
       return state;
   }
