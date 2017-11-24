@@ -1,9 +1,7 @@
 const Downloader = require('./Downloader');
 const config = require('../src/config/local');
 const { processAchData, processRealmData, processCriteriaData } = require('./dataProcessors');
-
 const rawCriteriaData = require('./wowClientData/criteria');
-
 
 const { API_KEY } = config;
 
