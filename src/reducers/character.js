@@ -15,6 +15,7 @@ const {
   RECENT_ACHIEVEMENTS_COUNT,
   RACES,
   CLASSES,
+  CLASS_COLORS,
 } = config;
 
 const createCharacterInfo = (state, action) => {
@@ -34,6 +35,7 @@ const createCharacterInfo = (state, action) => {
     ...info,
     race: RACES[info.race],
     class: CLASSES[info.class],
+    classColor: CLASS_COLORS[info.class],
   };
 };
 

@@ -62,15 +62,22 @@ export const getCategoriesWithCompleted = createSelector(
   getCompletedAchievements,
   (categories, achievements, characterInfo, completedAchievements) => {
     const cats = Object.values(categories).map((category) => {
-      const filteredAchievements = category.achievements.filter((id) =>
+      // filter achievements only for current faction,
+      // 0 = alliance
+      // 1 = horde
+      // 2 = both
+      const filteredAchievementsIds = category.achievements.filter((id) =>
         (achievements[id].factionId === characterInfo.faction)
         || achievements[id].factionId === 2);
 
+      // array of achievements that were completed
+      const completedAchievementsIds = category.achievements.filter((id) =>
+        has(completedAchievements, id));
+
       return {
         ...category,
-        achievements: filteredAchievements,
-        completedAchievements: category.achievements.filter((id) =>
-          has(completedAchievements, id)),
+        achievements: category.isLegacy ? completedAchievementsIds : filteredAchievementsIds,
+        completedAchievements: completedAchievementsIds,
       };
     });
 

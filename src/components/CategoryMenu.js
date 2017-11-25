@@ -10,6 +10,7 @@ const CategoryMenu = ({ categoryMenuItems, baseUrl }) => (
       name,
       completedAchievements,
       achievements,
+      isLegacy,
     }) => (
       <li className="list-group-item" key={id} sm={3}>
         <NavLink
@@ -18,7 +19,12 @@ const CategoryMenu = ({ categoryMenuItems, baseUrl }) => (
           activeClassName="font-weight-bold"
         >
           {name}
-          <span className="float-right">{completedAchievements.length} / {achievements.length}</span>
+          <span className="float-right">
+            {isLegacy
+              ? completedAchievements.length
+              : `${completedAchievements.length}/${achievements.length}`
+            }
+          </span>
         </NavLink>
       </li>
     ))}
@@ -28,11 +34,13 @@ const CategoryMenu = ({ categoryMenuItems, baseUrl }) => (
 CategoryMenu.defaultProps = {
   baseUrl: '',
   categoryMenuItems: [],
+  isLegacy: false,
 };
 
 CategoryMenu.propTypes = {
   baseUrl: PropTypes.string,
   categoryMenuItems: PropTypes.arrayOf(PropTypes.object),
+  isLegacy: PropTypes.bool,
 };
 
 export default CategoryMenu;

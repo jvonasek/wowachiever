@@ -5,7 +5,7 @@ import { Row, Col } from 'reactstrap';
 
 import { getRecentAchievements } from '../reducers';
 
-import Achievement from '../components/Achievement';
+import AchievementList from '../components/AchievementList';
 
 const RecentAchievements = ({ recentAchievements }) => {
   if (!recentAchievements.length) {
@@ -21,7 +21,7 @@ const RecentAchievements = ({ recentAchievements }) => {
       </Row>
       <Row>
         <Col>
-          {recentAchievements.map((ach) => <Achievement key={ach.id} {...ach} />)}
+          <AchievementList achievements={recentAchievements} />
         </Col>
       </Row>
     </div>

@@ -1,5 +1,10 @@
 import { schema } from 'normalizr';
 import kebabCase from 'lodash/kebabCase';
+import includes from 'lodash/includes';
+
+import config from '../config';
+
+const { LEGACY_GROUPS } = config;
 
 const achievementProcessStrategy = (entity, parent) => ({
   ...entity,
@@ -20,6 +25,7 @@ const categoryProcessStrategy = (entity, parent) => {
     url: chunks.join('/'),
     slug: kebabCase(entity.name),
     completedAchievements: [],
+    isLegacy: includes(LEGACY_GROUPS, entity.id) || includes(LEGACY_GROUPS, parent.id),
   };
 };
 

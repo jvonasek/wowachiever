@@ -32,7 +32,7 @@ const renderCriterion = (criterion, criteria) => (
 const CriteriaList = ({
   criteria,
   visibleCriteria,
-}) => criteria.length > 0 && (
+}) => visibleCriteria.length > 0 && (
   <Row>
     {splitInHalf(visibleCriteria).map((list, index) => (
       <Col key={`col-${index.toString()}`}>

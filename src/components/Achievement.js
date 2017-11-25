@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import moment from 'moment';
 import {
   Row,
   Col,
@@ -11,12 +10,9 @@ import {
   CardFooter,
 } from 'reactstrap';
 
-import config from '../config';
-
 import CriteriaList from './CriteriaList';
+import DateText from './DateText';
 import BattlenetImage from '../containers/BattlenetImage';
-
-const { DATE_FORMAT } = config;
 
 // temporary for debugging purposes
 const factionIdToText = (factionId) => {
@@ -69,7 +65,7 @@ const Achievement = ({
           {reward && <strong><br />{reward}</strong>}
         </Col>
         <Col className="text-right text-success">
-          {timestamp > 0 && <strong>{moment(timestamp).format(DATE_FORMAT)}</strong>}
+          <DateText timestamp={timestamp} />
         </Col>
       </Row>
     </CardFooter>

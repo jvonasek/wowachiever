@@ -53,7 +53,7 @@ const CharacterSelectForm = ({ handleSubmit, realms }) => (
     <FormGroup>
       <Label for="character">Character</Label>
       <Field
-        className="form-control"
+        className="form-control form-control-lg"
         id="character"
         name="character"
         component="input"
@@ -63,7 +63,7 @@ const CharacterSelectForm = ({ handleSubmit, realms }) => (
     <FormGroup>
       <Label for="realm">Realm</Label>
       <Field
-        className="form-control"
+        className="form-control form-control-lg"
         id="realm"
         name="realm"
         component="select"

@@ -15,7 +15,7 @@ import {
   getCurrentCategory,
 } from '../reducers';
 
-import Achievement from '../components/Achievement';
+import AchievementList from '../components/AchievementList';
 import CategoryMenu from '../components/CategoryMenu';
 
 const CategoryPage = ({
@@ -37,7 +37,7 @@ const CategoryPage = ({
       <CategoryMenu {...categoryMenuProps} />
     </Col>
     <Col sm={9}>
-      {achievements.map((ach) => (<Achievement key={ach.id} {...ach} />))}
+      <AchievementList achievements={achievements} />
     </Col>
   </Row>
 );
