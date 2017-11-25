@@ -19,7 +19,7 @@ const categoryProcessStrategy = (entity, parent) => {
     ...entity,
     url: chunks.join('/'),
     slug: kebabCase(entity.name),
-    achievementsCompleted: [],
+    completedAchievements: [],
   };
 };
 

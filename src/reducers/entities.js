@@ -4,7 +4,6 @@ const initialState = {
   achievements: {},
   categories: {},
   criteria: {},
-  character: null,
   urls: {},
   realms: [],
   groups: {},
@@ -31,11 +30,6 @@ const entities = (state = initialState, action) => {
           ...action.payload,
         },
       };
-    case ActionTypes.FETCH_CHARACTER_SUCCESS:
-      return {
-        ...state,
-        character: action.payload,
-      };
     default:
       return state;
   }
@@ -46,7 +40,6 @@ export default entities;
 export const getAchievements = (state) => state.achievements;
 export const getCategories = (state) => state.categories;
 export const getCriteria = (state) => state.criteria;
-export const getCharacter = (state) => state.character;
 export const getUrls = (state) => state.urls;
 export const getRealms = (state) => state.realms;
 export const getGroups = (state) => state.groups;

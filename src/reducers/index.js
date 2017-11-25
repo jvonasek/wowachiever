@@ -1,12 +1,15 @@
 import { combineReducers } from 'redux';
 import { createSelector } from 'reselect';
 import { reducer as form } from 'redux-form';
-import includes from 'lodash/includes';
+import has from 'lodash/has';
+import keyBy from 'lodash/keyBy';
 
+import character, * as fromCharacter from './character';
 import entities, * as fromEntities from './entities';
 import ui, * as fromUi from './ui';
 
 const rootReducer = combineReducers({
+  character,
   entities,
   ui,
   form,
@@ -24,34 +27,25 @@ export default rootReducer;
 const createCatUrlFromParams = ({ group, category }) =>
   (category ? `${group}/${category}` : group);
 
-/**
- * Returns single achievement with timestamp
- *
- * @param  {Object} achievements
- * @param  {Object} timestamps
- * @param  {Number} id
- *
- * @returns {Object};
- */
-const createTimestampedAchievement = (id, achievements, timestamps) => ({
-  ...achievements[id],
-  timestamp: timestamps[id] ? timestamps[id] : 0,
-});
-
-
-// Basic ui selector
+// Basic ui selectors
 export const getGroupIds = (state) => fromUi.getGroupIds(state.ui);
-export const getAchievementsTimestamp = (state) => fromUi.getAchievementsTimestamp(state.ui);
-export const getRecentAchievementsIds = (state) => fromUi.getRecentAchievementsIds(state.ui);
-export const getCharacterCriteria = (state) => fromUi.getCharacterCriteria(state.ui);
 export const getBaseUrl = (state) => fromUi.getBaseUrl(state.ui);
 export const getRegion = (state) => fromUi.getRegion(state.ui);
+
+// Basic character selectors
+export const getCharacterInfo = (state) =>
+  fromCharacter.getCharacterInfo(state.character);
+export const getRecentAchIds = (state) =>
+  fromCharacter.getRecentAchIds(state.character);
+export const getCompletedCriteria = (state) =>
+  fromCharacter.getCompletedCriteria(state.character);
+export const getCompletedAchievements = (state) =>
+  fromCharacter.getCompletedAchievements(state.character);
 
 // Basic entities selectors
 export const getAchievements = (state) => fromEntities.getAchievements(state.entities);
 export const getCategories = (state) => fromEntities.getCategories(state.entities);
 export const getCriteria = (state) => fromEntities.getCriteria(state.entities);
-export const getCharacter = (state) => fromEntities.getCharacter(state.entities);
 export const getUrls = (state) => fromEntities.getUrls(state.entities);
 export const getRealms = (state) => fromEntities.getRealms(state.entities);
 export const getGroups = (state) => fromEntities.getGroups(state.entities);
@@ -64,25 +58,23 @@ export const getMatchFromProps = (state, props) => props.match || null;
 export const getCategoriesWithCompleted = createSelector(
   getCategories,
   getAchievements,
-  getCharacter,
-  (categories, achievements, character) => {
-    if (!character) {
-      return categories;
-    }
+  getCharacterInfo,
+  getCompletedAchievements,
+  (categories, achievements, characterInfo, completedAchievements) => {
+    const cats = Object.values(categories).map((category) => {
+      const filteredAchievements = category.achievements.filter((id) =>
+        (achievements[id].factionId === characterInfo.faction)
+        || achievements[id].factionId === 2);
 
-    const categoriesWithCompleted = {};
-    Object.values(categories).forEach((category) => {
-      categoriesWithCompleted[category.id] = {
+      return {
         ...category,
-        achievements: category.achievements.filter((id) =>
-          (achievements[id].factionId === character.faction)
-          || achievements[id].factionId === 2),
-        achievementsCompleted: category.achievements.filter((id) =>
-          includes(character.achievements.achievementsCompleted, id)),
+        achievements: filteredAchievements,
+        completedAchievements: category.achievements.filter((id) =>
+          has(completedAchievements, id)),
       };
     });
 
-    return categoriesWithCompleted;
+    return keyBy(cats, 'id');
   },
 );
 
@@ -101,21 +93,26 @@ export const getGroupMenuItems = createSelector(
 );
 
 export const getCurrentCategory = createSelector(
-  getCategoriesWithCompleted,
   getUrls,
   getMatchFromProps,
-  (categories, urls, match) => {
+  getCategoriesWithCompleted,
+  (urls, match, categories) => {
     const url = createCatUrlFromParams(match.params);
     const catId = urls[url];
-    return categories[catId];
+    return categories[catId] || {};
   },
+);
+
+export const getVisibleAchievementsIds = createSelector(
+  getCurrentCategory,
+  (currentCategory) => currentCategory.achievements || [],
 );
 
 export const getCategoryMenuItems = createSelector(
   getGroups,
-  getCategoriesWithCompleted,
   getMatchFromProps,
-  (groups, categories, match) => {
+  getCategoriesWithCompleted,
+  (groups, match, categories) => {
     const currentGroup = Object.values(groups).find((group) =>
       group.slug === match.params.group);
 
@@ -128,80 +125,57 @@ export const getCategoryMenuItems = createSelector(
 export const hydrateAchievements = (
   ids,
   achievements,
-  achievementsTimestamp,
+  completedAchievements,
   allCriteria,
-  characterCriteria,
+  completedCriteria,
 ) => ids.map((id) => {
-  const achievement = createTimestampedAchievement(
-    id,
-    achievements,
-    achievementsTimestamp,
-  );
+  const achievement = {
+    ...achievements[id],
+    ...completedAchievements[id],
+  };
 
-  const completed = achievement.timestamp > 0;
-  const achievementCriteria = allCriteria[id].criteria || [];
+  const timestamp = achievement.timestamp || 0;
+  const completed = timestamp > 0;
 
-  const metaCriteria = achievement.criteria.map((criterion) => ({
+  const achievementCriteria = allCriteria[id]
+    ? allCriteria[id].criteria
+    : [];
+
+  const criteria = achievement.criteria.map((criterion) => ({
     ...criterion,
-    ...characterCriteria[criterion.id],
+    ...completedCriteria[criterion.id],
   }));
 
-  const criteria = achievementCriteria.map((criterion) => ({
+  const visibleCriteria = achievementCriteria ? achievementCriteria.map((criterion) => ({
     ...criterion,
-    ...characterCriteria[criterion.id],
+    ...completedCriteria[criterion.id],
     asset: criterion.type === 8 ? achievements[criterion.assetId] : null,
-  }));
+  })) : [];
 
   return {
     ...achievement,
+    timestamp,
     completed,
     criteria,
-    metaCriteria,
+    visibleCriteria,
   };
 });
 
-
 export const getVisibleAchievements = createSelector(
-  getCategoriesWithCompleted,
+  getVisibleAchievementsIds,
   getAchievements,
-  getCurrentCategory,
-  getAchievementsTimestamp,
+  getCompletedAchievements,
   getCriteria,
-  getCharacterCriteria,
-  (
-    categories,
-    achievements,
-    currentCategory,
-    achievementsTimestamp,
-    allCriteria,
-    characterCriteria,
-  ) => {
-    if (!currentCategory) {
-      return [];
-    }
-
-    return hydrateAchievements(
-      currentCategory.achievements,
-      achievements,
-      achievementsTimestamp,
-      allCriteria,
-      characterCriteria,
-    ).sort((a, b) => b.timestamp - a.timestamp);
-  },
+  getCompletedCriteria,
+  (...args) => hydrateAchievements(...args)
+    .sort((a, b) => b.timestamp - a.timestamp),
 );
 
 export const getRecentAchievements = createSelector(
-  getRecentAchievementsIds,
+  getRecentAchIds,
   getAchievements,
-  getAchievementsTimestamp,
+  getCompletedAchievements,
   getCriteria,
-  getCharacterCriteria,
-  (ids, achievements, timestamps, allCriteria, characterCriteria) =>
-    hydrateAchievements(
-      ids,
-      achievements,
-      timestamps,
-      allCriteria,
-      characterCriteria,
-    ),
+  getCompletedCriteria,
+  (...args) => hydrateAchievements(...args),
 );

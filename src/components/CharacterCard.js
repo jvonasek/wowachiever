@@ -9,6 +9,7 @@ const CharacterCard = ({
   name,
   realm,
   thumbnail,
+  ...rest
 }) => (
   <Row>
     <Col sm={6}>
@@ -19,7 +20,7 @@ const CharacterCard = ({
         resourcePath={`character/${thumbnail}`}
       />
       <span className="h4">{name}</span><br />
-      <span className="h6">{realm}</span>
+      <span className="h6">{rest.level} {rest.race} {rest.class} - {realm}</span>
     </Col>
     <Col sm={6}>
       <div className="text-right h5 mt-2">Points: {achievementPoints}</div>

@@ -36,11 +36,11 @@ const Achievement = ({
   description,
   icon,
   id,
-  metaCriteria,
   points,
   reward,
   timestamp,
   title,
+  visibleCriteria,
 }) => (
   <Card className={completed ? 'border-success mb-4' : 'mb-4'}>
     <CardBody>
@@ -55,7 +55,7 @@ const Achievement = ({
         <Col sm={11}>
           <CardTitle className="mb-1">{title}</CardTitle>
           <CardText>{description}</CardText>
-          <CriteriaList criteria={criteria} metaCriteria={metaCriteria} />
+          <CriteriaList criteria={criteria} visibleCriteria={visibleCriteria} />
         </Col>
       </Row>
     </CardBody>
@@ -80,10 +80,10 @@ Achievement.defaultProps = {
   accountWide: false,
   completed: false,
   criteria: [],
-  metaCriteria: [],
   points: 0,
   reward: null,
   timestamp: null,
+  visibleCriteria: [],
 };
 
 Achievement.propTypes = {
@@ -94,11 +94,11 @@ Achievement.propTypes = {
   description: PropTypes.string.isRequired,
   icon: PropTypes.string.isRequired,
   id: PropTypes.number.isRequired,
-  metaCriteria: PropTypes.arrayOf(PropTypes.object),
   points: PropTypes.number,
   reward: PropTypes.string,
   timestamp: PropTypes.number,
   title: PropTypes.string.isRequired,
+  visibleCriteria: PropTypes.arrayOf(PropTypes.object),
 };
 
 export default Achievement;

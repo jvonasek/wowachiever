@@ -8,7 +8,7 @@ const CategoryMenu = ({ categoryMenuItems, baseUrl }) => (
       id,
       url,
       name,
-      achievementsCompleted,
+      completedAchievements,
       achievements,
     }) => (
       <li className="list-group-item" key={id} sm={3}>
@@ -18,7 +18,7 @@ const CategoryMenu = ({ categoryMenuItems, baseUrl }) => (
           activeClassName="font-weight-bold"
         >
           {name}
-          <span className="float-right">{achievementsCompleted.length} / {achievements.length}</span>
+          <span className="float-right">{completedAchievements.length} / {achievements.length}</span>
         </NavLink>
       </li>
     ))}

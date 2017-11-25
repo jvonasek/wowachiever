@@ -6,6 +6,8 @@ import Root from './containers/Root';
 import configureStore from './store/configureStore';
 import registerServiceWorker from './registerServiceWorker';
 
+import './styles.css';
+
 const store = configureStore();
 
 ReactDOM.render(

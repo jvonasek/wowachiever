@@ -10,8 +10,7 @@ import {
 
 import {
   getVisibleAchievements,
-  getCharacter,
-  getRegion,
+  getCharacterInfo,
 } from '../reducers';
 
 import {
@@ -36,13 +35,12 @@ class CharacterPage extends Component {
 
   render() {
     const {
-      character,
+      characterInfo,
       match,
-      region,
     } = this.props;
     return (
       <div className="mt-3">
-        <CharacterCard {...character} region={region} />
+        <CharacterCard {...characterInfo} />
         <hr />
         <Row>
           <Col xs={12}>
@@ -61,24 +59,22 @@ class CharacterPage extends Component {
 
 CharacterPage.defaultProps = {
   achievements: [],
-  character: null,
+  characterInfo: null,
   match: {},
 };
 
 CharacterPage.propTypes = {
   achievements: PropTypes.arrayOf(PropTypes.object),
-  character: PropTypes.objectOf(PropTypes.any),
+  characterInfo: PropTypes.objectOf(PropTypes.any),
   fetchCharacter: PropTypes.func.isRequired,
   match: PropTypes.objectOf(PropTypes.any),
-  region: PropTypes.string.isRequired,
   setBaseUrl: PropTypes.func.isRequired,
   setRegion: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state, props) => ({
   achievements: getVisibleAchievements(state, props),
-  character: getCharacter(state),
-  region: getRegion(state),
+  characterInfo: getCharacterInfo(state),
 });
 
 export default connect(

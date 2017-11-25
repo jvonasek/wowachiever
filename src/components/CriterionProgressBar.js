@@ -10,7 +10,7 @@ const CriterionProgressBar = ({
   id,
   max,
   quantity,
-  metaCriteria,
+  criteria,
 }) => {
   const progress = {
     value: 0,
@@ -19,8 +19,8 @@ const CriterionProgressBar = ({
 
   if (id === 0) {
     // sometimes the criterion ID is 0 which means we have to look
-    // into meta criteria for real quantity count
-    progress.value = getCriteriaQuantityOccurence(metaCriteria);
+    // into hidden criteria for real quantity count
+    progress.value = getCriteriaQuantityOccurence(criteria);
   } else {
     progress.value = quantity;
   }
@@ -36,14 +36,14 @@ const CriterionProgressBar = ({
 CriterionProgressBar.defaultProps = {
   max: 1,
   quantity: 0,
-  metaCriteria: [],
+  criteria: [],
 };
 
 CriterionProgressBar.propTypes = {
   id: PropTypes.number.isRequired,
   max: PropTypes.number,
   quantity: PropTypes.number,
-  metaCriteria: PropTypes.arrayOf(PropTypes.object),
+  criteria: PropTypes.arrayOf(PropTypes.object),
 };
 
 export default CriterionProgressBar;

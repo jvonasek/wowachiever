@@ -13,7 +13,7 @@ import CriterionProgressBar from './CriterionProgressBar';
  * @param {Array} criterion
  * @param {Array.<Object>} metaCriteria
  */
-const renderCriterion = (criterion, metaCriteria) => (
+const renderCriterion = (criterion, criteria) => (
   <li
     key={`${criterion.id}_${kebabCase(criterion.description)}`}
     className={classnames({
@@ -24,20 +24,20 @@ const renderCriterion = (criterion, metaCriteria) => (
   >
     <strong>{criterion.asset ? criterion.asset.title : criterion.description}</strong>
     {criterion.progressBar &&
-      <CriterionProgressBar {...criterion} metaCriteria={metaCriteria} />
+      <CriterionProgressBar {...criterion} criteria={criteria} />
     }
   </li>
 );
 
 const CriteriaList = ({
   criteria,
-  metaCriteria,
+  visibleCriteria,
 }) => criteria.length > 0 && (
   <Row>
-    {splitInHalf(criteria).map((list, index) => (
+    {splitInHalf(visibleCriteria).map((list, index) => (
       <Col key={`col-${index.toString()}`}>
         <ul className="list-unstyled">
-          {list.map((criterion) => renderCriterion(criterion, metaCriteria))}
+          {list.map((criterion) => renderCriterion(criterion, criteria))}
         </ul>
       </Col>
     ))}
@@ -46,12 +46,12 @@ const CriteriaList = ({
 
 CriteriaList.defaultProps = {
   criteria: [],
-  metaCriteria: [],
+  visibleCriteria: [],
 };
 
 CriteriaList.propTypes = {
   criteria: PropTypes.arrayOf(PropTypes.object),
-  metaCriteria: PropTypes.arrayOf(PropTypes.object),
+  visibleCriteria: PropTypes.arrayOf(PropTypes.object),
 };
 
 export default CriteriaList;

@@ -27,4 +27,4 @@ const mapStateToProps = (state) => ({
   region: getRegion(state),
 });
 
-export default connect(mapStateToProps)(BattlenetImage);
+export default connect(mapStateToProps, {})(BattlenetImage);

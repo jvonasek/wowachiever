@@ -29,7 +29,7 @@ const GroupMenu = ({ groupMenuItems, match }) => (
               <Link to={`${match.path}${slug}/global`}>{name}</Link>
             </CardTitle>
             <ProgressBar
-              value={getTotalAchCount(categories, 'achievementsCompleted')}
+              value={getTotalAchCount(categories, 'completedAchievements')}
               max={getTotalAchCount(categories, 'achievements')}
             />
           </CardBody>
