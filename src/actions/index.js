@@ -1,5 +1,4 @@
 import { normalize } from 'normalizr';
-import keyBy from 'lodash/keyBy';
 
 import * as ActionTypes from '../constants/ActionTypes';
 import { groupSchema, urlSchema } from '../actions/schema';
