@@ -28,13 +28,13 @@ class Achievement extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      criteriaHidden: true,
+      criteriaPaneHidden: true,
     };
   }
 
   toggleCriteriaPane = () => {
     this.setState({
-      criteriaHidden: !this.state.criteriaHidden,
+      criteriaPaneHidden: !this.state.criteriaPaneHidden,
     });
   }
 
@@ -57,7 +57,7 @@ class Achievement extends Component {
 
     return (
       <Card className={completed ? 'border-success mb-4' : 'mb-4'}>
-        <CardBody onClick={this.toggleCriteriaPane}>
+        <CardBody>
           <Row>
             <Col sm={1} className="text-center">
               <BattlenetImage
@@ -70,10 +70,16 @@ class Achievement extends Component {
             </Col>
             <Col sm={11}>
               <CardTitle className="mb-1">{title}</CardTitle>
-              <CardText>{description}</CardText>
-              <div style={{ display: this.state.criteriaHidden ? 'none' : 'block' }}>
+              <CardText className="mb-0">{description}</CardText>
+              <div className="mt-2" style={{ display: this.state.criteriaPaneHidden ? 'none' : 'block' }}>
                 <CriteriaList criteria={criteria} visibleCriteria={visibleCriteria} />
               </div>
+              {visibleCriteria.length > 0 &&
+                <button
+                  onClick={this.toggleCriteriaPane}
+                  className="btn btn-link text-info p-0">
+                    {this.state.criteriaPaneHidden ? 'show' : 'hide'} criteria
+                </button>}
             </Col>
           </Row>
         </CardBody>

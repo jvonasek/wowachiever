@@ -31,7 +31,7 @@ export const fetchCharacter = (values) => createFetchAction({
 });
 
 export const fetchAchievements = () => createFetchAction({
-  endpoint: '/data/achievements.json',
+  endpoint: `${process.env.PUBLIC_URL}/data/achievements.json`,
   types: [
     ActionTypes.FETCH_ACHIEVEMENTS,
     {
@@ -43,7 +43,7 @@ export const fetchAchievements = () => createFetchAction({
 });
 
 export const fetchCriteria = () => createFetchAction({
-  endpoint: '/data/criteria.json',
+  endpoint: `${process.env.PUBLIC_URL}/data/criteria.json`,
   types: [
     ActionTypes.FETCH_CRITERIA,
     ActionTypes.FETCH_CRITERIA_SUCCESS,
@@ -52,7 +52,7 @@ export const fetchCriteria = () => createFetchAction({
 });
 
 export const fetchRealms = () => createFetchAction({
-  endpoint: '/data/realms.json',
+  endpoint: `${process.env.PUBLIC_URL}/data/realms.json`,
   types: [
     ActionTypes.FETCH_REALMS,
     ActionTypes.FETCH_REALMS_SUCCESS,

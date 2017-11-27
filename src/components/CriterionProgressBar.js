@@ -32,7 +32,7 @@ const CriterionProgressBar = ({
   // clamp the value to max possible value
   progress.value = clamp(progress.value, progress.max);
 
-  const color = progress.value === progress.max ? 'success' : 'primary';
+  const color = progress.value === progress.max ? 'success' : 'info';
 
   return (
     <div>

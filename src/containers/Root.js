@@ -15,7 +15,7 @@ class Root extends Component {
 
   render() {
     return (
-      <Router>
+      <Router basename={process.env.PUBLIC_URL}>
         <ScrollToTop>
           <App />
         </ScrollToTop>

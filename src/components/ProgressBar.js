@@ -9,6 +9,7 @@ const ProgressBar = ({
   ...rest
 }) => (
   <Progress
+    color="info"
     style={height && { height }}
     value={value}
     max={max}
