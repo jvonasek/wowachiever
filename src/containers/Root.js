@@ -6,22 +6,13 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import App from '../components/App';
 import ScrollToTop from '../components/ScrollToTop';
 
-import {
-  importCategories,
-  importRealms,
-  importCriteria,
-} from '../actions';
-
-import achievementData from '../data/achievements.json';
-import realmsData from '../data/realms.json';
-import criteriaData from '../data/criteria.json';
+import { fetchRealms } from '../actions';
 
 class Root extends Component {
   componentWillMount() {
-    this.props.importCategories(achievementData);
-    this.props.importRealms(realmsData);
-    this.props.importCriteria(criteriaData);
+    this.props.dispatch(fetchRealms());
   }
+
   render() {
     return (
       <Router>
@@ -34,16 +25,7 @@ class Root extends Component {
 }
 
 Root.propTypes = {
-  importCategories: PropTypes.func.isRequired,
-  importRealms: PropTypes.func.isRequired,
-  importCriteria: PropTypes.func.isRequired,
+  dispatch: PropTypes.func.isRequired,
 };
 
-export default connect(
-  null,
-  {
-    importCategories,
-    importRealms,
-    importCriteria,
-  },
-)(Root);
+export default connect()(Root);

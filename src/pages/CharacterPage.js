@@ -9,14 +9,17 @@ import {
 } from 'reactstrap';
 
 import {
-  getVisibleAchievements,
   getCharacterInfo,
+  getCharacterCriteria,
+  getCompletedAchievements,
 } from '../reducers';
 
 import {
   fetchCharacter,
   setBaseUrl,
   setRegion,
+  fetchAchievementsAndCriteria,
+  hydrateAchievements,
 } from '../actions';
 
 import CharacterCard from '../components/CharacterCard';
@@ -28,9 +31,14 @@ import AchievementsPage from './AchievementsPage';
 class CharacterPage extends Component {
   componentDidMount() {
     const { params, url } = this.props.match;
-    this.props.fetchCharacter(params);
     this.props.setBaseUrl(url);
     this.props.setRegion(params.region);
+    this.props.fetchCharacter(params)
+      .then(() => this.props.fetchAchievementsAndCriteria())
+      .then(() => this.props.hydrateAchievements(
+        this.props.completedAchievements,
+        this.props.characterCriteria,
+      ));
   }
 
   render() {
@@ -58,26 +66,37 @@ class CharacterPage extends Component {
 }
 
 CharacterPage.defaultProps = {
-  achievements: [],
+  characterCriteria: {},
   characterInfo: null,
+  completedAchievements: {},
   match: {},
 };
 
 CharacterPage.propTypes = {
-  achievements: PropTypes.arrayOf(PropTypes.object),
+  characterCriteria: PropTypes.objectOf(PropTypes.object),
   characterInfo: PropTypes.objectOf(PropTypes.any),
-  fetchCharacter: PropTypes.func.isRequired,
+  completedAchievements: PropTypes.objectOf(PropTypes.object),
   match: PropTypes.objectOf(PropTypes.any),
+  fetchCharacter: PropTypes.func.isRequired,
   setBaseUrl: PropTypes.func.isRequired,
   setRegion: PropTypes.func.isRequired,
+  fetchAchievementsAndCriteria: PropTypes.func.isRequired,
+  hydrateAchievements: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = (state, props) => ({
-  achievements: getVisibleAchievements(state, props),
+const mapStateToProps = (state) => ({
+  characterCriteria: getCharacterCriteria(state),
   characterInfo: getCharacterInfo(state),
+  completedAchievements: getCompletedAchievements(state),
 });
 
 export default connect(
   mapStateToProps,
-  { fetchCharacter, setBaseUrl, setRegion },
+  {
+    fetchCharacter,
+    setBaseUrl,
+    setRegion,
+    fetchAchievementsAndCriteria,
+    hydrateAchievements,
+  },
 )(CharacterPage);

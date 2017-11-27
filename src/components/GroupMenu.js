@@ -9,10 +9,9 @@ import {
   CardTitle,
 } from 'reactstrap';
 
-import ProgressBar from '../components/ProgressBar';
+import { getTotalPropertyLength } from '../utils';
 
-const getTotalAchCount = (categories, property) =>
-  categories.reduce((acc, curr) => acc + curr[property].length, 0);
+import ProgressBar from '../components/ProgressBar';
 
 const GroupMenu = ({ groupMenuItems, match }) => (
   <Row>
@@ -29,8 +28,8 @@ const GroupMenu = ({ groupMenuItems, match }) => (
               <Link to={`${match.path}${slug}/global`}>{name}</Link>
             </CardTitle>
             <ProgressBar
-              value={getTotalAchCount(categories, 'completedAchievements')}
-              max={getTotalAchCount(categories, 'achievements')}
+              value={getTotalPropertyLength(categories, 'completedAchievements')}
+              max={getTotalPropertyLength(categories, 'achievements')}
             />
           </CardBody>
         </Card>

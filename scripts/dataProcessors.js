@@ -1,13 +1,18 @@
 const { omit, keyBy } = require('lodash');
 
+const LOCALE_TO_REGION_MAP = {
+  'en-US': 'us',
+  'en-GB': 'eu',
+};
+
 /**
  * Processor for achievement data.
  * Shifts global category on the same level as other categories.
  * @param {Object} data
  */
-const processAchData = (data) =>
-  Object.keys(data.achievements).map((index) => {
-    const category = data.achievements[index];
+const processAchData = ({ body }) =>
+  Object.keys(body.achievements).map((index) => {
+    const category = body.achievements[index];
     const subcategories = category.categories;
     const { achievements, id } = category;
 
@@ -31,21 +36,20 @@ const processAchData = (data) =>
  * Omits unwanted realm properties.
  * @param {Object} data
  */
-const processRealmData = (data) =>
-  data.realms.map((realm) =>
-    omit(realm, [
-      'type',
-      'population',
-      'queue',
-      'status',
-      'battlegroup',
-      'timezone',
-      'connected_realms',
-    ]));
-
-const processCriteriaData = (data) => {
-  return keyBy(JSON.parse(data), 'id')
+const processRealmData = ({ body, caseless: { dict } }) => {
+  const region = LOCALE_TO_REGION_MAP[dict['content-language']];
+  return {
+    label: region.toUpperCase(),
+    options: body.realms.map(({ name, slug, locale }) => ({
+      label: name,
+      value: slug,
+      locale,
+      region,
+    })),
+  };
 };
+
+const processCriteriaData = (data) => keyBy(JSON.parse(data), 'id');
 
 module.exports = {
   processAchData,

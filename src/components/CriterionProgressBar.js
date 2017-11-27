@@ -2,7 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import clamp from 'lodash/clamp';
 
-import { getCriteriaQuantityOccurence } from '../utils';
+import {
+  getCriteriaQuantityOccurence,
+  formatNumberAsWoWCurrency,
+} from '../utils';
 
 import ProgressBar from './ProgressBar';
 
@@ -11,6 +14,7 @@ const CriterionProgressBar = ({
   max,
   quantity,
   criteria,
+  format,
 }) => {
   const progress = {
     value: 0,
@@ -19,7 +23,7 @@ const CriterionProgressBar = ({
 
   if (id === 0) {
     // sometimes the criterion ID is 0 which means we have to look
-    // into hidden criteria for real quantity count
+    // into original criteria for real quantity count
     progress.value = getCriteriaQuantityOccurence(criteria);
   } else {
     progress.value = quantity;
@@ -30,7 +34,16 @@ const CriterionProgressBar = ({
 
   const color = progress.value === progress.max ? 'success' : 'primary';
 
-  return <ProgressBar color={color} {...progress} />;
+  return (
+    <div>
+      {format === 'currency' &&
+        <span>
+          {formatNumberAsWoWCurrency(progress.value)} / {formatNumberAsWoWCurrency(progress.max)}
+        </span>
+      }
+      <ProgressBar color={color} {...progress} />
+    </div>
+  );
 };
 
 CriterionProgressBar.defaultProps = {

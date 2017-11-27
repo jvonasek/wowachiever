@@ -15,8 +15,11 @@ import {
   getCurrentCategory,
 } from '../reducers';
 
+import { getTotalPropertyLength } from '../utils';
+
 import AchievementList from '../components/AchievementList';
 import CategoryMenu from '../components/CategoryMenu';
+import ProgressBar from '../components/ProgressBar';
 
 const CategoryPage = ({
   achievements,
@@ -28,8 +31,13 @@ const CategoryPage = ({
       <h2 className="mb-4">{currentCategory.name}</h2>
     </Col>
     <Col sm={3}>
+      <ProgressBar
+        className="mb-2"
+        value={getTotalPropertyLength(categoryMenuProps.categoryMenuItems, 'completedAchievements')}
+        max={getTotalPropertyLength(categoryMenuProps.categoryMenuItems, 'achievements')}
+      />
       <Link
-        className="btn btn-primary btn-block mb-3"
+        className="btn btn-secondary btn-block mb-2"
         to={`${categoryMenuProps.baseUrl}/achievements`}
       >
         Back to overview

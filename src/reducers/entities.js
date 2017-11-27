@@ -1,4 +1,7 @@
+import keyBy from 'lodash/keyBy';
+
 import * as ActionTypes from '../constants/ActionTypes';
+import updateAchievements from '../utils/achievements';
 
 const initialState = {
   achievements: {},
@@ -9,26 +12,30 @@ const initialState = {
   groups: {},
 };
 
-
 const entities = (state = initialState, action) => {
   switch (action.type) {
-    case ActionTypes.IMPORT_CATEGORIES:
+    case ActionTypes.FETCH_ACHIEVEMENTS_SUCCESS:
       return {
         ...state,
         ...action.payload.entities,
       };
-    case ActionTypes.IMPORT_REALMS:
+    case ActionTypes.FETCH_REALMS_SUCCESS:
       return {
         ...state,
         realms: [...state.realms, ...action.payload],
       };
-    case ActionTypes.IMPORT_CRITERIA:
+    case ActionTypes.FETCH_CRITERIA_SUCCESS:
       return {
         ...state,
         criteria: {
           ...state.criteria,
           ...action.payload,
         },
+      };
+    case ActionTypes.HYDRATE_ACHIEVEMENTS:
+      return {
+        ...state,
+        achievements: keyBy(updateAchievements(state, action), 'id'),
       };
     default:
       return state;

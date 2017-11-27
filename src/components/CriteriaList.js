@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import kebabCase from 'lodash/kebabCase';
+import clamp from 'lodash/clamp';
 import classnames from 'classnames';
 import { Row, Col } from 'reactstrap';
 
@@ -22,7 +23,11 @@ const renderCriterion = (criterion, criteria) => (
       small: true,
     })}
   >
-    <strong>{criterion.asset ? criterion.asset.title : criterion.description}</strong>
+    <strong>
+      {criterion.asset ? criterion.asset.title : criterion.description}
+      {' '}
+      {criterion.max > 1 && `(${clamp(criterion.quantity, criterion.max)}/${criterion.max})`}
+    </strong>
     {criterion.progressBar &&
       <CriterionProgressBar {...criterion} criteria={criteria} />
     }

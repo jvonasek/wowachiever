@@ -1,3 +1,14 @@
+a {
+  color: #d8d8d8;
+}
+
+a:hover {
+  color: #00bc8c;
+  text-decoration: underline;
+}
+
 .progress {
   background: #444;
+  height: 16px;
+  font-size: 12px;
 }

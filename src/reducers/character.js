@@ -75,7 +75,7 @@ const recentAchIds = (state = [], action) => {
   }
 };
 
-const zipCompletedCriteria = (state, action) => {
+const zipCharacterCriteria = (state, action) => {
   const {
     criteria,
     criteriaQuantity,
@@ -99,10 +99,10 @@ const zipCompletedCriteria = (state, action) => {
   ];
 };
 
-const completedCriteria = (state = {}, action) => {
+const characterCriteria = (state = {}, action) => {
   switch (action.type) {
     case ActionTypes.FETCH_CHARACTER_SUCCESS:
-      return keyBy(zipCompletedCriteria(state, action), 'id');
+      return keyBy(zipCharacterCriteria(state, action), 'id');
     default:
       return state;
   }
@@ -117,7 +117,7 @@ const zipCompletedAchievements = (state, action) => {
   const zippedAchievements = zipWith(
     achievementsCompleted,
     achievementsCompletedTimestamp,
-    (id, timestamp) => ({ id, timestamp }),
+    (id, timestamp) => ({ id, timestamp, completed: true }),
   );
 
   return [
@@ -138,11 +138,11 @@ const completedAchievements = (state = {}, action) => {
 export default combineReducers({
   characterInfo,
   recentAchIds,
-  completedCriteria,
+  characterCriteria,
   completedAchievements,
 });
 
 export const getCharacterInfo = (state) => state.characterInfo;
 export const getRecentAchIds = (state) => state.recentAchIds;
-export const getCompletedCriteria = (state) => state.completedCriteria;
+export const getCharacterCriteria = (state) => state.characterCriteria;
 export const getCompletedAchievements = (state) => state.completedAchievements;

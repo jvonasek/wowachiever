@@ -19,7 +19,7 @@ const CharacterCard = ({
         className="float-left mr-3 rounded"
         resourcePath={`character/${thumbnail}`}
       />
-      <h4 className="font-weight-bold mb-0" style={{ color: rest.classColor }}>{name}</h4>
+      <h2 className="font-weight-bold mb-0" style={{ color: rest.classColor }}>{name}</h2>
       <span className="h6">{rest.level} {rest.race} {rest.class} - {realm}</span>
     </Col>
     <Col sm={6}>

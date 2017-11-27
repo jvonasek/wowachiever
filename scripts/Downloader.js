@@ -8,25 +8,45 @@ const ROOT_APP_PATH = fs.realpathSync('.');
  */
 class Downloader {
   /**
-   * @param {String} endpoint
-   * @param {String} file
-   * @param {Function} processFn
+   * @param {string|Array} endpoint
+   * @param {string} file
+   * @param {function} processFn
    */
   constructor(endpoint, file, processFn = null) {
     this.endpoint = endpoint;
     this.file = file;
     this.processFn = processFn;
-    this.request = unirest('GET', this.endpoint);
+    this.request = [];
+    this.temp = [];
+
+    if (this.endpoint instanceof Array) {
+      this.endpoint.forEach((ep) => {
+        this.request.push(unirest('GET', ep));
+      });
+    } else {
+      this.request.push(unirest('GET', this.endpoint));
+    }
   }
 
   /**
    * Setup request and fetch the data
    */
   download() {
-    this.request.end((res) => this.constructor.writeFile(
-      this.processData(res.body),
-      this.file,
-    ));
+    if (!this.request.length) {
+      return;
+    }
+
+    this.request.forEach((req) => {
+      req.end((res) => {
+        this.temp.push(this.processData(res));
+        if (this.temp.length === this.request.length) {
+          this.constructor.writeFile(
+            this.temp.length === 1 ? this.temp[0] : this.temp,
+            this.file,
+          );
+        }
+      });
+    })
   }
 
   /**

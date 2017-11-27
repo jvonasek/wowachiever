@@ -4,7 +4,7 @@ import * as ActionTypes from '../constants/ActionTypes';
 
 const groupIds = (state = [], action) => {
   switch (action.type) {
-    case ActionTypes.IMPORT_CATEGORIES:
+    case ActionTypes.FETCH_ACHIEVEMENTS_SUCCESS:
       return [...state, ...action.payload.result];
     default:
       return state;
