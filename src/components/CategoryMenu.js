@@ -14,7 +14,7 @@ const CategoryMenu = ({ categoryMenuItems, baseUrl }) => (
     }) => (
       <li className="list-group-item" key={id} sm={3}>
         <NavLink
-          to={`${baseUrl}/achievements/${url}`}
+          to={`${baseUrl}/achievements${url}`}
           className="d-block"
           activeClassName="font-weight-bold"
         >

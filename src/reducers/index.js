@@ -3,12 +3,13 @@ import { createSelector } from 'reselect';
 import { reducer as form } from 'redux-form';
 import has from 'lodash/has';
 import keyBy from 'lodash/keyBy';
+import values from 'lodash/values';
 
 import character, * as fromCharacter from './character';
 import entities, * as fromEntities from './entities';
 import ui, * as fromUi from './ui';
 
-import { mapEntitiesToIds } from '../utils';
+import { mapEntitiesToIds, createUrl } from '../utils';
 
 const rootReducer = combineReducers({
   character,
@@ -19,20 +20,12 @@ const rootReducer = combineReducers({
 
 export default rootReducer;
 
-/**
- * Creates url string from provided router params
- *
- * @param  {Object} params
- *
- * @return {String}
- */
-const createCatUrlFromParams = ({ group, category }) =>
-  (category ? `${group}/${category}` : group);
-
 // Basic ui selectors
 export const getGroupIds = (state) => fromUi.getGroupIds(state.ui);
 export const getBaseUrl = (state) => fromUi.getBaseUrl(state.ui);
 export const getRegion = (state) => fromUi.getRegion(state.ui);
+export const getActiveRequests = (state) => fromUi.getActiveRequests(state.ui);
+export const getIsLoading = (state) => fromUi.getActiveRequests(state.ui).length > 0;
 
 // Basic character selectors
 export const getCharacterInfo = (state) =>
@@ -106,7 +99,7 @@ export const getCurrentCategory = createSelector(
   getMatchFromProps,
   getCategoriesWithCompleted,
   (urls, match, categories) => {
-    const url = createCatUrlFromParams(match.params);
+    const url = createUrl(values(match.params));
     const catId = urls[url];
     return categories[catId] || {};
   },

@@ -69,7 +69,7 @@ const pickRecentAchievements = (state, action) => {
 const recentAchIds = (state = [], action) => {
   switch (action.type) {
     case ActionTypes.FETCH_CHARACTER_SUCCESS:
-      return pickRecentAchievements(state, action);
+      return state.length ? state : pickRecentAchievements(state, action);
     default:
       return state;
   }

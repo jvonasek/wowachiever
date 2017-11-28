@@ -24,7 +24,7 @@ const normalizeAchievementsResponse = (res) => {
 export const fetchCharacter = (values) => createFetchAction({
   endpoint: createApiEndpoint(values),
   types: [
-    ActionTypes.FETCH_CHARACTER,
+    ActionTypes.FETCH_CHARACTER_REQUEST,
     ActionTypes.FETCH_CHARACTER_SUCCESS,
     ActionTypes.FETCH_CHARACTER_FAILURE,
   ],
@@ -33,7 +33,7 @@ export const fetchCharacter = (values) => createFetchAction({
 export const fetchAchievements = () => createFetchAction({
   endpoint: `${process.env.PUBLIC_URL}/data/achievements.json`,
   types: [
-    ActionTypes.FETCH_ACHIEVEMENTS,
+    ActionTypes.FETCH_ACHIEVEMENTS_REQUEST,
     {
       type: ActionTypes.FETCH_ACHIEVEMENTS_SUCCESS,
       payload: (res) => normalizeAchievementsResponse(res),
@@ -45,7 +45,7 @@ export const fetchAchievements = () => createFetchAction({
 export const fetchCriteria = () => createFetchAction({
   endpoint: `${process.env.PUBLIC_URL}/data/criteria.json`,
   types: [
-    ActionTypes.FETCH_CRITERIA,
+    ActionTypes.FETCH_CRITERIA_REQUEST,
     ActionTypes.FETCH_CRITERIA_SUCCESS,
     ActionTypes.FETCH_CRITERIA_FAILURE,
   ],
@@ -54,7 +54,7 @@ export const fetchCriteria = () => createFetchAction({
 export const fetchRealms = () => createFetchAction({
   endpoint: `${process.env.PUBLIC_URL}/data/realms.json`,
   types: [
-    ActionTypes.FETCH_REALMS,
+    ActionTypes.FETCH_REALMS_REQUEST,
     ActionTypes.FETCH_REALMS_SUCCESS,
     ActionTypes.FETCH_REALMS_FAILURE,
   ],

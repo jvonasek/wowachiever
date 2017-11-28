@@ -3,6 +3,7 @@ import kebabCase from 'lodash/kebabCase';
 import includes from 'lodash/includes';
 
 import config from '../config';
+import { createUrl } from '../utils';
 
 const { LEGACY_GROUPS } = config;
 
@@ -23,7 +24,7 @@ const categoryProcessStrategy = (entity, parent) => {
 
   return {
     ...entity,
-    url: chunks.join('/'),
+    url: createUrl(chunks),
     slug: kebabCase(entity.name),
     completedAchievements: [],
     isLegacy: includes(LEGACY_GROUPS, entity.id) || includes(LEGACY_GROUPS, parent.id),

@@ -38,11 +38,20 @@ export const serializeParams = (params) =>
 
 /**
  * Creates url string from an array of strings
- * @param {Array.<string>} params¨
+ * @param {Array.<string>} chunks
  * @return {string}
  */
-export const createUrl = (params) =>
-  params.map((p) => `/${p}`).join('').toLowerCase();
+export const createUrl = (chunks) =>
+  chunks.map((chunk) => `/${chunk}`).join('').toLowerCase();
+
+/**
+ * Creates url string from provided react-router params
+ *
+ * @param  {Object} params
+ * @return {String}
+ */
+export const createCatUrlFromParams = ({ group, category }) =>
+  (category ? `${group}/${category}` : group);
 
 /**
  * Creates Battle.net API endpoint url

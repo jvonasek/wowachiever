@@ -9,9 +9,9 @@ import CharacterSelectForm from '../containers/CharacterSelectForm';
 
 const CharacterSelectPage = () => (
   <Row className="justify-content-center">
-    <Col sm={6}>
-      <Jumbotron className="my-3">
-        <h1 className="display-4 text-center">WoWACHIEVER</h1>
+    <Col md={12} lg={6}>
+      <Jumbotron className="my-5 py-5">
+        <h1 className="display-5 text-center">WoWACHIEVER</h1>
         <CharacterSelectForm onSubmit={() => {}} />
       </Jumbotron>
     </Col>

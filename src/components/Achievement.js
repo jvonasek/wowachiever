@@ -77,7 +77,8 @@ class Achievement extends Component {
               {visibleCriteria.length > 0 &&
                 <button
                   onClick={this.toggleCriteriaPane}
-                  className="btn btn-link text-info p-0">
+                  className="btn btn-link text-info p-0"
+                >
                     {this.state.criteriaPaneHidden ? 'show' : 'hide'} criteria
                 </button>}
             </Col>

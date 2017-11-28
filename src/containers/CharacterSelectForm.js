@@ -4,24 +4,15 @@ import { withRouter } from 'react-router-dom';
 import { Field, reduxForm } from 'redux-form';
 import { connect } from 'react-redux';
 import flowRight from 'lodash/fp/flowRight';
-import {
-  FormGroup,
-  Label,
-} from 'reactstrap';
+import { FormGroup, Label } from 'reactstrap';
 
 import { getRealms } from '../reducers';
 import { createUrl } from '../utils';
 
 import RealmSelectbox from '../components/RealmSelectbox';
+import FieldWithMessage from '../components/FieldWithMessage';
 
-// temporary values for development
-const initialValues = {
-  character: 'Razzin',
-  realm: {
-    value: 'argent-dawn',
-    region: 'eu',
-  },
-};
+import { required, alphaNumeric } from '../utils/validators';
 
 const CharacterSelectForm = ({ handleSubmit, realms }) => (
   <form onSubmit={handleSubmit}>
@@ -31,7 +22,9 @@ const CharacterSelectForm = ({ handleSubmit, realms }) => (
         className="form-control"
         id="character"
         name="character"
-        component="input"
+        component={FieldWithMessage}
+        validate={required}
+        warn={alphaNumeric}
         type="text"
       />
     </FormGroup>
@@ -42,9 +35,10 @@ const CharacterSelectForm = ({ handleSubmit, realms }) => (
         name="realm"
         component={RealmSelectbox}
         options={realms}
+        validate={required}
       />
     </FormGroup>
-    <button className="btn btn-primary btn-lg" type="submit">Submit</button>
+    <button className="btn btn-info btn-block btn-lg mt-4" type="submit">Submit</button>
   </form>
 );
 
@@ -60,7 +54,6 @@ CharacterSelectForm.propTypes = {
 };
 
 const mapStateToProps = (state) => ({
-  initialValues,
   realms: getRealms(state),
 });
 
