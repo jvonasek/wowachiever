@@ -12,20 +12,19 @@ import {
   getCharacterInfo,
   getCharacterCriteria,
   getCompletedAchievements,
+  getIsCharacterFetched,
 } from '../reducers';
 
 import {
-  fetchCharacter,
   setBaseUrl,
   setRegion,
-  fetchAchievementsAndCriteria,
-  hydrateAchievements,
+  fetchEverything,
 } from '../actions';
 
 import CharacterCard from '../components/CharacterCard';
 import RecentAchievements from '../containers/RecentAchievements';
+import CategoryRoutes from '../containers/CategoryRoutes';
 
-import CategoryPage from './CategoryPage';
 import AchievementsPage from './AchievementsPage';
 
 class CharacterPage extends Component {
@@ -33,12 +32,12 @@ class CharacterPage extends Component {
     const { params, url } = this.props.match;
     this.props.setBaseUrl(url);
     this.props.setRegion(params.region);
-    this.props.fetchCharacter(params)
-      .then(() => this.props.fetchAchievementsAndCriteria())
-      .then(() => this.props.hydrateAchievements(
-        this.props.completedAchievements,
-        this.props.characterCriteria,
-      ));
+
+    const { isFetched } = this.props;
+
+    if (!isFetched) {
+      this.props.fetchEverything(params);
+    }
   }
 
   render() {
@@ -54,7 +53,7 @@ class CharacterPage extends Component {
           <Col xs={12}>
             <h2>{match.params.category}</h2>
             <Route path={`${match.url}/achievements/`} exact component={AchievementsPage} />
-            <Route path={`${match.url}/achievements/:group/:category?`} component={CategoryPage} />
+            <CategoryRoutes />
           </Col>
           <Col xs={12}>
             <RecentAchievements />
@@ -66,37 +65,32 @@ class CharacterPage extends Component {
 }
 
 CharacterPage.defaultProps = {
-  characterCriteria: {},
   characterInfo: null,
-  completedAchievements: {},
+  isFetched: false,
   match: {},
 };
 
 CharacterPage.propTypes = {
-  characterCriteria: PropTypes.objectOf(PropTypes.object),
   characterInfo: PropTypes.objectOf(PropTypes.any),
-  completedAchievements: PropTypes.objectOf(PropTypes.object),
   match: PropTypes.objectOf(PropTypes.any),
-  fetchCharacter: PropTypes.func.isRequired,
+  fetchEverything: PropTypes.func.isRequired,
+  isFetched: PropTypes.bool,
   setBaseUrl: PropTypes.func.isRequired,
   setRegion: PropTypes.func.isRequired,
-  fetchAchievementsAndCriteria: PropTypes.func.isRequired,
-  hydrateAchievements: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   characterCriteria: getCharacterCriteria(state),
   characterInfo: getCharacterInfo(state),
   completedAchievements: getCompletedAchievements(state),
+  isFetched: getIsCharacterFetched(state),
 });
 
 export default connect(
   mapStateToProps,
   {
-    fetchCharacter,
     setBaseUrl,
     setRegion,
-    fetchAchievementsAndCriteria,
-    hydrateAchievements,
+    fetchEverything,
   },
 )(CharacterPage);

@@ -27,6 +27,18 @@ const region = (state = '', action) => {
   return state;
 };
 
+const requestErrors = (state = [], action) => {
+  if (action.error && action.payload) {
+    return [...state, action.payload];
+  }
+
+  if (action.type === ActionTypes.CLEAR_ERRORS) {
+    return [];
+  }
+
+  return state;
+};
+
 const activeRequests = (state = [], action) => {
   const requestReg = new RegExp(/^([A-Z_]+)_REQUEST$/g);
   const successReg = new RegExp(/^([A-Z_]+)_SUCCESS$/g);
@@ -49,6 +61,11 @@ const activeRequests = (state = [], action) => {
     return state.filter((a) => a !== successMatch[1]);
   }
 
+  // clear the list  on error
+  if (action.error) {
+    return [];
+  }
+
   return state;
 };
 
@@ -57,9 +74,11 @@ export default combineReducers({
   baseUrl,
   region,
   activeRequests,
+  requestErrors,
 });
 
 export const getGroupIds = (state) => state.groupIds;
 export const getBaseUrl = (state) => state.baseUrl;
 export const getRegion = (state) => state.region;
 export const getActiveRequests = (state) => state.activeRequests;
+export const getRequestErrors = (state) => state.requestErrors;

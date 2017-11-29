@@ -1,21 +1,22 @@
 import { combineReducers } from 'redux';
 import { createSelector } from 'reselect';
 import { reducer as form } from 'redux-form';
+import { routerReducer as routing } from 'react-router-redux';
 import has from 'lodash/has';
 import keyBy from 'lodash/keyBy';
-import values from 'lodash/values';
 
 import character, * as fromCharacter from './character';
 import entities, * as fromEntities from './entities';
 import ui, * as fromUi from './ui';
 
-import { mapEntitiesToIds, createUrl } from '../utils';
+import { mapEntitiesToIds } from '../utils';
 
 const rootReducer = combineReducers({
   character,
   entities,
   ui,
   form,
+  routing,
 });
 
 export default rootReducer;
@@ -25,7 +26,7 @@ export const getGroupIds = (state) => fromUi.getGroupIds(state.ui);
 export const getBaseUrl = (state) => fromUi.getBaseUrl(state.ui);
 export const getRegion = (state) => fromUi.getRegion(state.ui);
 export const getActiveRequests = (state) => fromUi.getActiveRequests(state.ui);
-export const getIsLoading = (state) => fromUi.getActiveRequests(state.ui).length > 0;
+export const getRequestErrors = (state) => fromUi.getRequestErrors(state.ui);
 
 // Basic character selectors
 export const getCharacterInfo = (state) =>
@@ -36,19 +37,23 @@ export const getCharacterCriteria = (state) =>
   fromCharacter.getCharacterCriteria(state.character);
 export const getCompletedAchievements = (state) =>
   fromCharacter.getCompletedAchievements(state.character);
+export const getIsCharacterFetched = (state) =>
+  fromCharacter.getIsFetched(state.character);
 
 // Basic entities selectors
 export const getAchievements = (state) => fromEntities.getAchievements(state.entities);
 export const getCategories = (state) => fromEntities.getCategories(state.entities);
 export const getCriteria = (state) => fromEntities.getCriteria(state.entities);
-export const getUrls = (state) => fromEntities.getUrls(state.entities);
+export const getRoutes = (state) => fromEntities.getRoutes(state.entities);
 export const getRealms = (state) => fromEntities.getRealms(state.entities);
 export const getGroups = (state) => fromEntities.getGroups(state.entities);
 
 export const getCategoryById = (state, id) => getCategories(state)[id];
-export const getCategoryByUrl = (state, url) => getCategoryById(state, getUrls(state)[url]);
 
 export const getMatchFromProps = (state, props) => props.match || null;
+export const getProps = (state, props) => props;
+export const getCategory = (state, props) => getCategories(state)[props.catId];
+export const getIsLoading = (state) => getActiveRequests(state).length > 0;
 
 export const getCategoriesWithCompleted = createSelector(
   getCategories,
@@ -95,14 +100,9 @@ export const getGroupMenuItems = createSelector(
 );
 
 export const getCurrentCategory = createSelector(
-  getUrls,
-  getMatchFromProps,
   getCategoriesWithCompleted,
-  (urls, match, categories) => {
-    const url = createUrl(values(match.params));
-    const catId = urls[url];
-    return categories[catId] || {};
-  },
+  getProps,
+  (categories, props) => categories[props.catId] || {},
 );
 
 export const getVisibleAchievementsIds = createSelector(
@@ -112,14 +112,12 @@ export const getVisibleAchievementsIds = createSelector(
 
 export const getCategoryMenuItems = createSelector(
   getGroups,
-  getMatchFromProps,
   getCategoriesWithCompleted,
-  (groups, match, categories) => {
-    const currentGroup = Object.values(groups).find((group) =>
-      group.slug === match.params.group);
-
-    return has(currentGroup, 'categories') ?
-      currentGroup.categories.map((catId) => ({
+  getCategory,
+  (groups, categories, category) => {
+    const group = category.parent ? groups[category.parent] : {};
+    return has(group, 'categories') ?
+      group.categories.map((catId) => ({
         ...categories[catId],
       })) : [];
   },
@@ -127,9 +125,9 @@ export const getCategoryMenuItems = createSelector(
 
 export const getVisibleAchievements = createSelector(
   getAchievements,
-  getVisibleAchievementsIds,
-  (achievements, achIds) =>
-    mapEntitiesToIds(achievements, achIds)
+  getCategory,
+  (achievements, category) =>
+    mapEntitiesToIds(achievements, category.achievements)
       .sort((a, b) => b.timestamp - a.timestamp),
 );
 

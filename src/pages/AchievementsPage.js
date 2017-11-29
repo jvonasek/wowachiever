@@ -1,7 +1,4 @@
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
-
-import flowRight from 'lodash/fp/flowRight';
 
 import { getGroupMenuItems } from '../reducers';
 
@@ -11,7 +8,4 @@ const mapStateToProps = (state) => ({
   groupMenuItems: getGroupMenuItems(state),
 });
 
-export default flowRight(
-  withRouter,
-  connect(mapStateToProps),
-)(GroupMenu);
+export default connect(mapStateToProps)(GroupMenu);

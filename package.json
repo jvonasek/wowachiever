@@ -6,6 +6,7 @@
   "dependencies": {
     "bootstrap": "^4.0.0-beta",
     "classnames": "^2.2.5",
+    "history": "^4.7.2",
     "isomorphic-fetch": "^2.2.1",
     "lodash": "^4.17.4",
     "moment": "^2.19.2",
@@ -15,6 +16,7 @@
     "react-dom": "^16.0.0",
     "react-redux": "^5.0.6",
     "react-router-dom": "^4.2.2",
+    "react-router-redux": "^5.0.0-alpha.8",
     "react-scripts": "1.0.17",
     "react-select-plus": "^1.0.0-rc.10.patch1",
     "reactstrap": "^5.0.0-alpha.3",

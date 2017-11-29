@@ -1,45 +1,44 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { BrowserRouter as Router } from 'react-router-dom';
+import { ConnectedRouter } from 'react-router-redux';
+import { Container } from 'reactstrap';
 
 import App from '../components/App';
 import ScrollToTop from '../components/ScrollToTop';
 import Loader from '../components/Loader';
 
-import { fetchRealms } from '../actions';
-import { getIsLoading } from '../reducers';
+import RequestErrors from '../components/RequestErrors';
 
+import { getIsLoading, getRequestErrors } from '../reducers';
 
-class Root extends Component {
-  componentWillMount() {
-    this.props.dispatch(fetchRealms());
-  }
+import history from '../store/history';
 
-  render() {
-    const { isLoading } = this.props;
-    return (
-      <Router basename={process.env.PUBLIC_URL}>
-        <ScrollToTop>
-          <App />
-          {isLoading && <Loader />}
-        </ScrollToTop>
-      </Router>
-    );
-  }
-}
+const Root = ({ isLoading, requestErrors }) => (
+  <ConnectedRouter basename={process.env.PUBLIC_URL} history={history}>
+    <ScrollToTop>
+      <Container>
+        <RequestErrors errors={requestErrors} />
+        <App />
+        {isLoading && <Loader />}
+      </Container>
+    </ScrollToTop>
+  </ConnectedRouter>
+);
 
 Root.defaultProps = {
   isLoading: false,
+  requestErrors: [],
 };
 
 Root.propTypes = {
-  dispatch: PropTypes.func.isRequired,
   isLoading: PropTypes.bool,
+  requestErrors: PropTypes.arrayOf(PropTypes.string),
 };
 
 const mapStateToProps = (state) => ({
   isLoading: getIsLoading(state),
+  requestErrors: getRequestErrors(state),
 });
 
 export default connect(mapStateToProps)(Root);

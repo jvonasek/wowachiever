@@ -1,8 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Link, withRouter } from 'react-router-dom';
-import flowRight from 'lodash/fp/flowRight';
+import { Link } from 'react-router-dom';
 import {
   Row,
   Col,
@@ -72,7 +71,4 @@ const mapStateToProps = (state, props) => ({
   },
 });
 
-export default flowRight(
-  withRouter,
-  connect(mapStateToProps),
-)(CategoryPage);
+export default connect(mapStateToProps)(CategoryPage);

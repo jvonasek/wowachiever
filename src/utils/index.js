@@ -45,15 +45,6 @@ export const createUrl = (chunks) =>
   chunks.map((chunk) => `/${chunk}`).join('').toLowerCase();
 
 /**
- * Creates url string from provided react-router params
- *
- * @param  {Object} params
- * @return {String}
- */
-export const createCatUrlFromParams = ({ group, category }) =>
-  (category ? `${group}/${category}` : group);
-
-/**
  * Creates Battle.net API endpoint url
  * @param {Object} param0
  * @return {string}
@@ -130,6 +121,17 @@ export const formatNumberAsWoWCurrency = (number) => {
 };
 
 /**
+ * Handler for fetch reuquest, if ok, pass the response
+ * @param {Object} response
+ */
+const handleRequestErrors = (response) => {
+  if (!response.ok) {
+    throw Error(response.statusText);
+  }
+  return response;
+};
+
+/**
  * Action creator for actions that fetch data.
  * Types array should contain action types in this order:
  * REQUEST -> SUCCESS -> FAILURE
@@ -161,10 +163,9 @@ export const createFetchAction = ({ endpoint, types, schema = null }) => {
     });
 
     return fetch(endpoint)
+      .then(handleRequestErrors)
       .then((response) => response.json())
-      .then(
-        (res) => dispatch(successAction(res)),
-        (error) => dispatch(errorAction(error)),
-      );
+      .then((res) => dispatch(successAction(res)))
+      .catch((error) => dispatch(errorAction(error.toString())));
   };
 };

@@ -10,7 +10,7 @@ const CharacterCard = ({
   realm,
   thumbnail,
   ...rest
-}) => (
+}) => name && (
   <Row>
     <Col sm={6}>
       <BattlenetImage

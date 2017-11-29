@@ -39,6 +39,13 @@ const createCharacterInfo = (state, action) => {
   };
 };
 
+const isFetched = (state = false, action) => {
+  if (action.type === ActionTypes.FETCH_CHARACTER_SUCCESS) {
+    return true;
+  }
+  return state;
+};
+
 const characterInfo = (state = {}, action) => {
   switch (action.type) {
     case ActionTypes.FETCH_CHARACTER_SUCCESS:
@@ -136,12 +143,14 @@ const completedAchievements = (state = {}, action) => {
 };
 
 export default combineReducers({
+  isFetched,
   characterInfo,
   recentAchIds,
   characterCriteria,
   completedAchievements,
 });
 
+export const getIsFetched = (state) => state.isFetched;
 export const getCharacterInfo = (state) => state.characterInfo;
 export const getRecentAchIds = (state) => state.recentAchIds;
 export const getCharacterCriteria = (state) => state.characterCriteria;

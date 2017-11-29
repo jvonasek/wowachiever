@@ -1,6 +1,7 @@
 import clamp from 'lodash/clamp';
 import round from 'lodash/round';
 import has from 'lodash/has';
+import keyBy from 'lodash/keyBy';
 
 import { calculatePercent } from '../utils';
 
@@ -96,7 +97,7 @@ const updateAchievements = (
     };
   });
 
-  return addProgressToAchievements(hydratedAchievements);
+  return keyBy(addProgressToAchievements(hydratedAchievements), 'id');
 };
 
 export default updateAchievements;

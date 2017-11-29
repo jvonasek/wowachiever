@@ -5,7 +5,7 @@ import Achievement from '../components/Achievement';
 
 const AchievementList = ({ achievements }) => {
   if (!achievements.length) {
-    return <span className="h5">No achievements found in this category.</span>;
+    return <span className="h5">Looks like there is nothing here...</span>;
   }
 
   return achievements.map((achievement) => (

@@ -1,25 +1,29 @@
 import { normalize } from 'normalizr';
 
 import * as ActionTypes from '../constants/ActionTypes';
-import { groupSchema, urlSchema } from '../actions/schema';
+import { groupSchema, routeSchema } from '../actions/schema';
 import { createApiEndpoint, createFetchAction } from '../utils';
 
 const normalizeAchievementsResponse = (res) => {
   const normalizedRes = normalize(res, groupSchema);
   // create url -> id map from all categories
-  const { urls } = normalize(
+  const { routes } = normalize(
     normalizedRes.entities.categories,
-    urlSchema,
+    routeSchema,
   ).entities;
 
   return {
     ...normalizedRes,
     entities: {
       ...normalizedRes.entities,
-      urls,
+      routes,
     },
   };
 };
+
+export const clearErrors = () => ({
+  type: ActionTypes.CLEAR_ERRORS,
+});
 
 export const fetchCharacter = (values) => createFetchAction({
   endpoint: createApiEndpoint(values),
@@ -60,16 +64,6 @@ export const fetchRealms = () => createFetchAction({
   ],
 });
 
-export const setBaseUrl = (url) => ({
-  type: ActionTypes.SET_BASE_URL,
-  payload: url,
-});
-
-export const setRegion = (region) => ({
-  type: ActionTypes.SET_REGION,
-  payload: region,
-});
-
 export const fetchAchievementsAndCriteria = () => (dispatch) =>
   Promise.all([
     dispatch(fetchAchievements()),
@@ -82,4 +76,34 @@ export const hydrateAchievements = (completedAchievements, characterCriteria) =>
     completedAchievements,
     characterCriteria,
   },
+});
+
+export const fetchEverything = (values) => (dispatch, getState) =>
+  new Promise((resolve, reject) => {
+    dispatch(clearErrors());
+    dispatch(fetchCharacter(values)).then((action) => {
+      if (action.error) {
+        reject(action);
+      } else {
+        resolve(action);
+      }
+    });
+  }).then(() => dispatch(fetchAchievementsAndCriteria(values)))
+    .then(() => {
+      const { character } = getState();
+      dispatch(hydrateAchievements(
+        character.completedAchievements,
+        character.characterCriteria,
+      ));
+      return true;
+    });
+
+export const setBaseUrl = (url) => ({
+  type: ActionTypes.SET_BASE_URL,
+  payload: url,
+});
+
+export const setRegion = (region) => ({
+  type: ActionTypes.SET_REGION,
+  payload: region,
 });

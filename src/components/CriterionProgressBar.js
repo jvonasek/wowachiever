@@ -47,12 +47,14 @@ const CriterionProgressBar = ({
 };
 
 CriterionProgressBar.defaultProps = {
+  format: null,
   max: 1,
   quantity: 0,
   criteria: [],
 };
 
 CriterionProgressBar.propTypes = {
+  format: PropTypes.string,
   id: PropTypes.number.isRequired,
   max: PropTypes.number,
   quantity: PropTypes.number,

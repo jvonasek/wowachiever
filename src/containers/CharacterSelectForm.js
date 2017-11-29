@@ -1,10 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withRouter } from 'react-router-dom';
+import { push } from 'react-router-redux';
 import { Field, reduxForm } from 'redux-form';
 import { connect } from 'react-redux';
-import flowRight from 'lodash/fp/flowRight';
 import { FormGroup, Label } from 'reactstrap';
+import flowRight from 'lodash/fp/flowRight';
 
 import { getRealms } from '../reducers';
 import { createUrl } from '../utils';
@@ -44,12 +44,11 @@ const CharacterSelectForm = ({ handleSubmit, realms }) => (
 
 
 CharacterSelectForm.defaultProps = {
-  handleSubmit: () => {},
   realms: [],
 };
 
 CharacterSelectForm.propTypes = {
-  handleSubmit: PropTypes.func,
+  handleSubmit: PropTypes.func.isRequired,
   realms: PropTypes.arrayOf(PropTypes.object),
 };
 
@@ -58,14 +57,15 @@ const mapStateToProps = (state) => ({
 });
 
 export default flowRight(
-  withRouter,
   connect(mapStateToProps),
   reduxForm({
     form: 'characterSelect',
-    onSubmitSuccess: (res, dispatch, { history, values }) => {
-      const { realm, character } = values;
-      const redirectUrl = createUrl([realm.region, realm.value, character, 'achievements']);
-      history.push(redirectUrl);
+    onSubmitSuccess: (res, dispatch, { values }) => {
+      if (res && values) {
+        const { realm, character } = values;
+        const redirectUrl = createUrl([realm.region, realm.value, character, 'achievements']);
+        dispatch(push(redirectUrl));
+      }
     },
   }),
 )(CharacterSelectForm);

@@ -9,7 +9,7 @@ const { LEGACY_GROUPS } = config;
 
 const achievementProcessStrategy = (entity, parent) => ({
   ...entity,
-  categoryId: parent.id,
+  parent: parent.id,
   timestamp: 0,
 });
 
@@ -26,6 +26,7 @@ const categoryProcessStrategy = (entity, parent) => {
     ...entity,
     url: createUrl(chunks),
     slug: kebabCase(entity.name),
+    parent: parent.id,
     completedAchievements: [],
     isLegacy: includes(LEGACY_GROUPS, entity.id) || includes(LEGACY_GROUPS, parent.id),
   };
@@ -47,10 +48,10 @@ const groups = new schema.Entity('groups', {
 
 export const groupSchema = [groups];
 
-const processUrlSchema = (entity) => entity.id;
-const urls = new schema.Entity('urls', {}, {
+const processRoutesStrategy = (entity) => entity.id;
+const routes = new schema.Entity('routes', {}, {
   idAttribute: 'url',
-  processStrategy: processUrlSchema,
+  processStrategy: processRoutesStrategy,
 });
 
-export const urlSchema = [urls];
+export const routeSchema = [routes];
