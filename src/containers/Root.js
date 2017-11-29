@@ -15,7 +15,7 @@ import { getIsLoading, getRequestErrors } from '../reducers';
 import history from '../store/history';
 
 const Root = ({ isLoading, requestErrors }) => (
-  <ConnectedRouter basename={process.env.PUBLIC_URL} history={history}>
+  <ConnectedRouter history={history}>
     <ScrollToTop>
       <Container>
         <RequestErrors errors={requestErrors} />
