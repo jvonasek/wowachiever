@@ -1,7 +1,7 @@
 {
   "RECENT_ACHIEVEMENTS_COUNT": 10,
   "ALMOST_FINISHED_ACHIEVEMENTS_COUNT": 10,
-  "DATE_FORMAT": "Do MMMM YYYY HH:mm",
+  "DATE_FORMAT": "Do MMMM YYYY",
   "REGIONS": {
     "eu": {
       "locale": "en_GB"

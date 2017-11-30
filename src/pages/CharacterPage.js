@@ -21,8 +21,7 @@ import {
   fetchEverything,
 } from '../actions';
 
-import CharacterCard from '../components/CharacterCard';
-import SearchField from '../containers/SearchField';
+import Header from '../containers/Header';
 import RecentAchievements from '../containers/RecentAchievements';
 import CategoryRoutes from '../containers/CategoryRoutes';
 
@@ -42,18 +41,10 @@ class CharacterPage extends Component {
   }
 
   render() {
-    const {
-      characterInfo,
-      match,
-    } = this.props;
+    const { match } = this.props;
     return (
-      <div className="mt-3">
-        <CharacterCard {...characterInfo} />
-        <Row className="d-flex justify-content-end">
-          <Col sm={4}>
-            <SearchField />
-          </Col>
-        </Row>
+      <div>
+        <Header />
         <Row>
           <Col xs={12}>
             <h2>{match.params.category}</h2>
@@ -70,13 +61,11 @@ class CharacterPage extends Component {
 }
 
 CharacterPage.defaultProps = {
-  characterInfo: null,
   isFetched: false,
   match: {},
 };
 
 CharacterPage.propTypes = {
-  characterInfo: PropTypes.objectOf(PropTypes.any),
   match: PropTypes.objectOf(PropTypes.any),
   fetchEverything: PropTypes.func.isRequired,
   isFetched: PropTypes.bool,
