@@ -27,22 +27,22 @@ a:hover {
 .progress-bar-circle {
   position: relative;
 }
-
-.progress-bar-percent,
-.progress-bar-status {
-  display:block;
+.progress-bar-label {
   position: absolute;
   text-align: center;
-  top: 60%;
+  top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+}
+.progress-bar-status,
+.progress-bar-percent {
+  display: block;
+}
+.progress-bar-status {
   font-size: 0.8rem;
 }
-
 .progress-bar-percent {
   font-size: 1.6rem;
-  margin-bottom: 20px;
-  top: 45%;
 }
 
 .search-field {
@@ -79,7 +79,6 @@ a:hover {
 .group-menu-card:hover a {
   color: #61befc;
 }
-
 .group-menu-item-title {
   height: 45px;
   margin-top: 1rem;

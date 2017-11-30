@@ -10,6 +10,7 @@ const ProgressBar = ({
   value,
   max,
   type,
+  label,
   ...rest
 }) => {
 
@@ -27,8 +28,14 @@ const ProgressBar = ({
           strokeLinecap="butt"
           trailColor="#555"
         />
-        <span className="progress-bar-percent">{percent}%</span>
-        <span className="progress-bar-status">{value}/{max}</span>
+        <div className="progress-bar-label">
+          { label ? label : (
+            <div className="mt-2">
+              <span className="h3 d-block mb-0">{percent}%</span>
+              <span className="h6 d-block">{value}/{max}</span>
+            </div>
+          )}
+        </div>
       </div>
     );
   }

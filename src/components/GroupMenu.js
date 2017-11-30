@@ -19,9 +19,10 @@ const GroupMenu = ({ groupMenuItems, match }) => (
       id,
       slug,
       name,
+      isLegacy,
       categories,
     }) => (
-      <Col key={id} sm={3}>
+      <Col key={id} xs={12} sm={6} md={4} xl={3}>
         <Card className="mb-4 group-menu-card">
           <CardBody className="pt-0">
             <CardTitle
@@ -29,9 +30,14 @@ const GroupMenu = ({ groupMenuItems, match }) => (
             >
               <Link to={`${match.path}${slug}/global`}>{name}</Link>
             </CardTitle>
-            <div className="pl-4 pr-4">
+            <div className="pl-5 pr-5 pl-sm-4 pr-sm-4">
               <ProgressBar
                 type="circle"
+                label={ isLegacy ? (
+                  <div className="h3">
+                    {getTotalPropertyLength(categories, 'completedAchievements')}
+                  </div>
+                ) : null}
                 value={getTotalPropertyLength(categories, 'completedAchievements')}
                 max={getTotalPropertyLength(categories, 'achievements')}
               />
