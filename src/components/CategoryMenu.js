@@ -2,11 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { NavLink } from 'react-router-dom';
 
-const CategoryMenu = ({ categoryMenuItems, baseUrl }) => (
+const CategoryMenu = ({ categoryMenuItems, fullGroupUrl }) => (
   <ul className="list-group">
     {categoryMenuItems.map(({
       id,
-      url,
+      slug,
       name,
       completedAchievements,
       achievements,
@@ -14,7 +14,7 @@ const CategoryMenu = ({ categoryMenuItems, baseUrl }) => (
     }) => (
       <li className="list-group-item" key={id} sm={3}>
         <NavLink
-          to={`${baseUrl}/achievements${url}`}
+          to={`${fullGroupUrl}/${slug}`}
           className="d-block"
           activeClassName="font-weight-bold"
         >
@@ -32,13 +32,12 @@ const CategoryMenu = ({ categoryMenuItems, baseUrl }) => (
 );
 
 CategoryMenu.defaultProps = {
-  baseUrl: '',
   categoryMenuItems: [],
   isLegacy: false,
 };
 
 CategoryMenu.propTypes = {
-  baseUrl: PropTypes.string,
+  fullGroupUrl: PropTypes.string.isRequired,
   categoryMenuItems: PropTypes.arrayOf(PropTypes.object),
   isLegacy: PropTypes.bool,
 };

@@ -1,4 +1,5 @@
 import { normalize } from 'normalizr';
+import { createSearchAction } from 'redux-search';
 
 import * as ActionTypes from '../constants/ActionTypes';
 import { groupSchema, routeSchema } from '../actions/schema';
@@ -20,6 +21,8 @@ const normalizeAchievementsResponse = (res) => {
     },
   };
 };
+
+export const searchAchievements = createSearchAction('achievements');
 
 export const clearErrors = () => ({
   type: ActionTypes.CLEAR_ERRORS,
@@ -98,8 +101,8 @@ export const fetchEverything = (values) => (dispatch, getState) =>
       return true;
     });
 
-export const setBaseUrl = (url) => ({
-  type: ActionTypes.SET_BASE_URL,
+export const setCharacterUrl = (url) => ({
+  type: ActionTypes.SET_CHARACTER_URL,
   payload: url,
 });
 

@@ -11,14 +11,6 @@ const groupIds = (state = [], action) => {
   }
 };
 
-const baseUrl = (state = '/', action) => {
-  if (action.type === ActionTypes.SET_BASE_URL && action.payload) {
-    return action.payload;
-  }
-
-  return state;
-};
-
 const region = (state = '', action) => {
   if (action.type === ActionTypes.SET_REGION && action.payload) {
     return action.payload;
@@ -71,14 +63,12 @@ const activeRequests = (state = [], action) => {
 
 export default combineReducers({
   groupIds,
-  baseUrl,
   region,
   activeRequests,
   requestErrors,
 });
 
 export const getGroupIds = (state) => state.groupIds;
-export const getBaseUrl = (state) => state.baseUrl;
 export const getRegion = (state) => state.region;
 export const getActiveRequests = (state) => state.activeRequests;
 export const getRequestErrors = (state) => state.requestErrors;

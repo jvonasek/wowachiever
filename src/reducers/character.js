@@ -142,12 +142,20 @@ const completedAchievements = (state = {}, action) => {
   }
 };
 
+const characterUrl = (state = '/', action) => {
+  if (action.type === ActionTypes.SET_CHARACTER_URL && action.payload) {
+    return action.payload;
+  }
+  return state;
+};
+
 export default combineReducers({
   isFetched,
   characterInfo,
   recentAchIds,
   characterCriteria,
   completedAchievements,
+  characterUrl,
 });
 
 export const getIsFetched = (state) => state.isFetched;
@@ -155,3 +163,4 @@ export const getCharacterInfo = (state) => state.characterInfo;
 export const getRecentAchIds = (state) => state.recentAchIds;
 export const getCharacterCriteria = (state) => state.characterCriteria;
 export const getCompletedAchievements = (state) => state.completedAchievements;
+export const getCharacterUrl = (state) => state.characterUrl;

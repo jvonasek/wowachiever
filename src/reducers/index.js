@@ -2,8 +2,10 @@ import { combineReducers } from 'redux';
 import { createSelector } from 'reselect';
 import { reducer as form } from 'redux-form';
 import { routerReducer as routing } from 'react-router-redux';
+import { reducer as search, getSearchSelectors } from 'redux-search';
 import has from 'lodash/has';
 import keyBy from 'lodash/keyBy';
+import pick from 'lodash/pick';
 
 import character, * as fromCharacter from './character';
 import entities, * as fromEntities from './entities';
@@ -17,13 +19,13 @@ const rootReducer = combineReducers({
   ui,
   form,
   routing,
+  search,
 });
 
 export default rootReducer;
 
 // Basic ui selectors
 export const getGroupIds = (state) => fromUi.getGroupIds(state.ui);
-export const getBaseUrl = (state) => fromUi.getBaseUrl(state.ui);
 export const getRegion = (state) => fromUi.getRegion(state.ui);
 export const getActiveRequests = (state) => fromUi.getActiveRequests(state.ui);
 export const getRequestErrors = (state) => fromUi.getRequestErrors(state.ui);
@@ -39,6 +41,8 @@ export const getCompletedAchievements = (state) =>
   fromCharacter.getCompletedAchievements(state.character);
 export const getIsCharacterFetched = (state) =>
   fromCharacter.getIsFetched(state.character);
+export const getCharacterUrl = (state) =>
+  fromCharacter.getCharacterUrl(state.character);
 
 // Basic entities selectors
 export const getAchievements = (state) => fromEntities.getAchievements(state.entities);
@@ -52,7 +56,6 @@ export const getCategoryById = (state, id) => getCategories(state)[id];
 
 export const getMatchFromProps = (state, props) => props.match || null;
 export const getProps = (state, props) => props;
-export const getCategory = (state, props) => getCategories(state)[props.catId];
 export const getIsLoading = (state) => getActiveRequests(state).length > 0;
 
 export const getCategoriesWithCompleted = createSelector(
@@ -105,6 +108,12 @@ export const getCurrentCategory = createSelector(
   (categories, props) => categories[props.catId] || {},
 );
 
+export const getCurrentGroup = createSelector(
+  getCurrentCategory,
+  getGroups,
+  (category, groups) => groups[category.parent],
+);
+
 export const getVisibleAchievementsIds = createSelector(
   getCurrentCategory,
   (currentCategory) => currentCategory.achievements || [],
@@ -113,10 +122,10 @@ export const getVisibleAchievementsIds = createSelector(
 export const getCategoryMenuItems = createSelector(
   getGroups,
   getCategoriesWithCompleted,
-  getCategory,
+  getCurrentCategory,
   (groups, categories, category) => {
-    const group = category.parent ? groups[category.parent] : {};
-    return has(group, 'categories') ?
+    const group = category.parent ? groups[category.parent] : null;
+    return group ?
       group.categories.map((catId) => ({
         ...categories[catId],
       })) : [];
@@ -125,7 +134,7 @@ export const getCategoryMenuItems = createSelector(
 
 export const getVisibleAchievements = createSelector(
   getAchievements,
-  getCategory,
+  getCurrentCategory,
   (achievements, category) =>
     mapEntitiesToIds(achievements, category.achievements)
       .sort((a, b) => b.timestamp - a.timestamp),
@@ -146,5 +155,30 @@ export const getUnfinishedAchievements = createSelector(
     .sort((a, b) => b.progress - a.progress)
     .slice(0, 10)
     .filter((ach) => (ach.factionId === characterInfo.faction) || ach.factionId === 2),
+);
+
+
+const searchAchievementsSelectors = getSearchSelectors({
+  resourceName: 'achievements',
+  resourceSelector: (resourceName, state) => getAchievements(state),
+});
+
+export const getAchievementsSearchResult = createSelector(
+  searchAchievementsSelectors.result,
+  searchAchievementsSelectors.text,
+  getAchievements,
+  (result, text, achievements) => {
+    if (!text.length) {
+      return [];
+    }
+
+    return result.slice(0, 20).map((id) => pick(achievements[id], [
+      'id',
+      'title',
+      'icon',
+      'completed',
+      'url',
+    ]));
+  },
 );
 

@@ -10,8 +10,9 @@ import {
 import {
   getVisibleAchievements,
   getCategoryMenuItems,
-  getBaseUrl,
+  getCharacterUrl,
   getCurrentCategory,
+  getCurrentGroup,
 } from '../reducers';
 
 import { getTotalPropertyLength } from '../utils';
@@ -22,26 +23,31 @@ import ProgressBar from '../components/ProgressBar';
 
 const CategoryPage = ({
   achievements,
-  categoryMenuProps,
+  categoryMenuItems,
+  characterUrl,
   currentCategory,
+  currentGroup,
 }) => (
   <Row>
     <Col xs={12}>
-      <h2 className="mb-4">{currentCategory.name}</h2>
+      <h2 className="mb-4">{currentGroup.name} / {currentCategory.name}</h2>
     </Col>
     <Col sm={3}>
       <ProgressBar
         className="mb-2"
-        value={getTotalPropertyLength(categoryMenuProps.categoryMenuItems, 'completedAchievements')}
-        max={getTotalPropertyLength(categoryMenuProps.categoryMenuItems, 'achievements')}
+        value={getTotalPropertyLength(categoryMenuItems, 'completedAchievements')}
+        max={getTotalPropertyLength(categoryMenuItems, 'achievements')}
       />
       <Link
         className="btn btn-secondary btn-block mb-2"
-        to={`${categoryMenuProps.baseUrl}/achievements`}
+        to={`${characterUrl}/achievements`}
       >
         Back to overview
       </Link>
-      <CategoryMenu {...categoryMenuProps} />
+      <CategoryMenu
+        categoryMenuItems={categoryMenuItems}
+        fullGroupUrl={`${characterUrl}/achievements/${currentGroup.slug}`}
+      />
     </Col>
     <Col sm={9}>
       <AchievementList achievements={achievements} />
@@ -51,24 +57,23 @@ const CategoryPage = ({
 
 CategoryPage.defaultProps = {
   achievements: [],
+  categoryMenuItems: [],
 };
 
 CategoryPage.propTypes = {
   achievements: PropTypes.arrayOf(PropTypes.object),
-  categoryMenuProps: PropTypes.shape({
-    categoryMenuItems: PropTypes.arrayOf(PropTypes.object).isRequired,
-    baseUrl: PropTypes.string.isRequired,
-  }).isRequired,
+  categoryMenuItems: PropTypes.arrayOf(PropTypes.object),
+  characterUrl: PropTypes.string.isRequired,
   currentCategory: PropTypes.objectOf(PropTypes.any).isRequired,
+  currentGroup: PropTypes.objectOf(PropTypes.any).isRequired,
 };
 
 const mapStateToProps = (state, props) => ({
   achievements: getVisibleAchievements(state, props),
+  categoryMenuItems: getCategoryMenuItems(state, props),
+  characterUrl: getCharacterUrl(state),
   currentCategory: getCurrentCategory(state, props),
-  categoryMenuProps: {
-    categoryMenuItems: getCategoryMenuItems(state, props),
-    baseUrl: getBaseUrl(state),
-  },
+  currentGroup: getCurrentGroup(state, props),
 });
 
 export default connect(mapStateToProps)(CategoryPage);

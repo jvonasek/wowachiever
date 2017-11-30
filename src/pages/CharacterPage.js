@@ -16,12 +16,13 @@ import {
 } from '../reducers';
 
 import {
-  setBaseUrl,
+  setCharacterUrl,
   setRegion,
   fetchEverything,
 } from '../actions';
 
 import CharacterCard from '../components/CharacterCard';
+import SearchField from '../containers/SearchField';
 import RecentAchievements from '../containers/RecentAchievements';
 import CategoryRoutes from '../containers/CategoryRoutes';
 
@@ -30,7 +31,7 @@ import AchievementsPage from './AchievementsPage';
 class CharacterPage extends Component {
   componentDidMount() {
     const { params, url } = this.props.match;
-    this.props.setBaseUrl(url);
+    this.props.setCharacterUrl(url);
     this.props.setRegion(params.region);
 
     const { isFetched } = this.props;
@@ -48,7 +49,11 @@ class CharacterPage extends Component {
     return (
       <div className="mt-3">
         <CharacterCard {...characterInfo} />
-        <hr />
+        <Row className="d-flex justify-content-end">
+          <Col sm={4}>
+            <SearchField />
+          </Col>
+        </Row>
         <Row>
           <Col xs={12}>
             <h2>{match.params.category}</h2>
@@ -75,7 +80,7 @@ CharacterPage.propTypes = {
   match: PropTypes.objectOf(PropTypes.any),
   fetchEverything: PropTypes.func.isRequired,
   isFetched: PropTypes.bool,
-  setBaseUrl: PropTypes.func.isRequired,
+  setCharacterUrl: PropTypes.func.isRequired,
   setRegion: PropTypes.func.isRequired,
 };
 
@@ -89,7 +94,7 @@ const mapStateToProps = (state) => ({
 export default connect(
   mapStateToProps,
   {
-    setBaseUrl,
+    setCharacterUrl,
     setRegion,
     fetchEverything,
   },

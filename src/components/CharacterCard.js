@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Row, Col } from 'reactstrap';
+import { Link } from 'react-router-dom';
 
 import BattlenetImage from '../containers/BattlenetImage';
 
@@ -20,10 +21,10 @@ const CharacterCard = ({
         resourcePath={`character/${thumbnail}`}
       />
       <h2 className="font-weight-bold mb-0" style={{ color: rest.classColor }}>{name}</h2>
-      <span className="h6">{rest.level} {rest.race} {rest.class} - {realm}</span>
+      <span className="h6">{rest.level} {rest.race} {rest.class} - {realm}, {achievementPoints} points</span>
     </Col>
-    <Col sm={6}>
-      <div className="text-right h5 mt-2">Points: {achievementPoints}</div>
+    <Col sm={6} className="text-right">
+      <Link to="/" className="btn btn-secondary my-3">Change character</Link>
     </Col>
   </Row>
 );

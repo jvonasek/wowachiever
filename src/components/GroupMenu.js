@@ -21,17 +21,23 @@ const GroupMenu = ({ groupMenuItems, match }) => (
       name,
       categories,
     }) => (
-      <Col key={id} sm={4}>
-        <Card className="mb-4">
-          <CardBody>
-            <CardTitle className="h5">
+      <Col key={id} sm={3}>
+        <Card className="mb-4 group-menu-card">
+          <CardBody className="pt-0">
+            <CardTitle
+              className="group-menu-item-title d-flex align-items-center justify-content-center"
+            >
               <Link to={`${match.path}${slug}/global`}>{name}</Link>
             </CardTitle>
-            <ProgressBar
-              value={getTotalPropertyLength(categories, 'completedAchievements')}
-              max={getTotalPropertyLength(categories, 'achievements')}
-            />
+            <div className="pl-4 pr-4">
+              <ProgressBar
+                type="circle"
+                value={getTotalPropertyLength(categories, 'completedAchievements')}
+                max={getTotalPropertyLength(categories, 'achievements')}
+              />
+            </div>
           </CardBody>
+          <Link to={`${match.path}${slug}/global`} className="full-cover-link" />
         </Card>
       </Col>
     ))}
