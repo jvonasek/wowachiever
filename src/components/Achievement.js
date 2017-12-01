@@ -12,6 +12,7 @@ import {
 
 import CriteriaList from './CriteriaList';
 import DateText from './DateText';
+import ColoredPercentageText from './ColoredPercentageText';
 import BattlenetImage from '../containers/BattlenetImage';
 
 // temporary for debugging purposes
@@ -87,7 +88,7 @@ class Achievement extends Component {
         <CardFooter>
           <Row>
             <Col sm={8}>
-              <span className="text-warning">{progress}%</span>{' | '}
+              <ColoredPercentageText percent={progress}>{progress}%</ColoredPercentageText>{' | '}
               <span>id: <strong>{id}</strong></span>{' | '}
               <span>Points: <strong>{points}</strong></span>{' | '}
               <span>Faction: <strong>{factionIdToText(factionId)}</strong></span>{' | '}

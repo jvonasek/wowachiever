@@ -17,7 +17,6 @@ const SearchResults = ({ results, visible }) => {
         icon,
         title,
         completed,
-        url,
       }) => (
         <Link to="/" key={id} className="serach-results-item d-block">
           <BattlenetImage

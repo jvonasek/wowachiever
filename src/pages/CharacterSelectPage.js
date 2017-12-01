@@ -11,6 +11,8 @@ import CharacterSelectForm from '../containers/CharacterSelectForm';
 
 import { fetchEverything, fetchRealms } from '../actions';
 
+import { normalizeApiParams } from '../utils';
+
 class CharacterSelectPage extends Component {
   componentDidMount() {
     this.props.fetchRealms();
@@ -22,13 +24,7 @@ class CharacterSelectPage extends Component {
           <Jumbotron className="my-5 py-5">
             <h1 className="display-5 text-center">WoWACHIEVER</h1>
             <CharacterSelectForm
-              onSubmit={({ realm, character }, dispatch) =>
-                dispatch(fetchEverything({
-                  region: realm.region,
-                  realm: realm.value,
-                  character,
-                }))
-              }
+              onSubmit={(values, dispatch) => dispatch(fetchEverything(normalizeApiParams(values)))}
             />
           </Jumbotron>
         </Col>

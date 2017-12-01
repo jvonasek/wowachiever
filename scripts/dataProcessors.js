@@ -42,7 +42,7 @@ const processRealmData = ({ body, caseless: { dict } }) => {
     label: region.toUpperCase(),
     options: body.realms.map(({ name, slug, locale }) => ({
       label: name,
-      value: slug,
+      value: `${region}/${slug}`,
       locale,
       region,
     })),

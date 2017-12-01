@@ -7,7 +7,7 @@ import { FormGroup, Label } from 'reactstrap';
 import flowRight from 'lodash/fp/flowRight';
 
 import { getRealms } from '../reducers';
-import { createUrl } from '../utils';
+import { createUrl, normalizeApiParams } from '../utils';
 
 import RealmSelectbox from '../components/RealmSelectbox';
 import FieldWithMessage from '../components/FieldWithMessage';
@@ -62,8 +62,13 @@ export default flowRight(
     form: 'characterSelect',
     onSubmitSuccess: (res, dispatch, { values }) => {
       if (res && values) {
-        const { realm, character } = values;
-        const redirectUrl = createUrl([realm.region, realm.value, character, 'achievements']);
+        const { region, realm, character } = normalizeApiParams(values);
+        const redirectUrl = createUrl([
+          region,
+          realm,
+          character,
+          'achievements',
+        ]);
         dispatch(push(redirectUrl));
       }
     },

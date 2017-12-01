@@ -26,7 +26,7 @@ const renderCriterion = (criterion, criteria) => (
     <strong>
       {criterion.asset ? criterion.asset.title : criterion.description}
       {' '}
-      {criterion.max > 1 && `(${clamp(criterion.quantity, criterion.max)}/${criterion.max})`}
+      {criterion.max > 1 && `(${clamp(criterion.quantity || 0, criterion.max)}/${criterion.max})`}
     </strong>
     {criterion.progressBar &&
       <CriterionProgressBar {...criterion} criteria={criteria} />

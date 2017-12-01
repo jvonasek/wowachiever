@@ -12,6 +12,13 @@ import entities, * as fromEntities from './entities';
 import ui, * as fromUi from './ui';
 
 import { mapEntitiesToIds } from '../utils';
+import config from '../config';
+
+const {
+  OVERVIEW_RECENT_ACHIEVEMENTS_COUNT,
+  OVERVIEW_UNFINISHED_ACHIEVEMENTS_COUNT,
+  SEARCH_RESULTS_LIMIT,
+} = config;
 
 const rootReducer = combineReducers({
   character,
@@ -144,17 +151,18 @@ export const getRecentAchievements = createSelector(
   getAchievements,
   getRecentAchIds,
   (achievements, recentAchIds) =>
-    mapEntitiesToIds(achievements, recentAchIds),
+    mapEntitiesToIds(achievements, recentAchIds)
+      .slice(0, OVERVIEW_RECENT_ACHIEVEMENTS_COUNT),
 );
 
 export const getUnfinishedAchievements = createSelector(
   getAchievements,
   getCharacterInfo,
   (achievements, characterInfo) => Object.values(achievements)
-    .filter((ach) => ach.progress < 100)
+    .filter((ach) => ach.progress < 100 && ach.isLegacy === false)
+    .filter((ach) => (ach.factionId === characterInfo.faction) || ach.factionId === 2)
     .sort((a, b) => b.progress - a.progress)
-    .slice(0, 10)
-    .filter((ach) => (ach.factionId === characterInfo.faction) || ach.factionId === 2),
+    .slice(0, OVERVIEW_UNFINISHED_ACHIEVEMENTS_COUNT),
 );
 
 
@@ -172,7 +180,7 @@ export const getAchievementsSearchResult = createSelector(
       return [];
     }
 
-    return result.slice(0, 20).map((id) => pick(achievements[id], [
+    return result.slice(0, SEARCH_RESULTS_LIMIT).map((id) => pick(achievements[id], [
       'id',
       'title',
       'icon',

@@ -13,9 +13,9 @@ import { getTotalPropertyLength } from '../utils';
 
 import ProgressBar from '../components/ProgressBar';
 
-const GroupMenu = ({ groupMenuItems, match }) => (
+const GroupMenu = ({ menuItems, path }) => (
   <Row>
-    {groupMenuItems.map(({
+    {menuItems.map(({
       id,
       slug,
       name,
@@ -28,22 +28,22 @@ const GroupMenu = ({ groupMenuItems, match }) => (
             <CardTitle
               className="group-menu-item-title d-flex align-items-center justify-content-center"
             >
-              <Link to={`${match.path}${slug}/global`}>{name}</Link>
+              <Link to={`${path}${slug}/global`}>{name}</Link>
             </CardTitle>
             <div className="pl-5 pr-5 pl-sm-4 pr-sm-4">
               <ProgressBar
                 type="circle"
-                label={ isLegacy ? (
-                  <div className="h3">
-                    {getTotalPropertyLength(categories, 'completedAchievements')}
-                  </div>
-                ) : null}
                 value={getTotalPropertyLength(categories, 'completedAchievements')}
                 max={getTotalPropertyLength(categories, 'achievements')}
-              />
+              >
+                {isLegacy &&
+                  <div className="h3">
+                    {getTotalPropertyLength(categories, 'completedAchievements')}
+                  </div>}
+              </ProgressBar>
             </div>
           </CardBody>
-          <Link to={`${match.path}${slug}/global`} className="full-cover-link" />
+          <Link to={`${path}${slug}/global`} className="full-cover-link" />
         </Card>
       </Col>
     ))}
@@ -51,13 +51,12 @@ const GroupMenu = ({ groupMenuItems, match }) => (
 );
 
 GroupMenu.defaultProps = {
-  groupMenuItems: [],
-  match: null,
+  menuItems: [],
 };
 
 GroupMenu.propTypes = {
-  groupMenuItems: PropTypes.arrayOf(PropTypes.object),
-  match: PropTypes.objectOf(PropTypes.any),
+  menuItems: PropTypes.arrayOf(PropTypes.object),
+  path: PropTypes.string.isRequired,
 };
 
 export default GroupMenu;

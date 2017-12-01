@@ -10,14 +10,12 @@ const ProgressBar = ({
   value,
   max,
   type,
-  label,
+  children,
   ...rest
 }) => {
-
   const percent = calculatePercent(value, max);
 
   if (type === 'circle') {
-
     return (
       <div className="progress-bar-circle">
         <Circle
@@ -29,7 +27,7 @@ const ProgressBar = ({
           trailColor="#555"
         />
         <div className="progress-bar-label">
-          { label ? label : (
+          { children || (
             <div className="mt-2">
               <span className="h3 d-block mb-0">{percent}%</span>
               <span className="h6 d-block">{value}/{max}</span>
@@ -51,9 +49,10 @@ const ProgressBar = ({
       {value > 0 && `${value} / ${max}`}
     </Progress>
   );
-}
+};
 
 ProgressBar.defaultProps = {
+  children: null,
   height: null,
   max: 1,
   type: 'line',
@@ -61,6 +60,7 @@ ProgressBar.defaultProps = {
 };
 
 ProgressBar.propTypes = {
+  children: PropTypes.node,
   height: PropTypes.number,
   max: PropTypes.number,
   type: PropTypes.string,

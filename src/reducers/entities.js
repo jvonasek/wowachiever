@@ -20,7 +20,7 @@ const entities = (state = initialState, action) => {
     case ActionTypes.FETCH_REALMS_SUCCESS:
       return {
         ...state,
-        realms: [...state.realms, ...action.payload],
+        realms: state.realms.length ? [...state.realms] : [...action.payload],
       };
     case ActionTypes.FETCH_CRITERIA_SUCCESS:
       return {

@@ -22,7 +22,6 @@ import {
 } from '../actions';
 
 import Header from '../containers/Header';
-import RecentAchievements from '../containers/RecentAchievements';
 import CategoryRoutes from '../containers/CategoryRoutes';
 
 import AchievementsPage from './AchievementsPage';
@@ -46,13 +45,10 @@ class CharacterPage extends Component {
       <div>
         <Header />
         <Row>
-          <Col xs={12}>
+          <Col>
             <h2>{match.params.category}</h2>
             <Route path={`${match.url}/achievements/`} exact component={AchievementsPage} />
             <CategoryRoutes />
-          </Col>
-          <Col xs={12}>
-            <RecentAchievements />
           </Col>
         </Row>
       </div>

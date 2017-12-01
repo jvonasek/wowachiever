@@ -10,6 +10,7 @@ const { LEGACY_GROUPS } = config;
 const achievementProcessStrategy = (entity, parent) => ({
   ...entity,
   parent: parent.id,
+  isLegacy: parent.isLegacy,
   timestamp: 0,
 });
 

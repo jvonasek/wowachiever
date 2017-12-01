@@ -12,7 +12,6 @@ import * as ActionTypes from '../constants/ActionTypes';
 import config from '../config';
 
 const {
-  RECENT_ACHIEVEMENTS_COUNT,
   RACES,
   CLASSES,
   CLASS_COLORS,
@@ -61,9 +60,10 @@ const pickRecentAchievements = (state, action) => {
     action.payload.achievements.achievementsCompletedTimestamp,
   );
 
+  // pick 100 recent achievements
   const recent = flow(
     sortBy((item) => -item[1]),
-    slice(0, RECENT_ACHIEVEMENTS_COUNT),
+    slice(0, 100),
     flatMap((item) => item[0]),
   )(zipped);
 
