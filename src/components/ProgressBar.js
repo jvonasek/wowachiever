@@ -29,8 +29,8 @@ const ProgressBar = ({
         <div className="progress-bar-label">
           { children || (
             <div className="mt-2">
-              <span className="h3 d-block mb-0">{percent}%</span>
-              <span className="h6 d-block">{value}/{max}</span>
+              <span className="h4 d-block mb-0">{value}/{max}</span>
+              <span className="h6 d-block">{percent}%</span>
             </div>
           )}
         </div>

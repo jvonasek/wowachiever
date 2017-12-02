@@ -58,11 +58,7 @@ const addProgressToAchievements = (achievements) =>
       ? getTotalPropertySum(visibleCriteria, 'max')
       : 1;
 
-    const progressText = `
-      ${numeral(clamp(totalQuantity, totalMax)).format('0a')}
-      /
-      ${numeral(totalMax).format('0a')}
-    `;
+    const progressText = `${numeral(clamp(totalQuantity, totalMax)).format('0a')}/${numeral(totalMax).format('0a')}`;
 
     return {
       ...ach,

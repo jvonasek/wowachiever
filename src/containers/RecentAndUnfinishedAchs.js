@@ -16,11 +16,11 @@ const RecentAndUnfinishedAchs = ({ recentAchievements, unfinishedAchievements })
     <div>
       <Row>
         <Col>
-          <h3 className="mb-4">Nearly finished achievements</h3>
+          <h3 className="mb-4">Nearly finished</h3>
           <AchievementList achievements={unfinishedAchievements} viewType="compact" />
         </Col>
         <Col>
-          <h3 className="mb-4">Recent achievements</h3>
+          <h3 className="mb-4">Recent</h3>
           <AchievementList achievements={recentAchievements} viewType="compact" />
         </Col>
       </Row>

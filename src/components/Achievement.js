@@ -50,6 +50,7 @@ class Achievement extends Component {
       id,
       points,
       progress,
+      progressText,
       reward,
       timestamp,
       title,
@@ -89,6 +90,7 @@ class Achievement extends Component {
           <Row>
             <Col sm={8}>
               <ColoredPercentageText percent={progress}>{progress}%</ColoredPercentageText>{' | '}
+              <span>status: <strong>{progressText}</strong></span>{' | '}
               <span>id: <strong>{id}</strong></span>{' | '}
               <span>Points: <strong>{points}</strong></span>{' | '}
               <span>Faction: <strong>{factionIdToText(factionId)}</strong></span>{' | '}
@@ -111,6 +113,7 @@ Achievement.defaultProps = {
   criteria: [],
   points: 0,
   progress: 0,
+  progressText: null,
   reward: null,
   timestamp: null,
   visibleCriteria: [],
@@ -126,6 +129,7 @@ Achievement.propTypes = {
   id: PropTypes.number.isRequired,
   points: PropTypes.number,
   progress: PropTypes.number,
+  progressText: PropTypes.string,
   reward: PropTypes.string,
   timestamp: PropTypes.number,
   title: PropTypes.string.isRequired,
