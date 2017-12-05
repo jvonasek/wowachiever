@@ -1,19 +1,28 @@
+// @flow
 import React from 'react';
-import PropTypes from 'prop-types';
+import type { Node } from 'react';
 import { Progress } from 'reactstrap';
 import { Circle } from 'rc-progress';
 
 import { calculatePercent } from '../utils';
 
+type Props = {
+  children: Node,
+  height?: ?number,
+  max: number,
+  type: 'line' | 'circle',
+  value: number,
+};
+
 const ProgressBar = ({
+  children,
   height,
-  value,
   max,
   type,
-  children,
+  value,
   ...rest
-}) => {
-  const percent = calculatePercent(value, max);
+}: Props) => {
+  const percent: number = calculatePercent(value, max);
 
   if (type === 'circle') {
     return (
@@ -57,14 +66,6 @@ ProgressBar.defaultProps = {
   max: 1,
   type: 'line',
   value: 0,
-};
-
-ProgressBar.propTypes = {
-  children: PropTypes.node,
-  height: PropTypes.number,
-  max: PropTypes.number,
-  type: PropTypes.string,
-  value: PropTypes.number,
 };
 
 export default ProgressBar;

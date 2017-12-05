@@ -1,6 +1,6 @@
+// @flow
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import { connect, type Connector } from 'react-redux';
 import debounce from 'lodash/debounce';
 
 import { searchAchievements } from '../actions';
@@ -8,46 +8,71 @@ import { getAchievementsSearchResult } from '../reducers';
 
 import SearchResults from '../components/SearchResults';
 
-class SearchField extends Component {
-  constructor(props) {
-    super(props);
+import type { State } from '../types';
 
-    this.state = {
-      value: '',
-      resultsVisible: false,
-    };
+type StateProps = {
+  results: Array<Object>,
+}
+
+type DispatchProps = {
+  searchAchievements: () => void,
+}
+
+type Props = StateProps & DispatchProps;
+
+type OwnState = {
+  value: string,
+  resultsVisible: boolean,
+}
+
+class SearchField extends Component<Props, OwnState> {
+  static defaultProps = {
+    results: [],
+  }
+
+  constructor(props: Props) {
+    super(props);
 
     this.debouncedSearch = debounce(this.props.searchAchievements, 250);
   }
 
-  showResults = (state = true) => {
+  state = {
+    value: '',
+    resultsVisible: false,
+  }
+
+  debouncedSearch: (value: string) => void
+
+  showResults = (resultsState: boolean = true): void => {
     this.setState({
       ...this.state,
-      resultsVisible: state,
+      resultsVisible: resultsState,
     });
   }
 
-  handleFocus = () => {
+  handleFocus = (): void => {
     this.showResults();
   }
 
-  handleBlur = () => {
+  handleBlur = (): void => {
     this.showResults(false);
   }
 
-  handleChange = (event) => {
-    const { value } = event.target;
-    this.setState({
-      ...this.state,
-      value,
-    }, () => {
-      if (value.length >= 3) {
-        this.debouncedSearch(value);
-        this.showResults();
-      } else {
-        this.showResults(false);
-      }
-    });
+  handleChange = (event: Event): void => {
+    const { target } = event;
+    if (target instanceof HTMLInputElement) {
+      this.setState({
+        ...this.state,
+        value: target.value,
+      }, () => {
+        if (target.value.length >= 3) {
+          this.debouncedSearch(target.value);
+          this.showResults();
+        } else {
+          this.showResults(false);
+        }
+      });
+    }
   }
 
   render() {
@@ -68,20 +93,14 @@ class SearchField extends Component {
     );
   }
 }
-SearchField.defaultProps = {
-  results: [],
-};
 
-SearchField.propTypes = {
-  results: PropTypes.arrayOf(PropTypes.object),
-  searchAchievements: PropTypes.func.isRequired,
-};
-
-const mapStateToProps = (state) => ({
+const mapStateToProps = (state: State) => ({
   results: getAchievementsSearchResult(state),
 });
 
-export default connect(
+const connector: Connector<{}, Props> = connect(
   mapStateToProps,
   { searchAchievements },
-)(SearchField);
+);
+
+export default connector(SearchField);

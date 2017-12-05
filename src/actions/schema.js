@@ -1,3 +1,4 @@
+// @flow
 import { schema } from 'normalizr';
 import kebabCase from 'lodash/kebabCase';
 import includes from 'lodash/includes';
@@ -5,16 +6,18 @@ import includes from 'lodash/includes';
 import config from '../config';
 import { createUrl } from '../utils';
 
+import type { Achievement, Category, Group } from '../types';
+
 const { LEGACY_GROUPS } = config;
 
-const achievementProcessStrategy = (entity, parent) => ({
+const achievementProcessStrategy = (entity: Achievement, parent: Category): Achievement => ({
   ...entity,
   parent: parent.id,
   isLegacy: parent.isLegacy,
   timestamp: 0,
 });
 
-const categoryProcessStrategy = (entity, parent) => {
+const categoryProcessStrategy = (entity: Category, parent: Group): Category => {
   const chunks = [];
 
   if (parent.name) {

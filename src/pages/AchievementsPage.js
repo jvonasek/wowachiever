@@ -1,13 +1,22 @@
+// @flow
 import React from 'react';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import { connect, type Connector } from 'react-redux';
 
 import { getGroupMenuItems } from '../reducers';
 
 import GroupMenu from '../components/GroupMenu';
 import RecentAndUnfinishedAchs from '../containers/RecentAndUnfinishedAchs';
 
-const AchievementsPage = ({ groupMenuItems, match }) => (
+import { State } from '../types';
+
+type StateProps = {
+  groupMenuItems: Array<Object>,
+  match: Object,
+};
+
+type Props = StateProps;
+
+const AchievementsPage = ({ groupMenuItems, match }: Props) => (
   <div>
     <RecentAndUnfinishedAchs />
     <GroupMenu menuItems={groupMenuItems} path={match.path} />
@@ -16,16 +25,12 @@ const AchievementsPage = ({ groupMenuItems, match }) => (
 
 AchievementsPage.defaultProps = {
   groupMenuItems: [],
-  match: null,
 };
 
-AchievementsPage.propTypes = {
-  groupMenuItems: PropTypes.arrayOf(PropTypes.object),
-  match: PropTypes.objectOf(PropTypes.any),
-};
-
-const mapStateToProps = (state) => ({
+const mapStateToProps = (state: State) => ({
   groupMenuItems: getGroupMenuItems(state),
 });
 
-export default connect(mapStateToProps)(AchievementsPage);
+const connector: Connector<{}, Props> = connect(mapStateToProps);
+
+export default connector(AchievementsPage);

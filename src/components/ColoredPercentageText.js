@@ -1,9 +1,15 @@
+// @flow
 import React from 'react';
-import PropTypes from 'prop-types';
+import type { Node } from 'react';
 
 import { getHslColorByPercent } from '../utils';
 
-const ColoredPercentageText = ({ percent, children }) => (
+type Props = {
+  children: Node,
+  percent: number
+};
+
+const ColoredPercentageText = ({ percent, children }: Props) => (
   <span style={{ color: getHslColorByPercent(percent) }}>
     {children}
   </span>
@@ -11,11 +17,6 @@ const ColoredPercentageText = ({ percent, children }) => (
 
 ColoredPercentageText.defaultProps = {
   percent: 0,
-};
-
-ColoredPercentageText.propTypes = {
-  children: PropTypes.node.isRequired,
-  percent: PropTypes.number,
 };
 
 export default ColoredPercentageText;

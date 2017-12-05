@@ -1,12 +1,21 @@
+// @flow
 import React from 'react';
-import PropTypes from 'prop-types';
 import { withRouter, Route, Switch, Link } from 'react-router-dom';
-import { connect } from 'react-redux';
+import { connect, type Connector } from 'react-redux';
 import { getRoutes } from '../reducers';
 
 import CategoryPage from '../pages/CategoryPage';
 
-const CategoryRoutes = ({ routes, match: { url } }) => {
+import type { State } from '../types';
+
+type StateProps = {
+  routes: Object,
+  match: Object,
+};
+
+type Props = StateProps;
+
+const CategoryRoutes = ({ routes, match: { url } }: Props) => {
   const routeKeys = Object.keys(routes);
   return routeKeys.length > 0 && (
     <Switch>
@@ -34,13 +43,10 @@ CategoryRoutes.defaultProps = {
   routes: {},
 };
 
-CategoryRoutes.propTypes = {
-  routes: PropTypes.objectOf(PropTypes.number),
-  match: PropTypes.objectOf(PropTypes.any).isRequired,
-};
-
-const mapStateToProps = (state) => ({
+const mapStateToProps = (state: State) => ({
   routes: getRoutes(state),
 });
 
-export default withRouter(connect(mapStateToProps)(CategoryRoutes));
+const connector: Connector<{}, Props> = connect(mapStateToProps);
+
+export default withRouter(connector(CategoryRoutes));

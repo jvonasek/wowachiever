@@ -1,3 +1,4 @@
+// @flow
 import { normalize } from 'normalizr';
 import { createSearchAction } from 'redux-search';
 
@@ -5,7 +6,16 @@ import * as ActionTypes from '../constants/ActionTypes';
 import { groupSchema, routeSchema } from '../actions/schema';
 import { createApiEndpoint, createFetchAction } from '../utils';
 
-const normalizeAchievementsResponse = (res) => {
+import type {
+  Action,
+  ThunkAction,
+  BnetApiParams,
+  Dispatch,
+  Region,
+  GetState,
+} from '../types';
+
+const normalizeAchievementsResponse = (res: Response): Object => {
   const normalizedRes = normalize(res, groupSchema);
   // create url -> id map from all categories
   const { routes } = normalize(
@@ -24,11 +34,11 @@ const normalizeAchievementsResponse = (res) => {
 
 export const searchAchievements = createSearchAction('achievements');
 
-export const clearErrors = () => ({
+export const clearErrors = (): Action => ({
   type: ActionTypes.CLEAR_ERRORS,
 });
 
-export const fetchCharacter = (values) => createFetchAction({
+export const fetchCharacter = (values: BnetApiParams): ThunkAction => createFetchAction({
   endpoint: createApiEndpoint(values),
   types: [
     ActionTypes.FETCH_CHARACTER_REQUEST,
@@ -37,19 +47,19 @@ export const fetchCharacter = (values) => createFetchAction({
   ],
 });
 
-export const fetchAchievements = () => createFetchAction({
+export const fetchAchievements = (): ThunkAction => createFetchAction({
   endpoint: `${process.env.PUBLIC_URL}/data/achievements.json`,
   types: [
     ActionTypes.FETCH_ACHIEVEMENTS_REQUEST,
     {
       type: ActionTypes.FETCH_ACHIEVEMENTS_SUCCESS,
-      payload: (res) => normalizeAchievementsResponse(res),
+      payload: (res: Response) => normalizeAchievementsResponse(res),
     },
     ActionTypes.FETCH_ACHIEVEMENTS_FAILURE,
   ],
 });
 
-export const fetchCriteria = () => createFetchAction({
+export const fetchCriteria = (): ThunkAction => createFetchAction({
   endpoint: `${process.env.PUBLIC_URL}/data/criteria.json`,
   types: [
     ActionTypes.FETCH_CRITERIA_REQUEST,
@@ -58,7 +68,7 @@ export const fetchCriteria = () => createFetchAction({
   ],
 });
 
-export const fetchRealms = () => createFetchAction({
+export const fetchRealms = (): ThunkAction => createFetchAction({
   endpoint: `${process.env.PUBLIC_URL}/data/realms.json`,
   types: [
     ActionTypes.FETCH_REALMS_REQUEST,
@@ -67,13 +77,16 @@ export const fetchRealms = () => createFetchAction({
   ],
 });
 
-export const fetchAchievementsAndCriteria = () => (dispatch) =>
+export const fetchAchievementsAndCriteria = () => (dispatch: Dispatch) =>
   Promise.all([
     dispatch(fetchAchievements()),
     dispatch(fetchCriteria()),
   ]);
 
-export const hydrateAchievements = (completedAchievements, characterCriteria) => ({
+export const hydrateAchievements = (
+  completedAchievements: Object,
+  characterCriteria: Object,
+): Action => ({
   type: ActionTypes.HYDRATE_ACHIEVEMENTS,
   payload: {
     completedAchievements,
@@ -81,32 +94,33 @@ export const hydrateAchievements = (completedAchievements, characterCriteria) =>
   },
 });
 
-export const fetchEverything = (values) => (dispatch, getState) =>
-  new Promise((resolve, reject) => {
-    dispatch(clearErrors());
-    dispatch(fetchCharacter(values)).then((action) => {
-      if (action.error) {
-        reject(action);
-      } else {
-        resolve(action);
-      }
-    });
-  }).then(() => dispatch(fetchAchievementsAndCriteria(values)))
-    .then(() => {
-      const { character } = getState();
-      dispatch(hydrateAchievements(
-        character.completedAchievements,
-        character.characterCriteria,
-      ));
-      return true;
-    });
+export const fetchEverything = (values: BnetApiParams): ThunkAction =>
+  (dispatch: Dispatch, getState: GetState) =>
+    new Promise((resolve, reject) => {
+      dispatch(clearErrors());
+      dispatch(fetchCharacter(values)).then((action) => {
+        if (action.error) {
+          reject(action);
+        } else {
+          resolve(action);
+        }
+      });
+    }).then(() => dispatch(fetchAchievementsAndCriteria(values)))
+      .then(() => {
+        const { character } = getState();
+        dispatch(hydrateAchievements(
+          character.completedAchievements,
+          character.characterCriteria,
+        ));
+        return true;
+      });
 
-export const setCharacterUrl = (url) => ({
+export const setCharacterUrl = (url: string): Action => ({
   type: ActionTypes.SET_CHARACTER_URL,
   payload: url,
 });
 
-export const setRegion = (region) => ({
+export const setRegion = (region: Region): Action => ({
   type: ActionTypes.SET_REGION,
   payload: region,
 });

@@ -1,8 +1,8 @@
+// @flow
 import React from 'react';
-import PropTypes from 'prop-types';
 import { push } from 'react-router-redux';
 import { Field, reduxForm } from 'redux-form';
-import { connect } from 'react-redux';
+import { connect, type Connector } from 'react-redux';
 import { FormGroup, Label } from 'reactstrap';
 import flowRight from 'lodash/fp/flowRight';
 
@@ -14,7 +14,19 @@ import FieldWithMessage from '../components/FieldWithMessage';
 
 import { required, alphaNumeric } from '../utils/validators';
 
-const CharacterSelectForm = ({ handleSubmit, realms }) => (
+import type { State } from '../types';
+
+type OwnProps = {
+  handleSubmit: () => void,
+};
+
+type StateProps = {
+  realms: Array<Object>,
+}
+
+type Props = OwnProps & StateProps;
+
+const CharacterSelectForm = ({ realms, handleSubmit }: Props) => (
   <form onSubmit={handleSubmit}>
     <FormGroup>
       <Label for="character">Character</Label>
@@ -47,17 +59,14 @@ CharacterSelectForm.defaultProps = {
   realms: [],
 };
 
-CharacterSelectForm.propTypes = {
-  handleSubmit: PropTypes.func.isRequired,
-  realms: PropTypes.arrayOf(PropTypes.object),
-};
-
-const mapStateToProps = (state) => ({
+const mapStateToProps = (state: State) => ({
   realms: getRealms(state),
 });
 
+const connector: Connector<OwnProps, Props> = connect(mapStateToProps);
+
 export default flowRight(
-  connect(mapStateToProps),
+  connector,
   reduxForm({
     form: 'characterSelect',
     onSubmitSuccess: (res, dispatch, { values }) => {

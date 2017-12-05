@@ -1,13 +1,21 @@
+// @flow
 import React from 'react';
-import PropTypes from 'prop-types';
-import clamp from 'lodash/clamp';
 
 import {
   getCriteriaQuantityOccurence,
   formatNumberAsWoWCurrency,
+  clampToMax,
 } from '../utils';
 
 import ProgressBar from './ProgressBar';
+
+type Props = {
+  format: string,
+  id: number,
+  max: number,
+  quantity: number,
+  criteria: Array<Object>,
+};
 
 const CriterionProgressBar = ({
   id,
@@ -15,7 +23,7 @@ const CriterionProgressBar = ({
   quantity,
   criteria,
   format,
-}) => {
+}: Props) => {
   const progress = {
     value: 0,
     max,
@@ -30,7 +38,7 @@ const CriterionProgressBar = ({
   }
 
   // clamp the value to max possible value
-  progress.value = clamp(progress.value, progress.max);
+  progress.value = clampToMax(progress.value, progress.max);
 
   const color = progress.value === progress.max ? 'success' : 'info';
 
@@ -51,14 +59,6 @@ CriterionProgressBar.defaultProps = {
   max: 1,
   quantity: 0,
   criteria: [],
-};
-
-CriterionProgressBar.propTypes = {
-  format: PropTypes.string,
-  id: PropTypes.number.isRequired,
-  max: PropTypes.number,
-  quantity: PropTypes.number,
-  criteria: PropTypes.arrayOf(PropTypes.object),
 };
 
 export default CriterionProgressBar;

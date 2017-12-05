@@ -1,17 +1,28 @@
-import clamp from 'lodash/clamp';
+// @flow
 import round from 'lodash/round';
 import has from 'lodash/has';
 import keyBy from 'lodash/keyBy';
 import numeral from 'numeral';
 
-import { calculatePercent, getTotalPropertySum, getRealCriteriaQuantity } from '../utils';
+import {
+  calculatePercent,
+  getTotalPropertySum,
+  getRealCriteriaQuantity,
+  clampToMax,
+} from '../utils';
 
-const addSpecialPropertyByType = (criterion, achievements) => {
+import type { EntityState } from '../reducers/entities';
+import type { Id, Criterion, Achievement, Action } from '../types';
+
+const getSpecialPropertyByType = (
+  criterion: Criterion,
+  achievements: { [Id] : Achievement },
+): Object => {
   switch (criterion.type) {
     // meta achievement
     case 8:
       return {
-        asset: achievements[criterion.assetId],
+        asset: criterion.assetId ? achievements[criterion.assetId] : null,
       };
     // currency
     case 62:
@@ -24,13 +35,13 @@ const addSpecialPropertyByType = (criterion, achievements) => {
   }
 };
 
-const addProgressToAchievements = (achievements) =>
-  achievements.map((ach) => {
+const addProgressToAchievements = (achievements: Array<Achievement>): Array<Achievement> => {
+  return achievements.map((ach: Achievement): Achievement => {
     // adding progress percentage of each criteria
     const visibleCriteria = ach.visibleCriteria.map((criterion) => ({
       ...criterion,
       progress: criterion.quantity ? calculatePercent(
-        clamp(criterion.quantity, criterion.max),
+        clampToMax(criterion.quantity, criterion.max),
         criterion.max,
       ) : 0,
     }));
@@ -58,7 +69,9 @@ const addProgressToAchievements = (achievements) =>
       ? getTotalPropertySum(visibleCriteria, 'max')
       : 1;
 
-    const progressText = `${numeral(clamp(totalQuantity, totalMax)).format('0a')}/${numeral(totalMax).format('0a')}`;
+    const totalQuantityFormatted = numeral(clampToMax(totalQuantity, totalMax)).format('0a');
+    const totalMaxFormatted = numeral(totalMax).format('0a');
+    const progressText = `${totalQuantityFormatted}/${totalMaxFormatted}`;
 
     return {
       ...ach,
@@ -67,23 +80,16 @@ const addProgressToAchievements = (achievements) =>
       progress: round(progress, 1),
     };
   });
+}
 
-const updateAchievements = (
-  state,
-  action,
+const hydrateAchievements = (
+  achievements: { [string]: Achievement },
+  completedAchievements: { [string]: Achievement },
+  allCriteria: { [string]: Criterion },
+  characterCriteria: { [string]: Criterion },
 ) => {
-  const {
-    achievements,
-    criteria: allCriteria,
-  } = state;
-
-  const {
-    completedAchievements,
-    characterCriteria,
-  } = action.payload;
-
-  const hydratedAchievements = Object.values(achievements).map((ach) => {
-    const { id } = ach;
+  return Object.keys(achievements).map((id) => {
+    const ach = achievements[id];
     // merge raw achiev data with completed achievs data
     const achievement = {
       ...ach,
@@ -91,7 +97,7 @@ const updateAchievements = (
     };
 
     // merge raw criteria with character criteria
-    const criteria = achievement.criteria.map((criterion) => ({
+    const criteria = achievement.criteria.map((criterion: Criterion): Criterion => ({
       ...criterion,
       ...characterCriteria[criterion.id],
     }));
@@ -102,7 +108,7 @@ const updateAchievements = (
       allCriteria[id].criteria.map((criterion) => ({
         ...criterion,
         ...characterCriteria[criterion.id],
-        ...addSpecialPropertyByType(criterion, achievements),
+        ...getSpecialPropertyByType(criterion, achievements),
       })) : [];
 
     // set timestamp and completed properties
@@ -117,8 +123,34 @@ const updateAchievements = (
       visibleCriteria,
     };
   });
+};
 
-  return keyBy(addProgressToAchievements(hydratedAchievements), 'id');
+
+const updateAchievements = (
+  state: EntityState,
+  action: Action,
+): { [Id]: Achievement } => {
+  const {
+    achievements,
+    criteria: allCriteria,
+  } = state;
+
+  const {
+    completedAchievements,
+    characterCriteria,
+  } = action.payload;
+
+
+  const hydratedAchievements = hydrateAchievements(
+    achievements,
+    completedAchievements,
+    allCriteria,
+    characterCriteria,
+  );
+
+  const withProgress = addProgressToAchievements(hydratedAchievements);
+
+  return keyBy(withProgress, 'id');
 };
 
 export default updateAchievements;

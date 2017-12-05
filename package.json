@@ -6,6 +6,7 @@
   "dependencies": {
     "bootstrap": "^4.0.0-beta",
     "classnames": "^2.2.5",
+    "flow-bin": "^0.60.1",
     "history": "^4.7.2",
     "isomorphic-fetch": "^2.2.1",
     "lodash": "^4.17.4",
@@ -39,7 +40,8 @@
     "eject": "react-scripts eject",
     "dl": "node scripts",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d build"
+    "deploy": "gh-pages -d build",
+    "flow": "flow"
   },
   "devDependencies": {
     "eslint": "^4.11.0",

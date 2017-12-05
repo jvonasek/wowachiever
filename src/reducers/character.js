@@ -1,166 +1,74 @@
-import { combineReducers } from 'redux';
-import pick from 'lodash/pick';
-import zip from 'lodash/zip';
-import zipWith from 'lodash/zipWith';
+// @flow
 import keyBy from 'lodash/keyBy';
-import flatMap from 'lodash/fp/flatMap';
-import sortBy from 'lodash/fp/sortBy';
-import flow from 'lodash/fp/flow';
-import slice from 'lodash/fp/slice';
 
 import * as ActionTypes from '../constants/ActionTypes';
-import config from '../config';
 
-const {
-  RACES,
-  CLASSES,
-  CLASS_COLORS,
-} = config;
+import {
+  createCharacterInfo,
+  pickRecentAchievements,
+  zipCharacterCriteria,
+  zipCompletedAchievements,
+} from '../utils/character';
 
-const createCharacterInfo = (state, action) => {
-  const info = pick(action.payload, [
-    'achievementPoints',
-    'class',
-    'faction',
-    'lastModified',
-    'level',
-    'name',
-    'race',
-    'realm',
-    'thumbnail',
-  ]);
-  return {
-    ...state,
-    ...info,
-    race: RACES[info.race],
-    class: CLASSES[info.class],
-    classColor: CLASS_COLORS[info.class],
-  };
+import type { Action } from '../types';
+
+export type CharacterInfo = {
+  +achievementPoints?: number,
+  +faction?: number,
+  +lastModified?: number,
+  +level?: number,
+  +name?: string,
+  +realm?: string,
+  +thumbnail?: string,
+  +charRace?: string,
+  +charClass?: string,
+  +classColor?: string,
+}
+
+export type CharacterState = {
+  +isFetched: boolean,
+  +characterInfo: CharacterInfo,
+  +recentAchIds: Array<number>,
+  +characterCriteria: Object,
+  +completedAchievements: Object,
+  +characterUrl: string
 };
 
-const isFetched = (state = false, action) => {
-  if (action.type === ActionTypes.FETCH_CHARACTER_SUCCESS) {
-    return true;
-  }
-  return state;
+const initialState = {
+  isFetched: false,
+  characterInfo: {},
+  recentAchIds: [],
+  characterCriteria: {},
+  completedAchievements: {},
+  characterUrl: '/',
 };
 
-const characterInfo = (state = {}, action) => {
+const character = (state: CharacterState = initialState, action: Action): CharacterState => {
   switch (action.type) {
     case ActionTypes.FETCH_CHARACTER_SUCCESS:
-      return createCharacterInfo(state, action);
+      return {
+        ...state,
+        isFetched: true,
+        characterInfo: createCharacterInfo(state.characterInfo, action),
+        recentAchIds: pickRecentAchievements(state.recentAchIds, action),
+        characterCriteria: keyBy(zipCharacterCriteria(state.characterCriteria, action), 'id'),
+        completedAchievements: keyBy(zipCompletedAchievements(state.completedAchievements, action), 'id'),
+      };
+    case ActionTypes.SET_CHARACTER_URL:
+      return {
+        ...state,
+        characterUrl: action.payload,
+      };
     default:
       return state;
   }
 };
 
-const pickRecentAchievements = (state, action) => {
-  const zipped = zip(
-    action.payload.achievements.achievementsCompleted,
-    action.payload.achievements.achievementsCompletedTimestamp,
-  );
+export default character;
 
-  // pick 100 recent achievements
-  const recent = flow(
-    sortBy((item) => -item[1]),
-    slice(0, 100),
-    flatMap((item) => item[0]),
-  )(zipped);
-
-  return [
-    ...state,
-    ...recent,
-  ];
-};
-
-const recentAchIds = (state = [], action) => {
-  switch (action.type) {
-    case ActionTypes.FETCH_CHARACTER_SUCCESS:
-      return state.length ? state : pickRecentAchievements(state, action);
-    default:
-      return state;
-  }
-};
-
-const zipCharacterCriteria = (state, action) => {
-  const {
-    criteria,
-    criteriaQuantity,
-    criteriaTimestamp,
-    criteriaCreated,
-  } = action.payload.achievements;
-
-  const zippedCriteria = zipWith(
-    criteria, criteriaQuantity, criteriaTimestamp, criteriaCreated,
-    (id, quantity, timestamp, created) => ({
-      id,
-      quantity,
-      timestamp,
-      created,
-    }),
-  );
-
-  return [
-    ...state,
-    ...zippedCriteria,
-  ];
-};
-
-const characterCriteria = (state = {}, action) => {
-  switch (action.type) {
-    case ActionTypes.FETCH_CHARACTER_SUCCESS:
-      return keyBy(zipCharacterCriteria(state, action), 'id');
-    default:
-      return state;
-  }
-};
-
-const zipCompletedAchievements = (state, action) => {
-  const {
-    achievementsCompleted,
-    achievementsCompletedTimestamp,
-  } = action.payload.achievements;
-
-  const zippedAchievements = zipWith(
-    achievementsCompleted,
-    achievementsCompletedTimestamp,
-    (id, timestamp) => ({ id, timestamp, completed: true }),
-  );
-
-  return [
-    ...state,
-    ...zippedAchievements,
-  ];
-};
-
-const completedAchievements = (state = {}, action) => {
-  switch (action.type) {
-    case ActionTypes.FETCH_CHARACTER_SUCCESS:
-      return keyBy(zipCompletedAchievements(state, action), 'id');
-    default:
-      return state;
-  }
-};
-
-const characterUrl = (state = '/', action) => {
-  if (action.type === ActionTypes.SET_CHARACTER_URL && action.payload) {
-    return action.payload;
-  }
-  return state;
-};
-
-export default combineReducers({
-  isFetched,
-  characterInfo,
-  recentAchIds,
-  characterCriteria,
-  completedAchievements,
-  characterUrl,
-});
-
-export const getIsFetched = (state) => state.isFetched;
-export const getCharacterInfo = (state) => state.characterInfo;
-export const getRecentAchIds = (state) => state.recentAchIds;
-export const getCharacterCriteria = (state) => state.characterCriteria;
-export const getCompletedAchievements = (state) => state.completedAchievements;
-export const getCharacterUrl = (state) => state.characterUrl;
+export const getIsFetched = (state: CharacterState) => state.isFetched;
+export const getCharacterInfo = (state: CharacterState) => state.characterInfo;
+export const getRecentAchIds = (state: CharacterState) => state.recentAchIds;
+export const getCharacterCriteria = (state: CharacterState) => state.characterCriteria;
+export const getCompletedAchievements = (state: CharacterState) => state.completedAchievements;
+export const getCharacterUrl = (state: CharacterState) => state.characterUrl;

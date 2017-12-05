@@ -1,20 +1,26 @@
+// @flow
 import React from 'react';
-import PropTypes from 'prop-types';
 import kebabCase from 'lodash/kebabCase';
-import clamp from 'lodash/clamp';
 import classnames from 'classnames';
 import { Row, Col } from 'reactstrap';
 
-import { splitInHalf } from '../utils';
+import { splitInHalf, clampToMax } from '../utils';
 
 import CriterionProgressBar from './CriterionProgressBar';
+
+import type { Criterion } from '../types';
+
+type Props = {
+  criteria: Array<Criterion>,
+  visibleCriteria: Array<Object>,
+};
 
 /**
  * Single criterion item in the criteria list
  * @param {Array} criterion
  * @param {Array.<Object>} metaCriteria
  */
-const renderCriterion = (criterion, criteria) => (
+const renderCriterion = (criterion: Criterion, criteria: Array<Criterion>) => (
   <li
     key={`${criterion.id}_${kebabCase(criterion.description)}`}
     className={classnames({
@@ -24,9 +30,11 @@ const renderCriterion = (criterion, criteria) => (
     })}
   >
     <strong>
-      {criterion.asset ? criterion.asset.title : criterion.description}
+      {(criterion.asset && typeof criterion.asset.title === 'string') ?
+        criterion.asset.title : criterion.description
+      }
       {' '}
-      {criterion.max > 1 && `(${clamp(criterion.quantity || 0, criterion.max)}/${criterion.max})`}
+      {criterion.max > 1 && `(${clampToMax(criterion.quantity, criterion.max)}/${criterion.max})`}
     </strong>
     {criterion.progressBar &&
       <CriterionProgressBar {...criterion} criteria={criteria} />
@@ -37,12 +45,12 @@ const renderCriterion = (criterion, criteria) => (
 const CriteriaList = ({
   criteria,
   visibleCriteria,
-}) => visibleCriteria.length > 0 && (
+}: Props) => visibleCriteria.length > 0 && (
   <Row>
     {splitInHalf(visibleCriteria).map((list, index) => (
       <Col key={`col-${index.toString()}`}>
         <ul className="list-unstyled">
-          {list.map((criterion) => renderCriterion(criterion, criteria))}
+          {list.map((criterion: Criterion) => renderCriterion(criterion, criteria))}
         </ul>
       </Col>
     ))}
@@ -52,11 +60,6 @@ const CriteriaList = ({
 CriteriaList.defaultProps = {
   criteria: [],
   visibleCriteria: [],
-};
-
-CriteriaList.propTypes = {
-  criteria: PropTypes.arrayOf(PropTypes.object),
-  visibleCriteria: PropTypes.arrayOf(PropTypes.object),
 };
 
 export default CriteriaList;

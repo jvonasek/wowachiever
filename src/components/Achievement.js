@@ -1,5 +1,5 @@
+// @flow
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import {
   Row,
   Col,
@@ -15,22 +15,41 @@ import DateText from './DateText';
 import ColoredPercentageText from './ColoredPercentageText';
 import BattlenetImage from '../containers/BattlenetImage';
 
-// temporary for debugging purposes
-const factionIdToText = (factionId) => {
-  switch (factionId) {
-    case 0: return 'alliance';
-    case 1: return 'horde';
-    case 2:
-    default: return 'all';
-  }
+type Props = {
+  accountWide?: boolean,
+  completed?: boolean,
+  criteria?: Array<any>,
+  description: string,
+  icon: string,
+  id: number,
+  points?: number,
+  progress?: number,
+  progressText?: string,
+  reward?: string,
+  timestamp?: number,
+  title: string,
+  visibleCriteria: Array<Object>,
 };
 
-class Achievement extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      criteriaPaneHidden: true,
-    };
+type State = {
+  criteriaPaneHidden: boolean
+};
+
+class Achievement extends Component<Props, State> {
+  static defaultProps = {
+    accountWide: false,
+    completed: false,
+    criteria: [],
+    points: 0,
+    progress: 0,
+    progressText: null,
+    reward: null,
+    timestamp: 0,
+    visibleCriteria: [],
+  }
+
+  state = {
+    criteriaPaneHidden: true,
   }
 
   toggleCriteriaPane = () => {
@@ -44,7 +63,6 @@ class Achievement extends Component {
       accountWide,
       completed,
       criteria,
-      factionId,
       description,
       icon,
       id,
@@ -93,7 +111,6 @@ class Achievement extends Component {
               <span>status: <strong>{progressText}</strong></span>{' | '}
               <span>id: <strong>{id}</strong></span>{' | '}
               <span>Points: <strong>{points}</strong></span>{' | '}
-              <span>Faction: <strong>{factionIdToText(factionId)}</strong></span>{' | '}
               <span>Account wide: <strong>{accountWide ? 'yes' : 'no'}</strong></span>
               {reward && <strong><br />{reward}</strong>}
             </Col>
@@ -106,34 +123,5 @@ class Achievement extends Component {
     );
   }
 }
-
-Achievement.defaultProps = {
-  accountWide: false,
-  completed: false,
-  criteria: [],
-  points: 0,
-  progress: 0,
-  progressText: null,
-  reward: null,
-  timestamp: null,
-  visibleCriteria: [],
-};
-
-Achievement.propTypes = {
-  accountWide: PropTypes.bool,
-  completed: PropTypes.bool,
-  criteria: PropTypes.arrayOf(PropTypes.any),
-  factionId: PropTypes.number.isRequired,
-  description: PropTypes.string.isRequired,
-  icon: PropTypes.string.isRequired,
-  id: PropTypes.number.isRequired,
-  points: PropTypes.number,
-  progress: PropTypes.number,
-  progressText: PropTypes.string,
-  reward: PropTypes.string,
-  timestamp: PropTypes.number,
-  title: PropTypes.string.isRequired,
-  visibleCriteria: PropTypes.arrayOf(PropTypes.object),
-};
 
 export default Achievement;

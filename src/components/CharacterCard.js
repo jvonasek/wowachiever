@@ -1,15 +1,29 @@
+// @flow
 import React from 'react';
-import PropTypes from 'prop-types';
 
 import BattlenetImage from '../containers/BattlenetImage';
 
+type Props = {
+  achievementPoints: number,
+  charClass: string,
+  charRace: string,
+  classColor: string,
+  level: number,
+  name: string,
+  realm: string,
+  thumbnail: string,
+};
+
 const CharacterCard = ({
   achievementPoints,
+  charClass,
+  charRace,
+  classColor,
+  level,
   name,
   realm,
   thumbnail,
-  ...rest
-}) => name && (
+}: Props) => name && (
   <div>
     <BattlenetImage
       width={60}
@@ -17,8 +31,8 @@ const CharacterCard = ({
       className="float-left mr-3 rounded"
       resourcePath={`character/${thumbnail}`}
     />
-    <h2 className="font-weight-bold mb-0" style={{ color: rest.classColor }}>{name}</h2>
-    <span className="h6">{rest.level} {rest.race} {rest.class} - {realm}, {achievementPoints} points</span>
+    <h2 className="font-weight-bold mb-0" style={{ color: classColor }}>{name}</h2>
+    <span className="h6">{level} {charRace} {charClass} - {realm}, {achievementPoints} points</span>
   </div>
 );
 
@@ -27,13 +41,6 @@ CharacterCard.defaultProps = {
   name: '',
   realm: '',
   thumbnail: '',
-};
-
-CharacterCard.propTypes = {
-  achievementPoints: PropTypes.number,
-  name: PropTypes.string,
-  realm: PropTypes.string,
-  thumbnail: PropTypes.string,
 };
 
 export default CharacterCard;

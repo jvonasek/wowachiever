@@ -1,3 +1,4 @@
+// @flow
 import { createStore, applyMiddleware } from 'redux';
 import { reduxSearch } from 'redux-search';
 import { composeWithDevTools } from 'redux-devtools-extension';
@@ -7,6 +8,8 @@ import thunk from 'redux-thunk';
 
 import history from './history';
 import rootReducer from '../reducers';
+
+import type { Store } from '../types';
 
 const middleware = [thunk, routerMiddleware(history)];
 
@@ -20,7 +23,7 @@ const enhancer = composeWithDevTools(
   }),
 );
 
-const configureStore = () =>
+const configureStore = (): Store =>
   createStore(
     rootReducer,
     enhancer,

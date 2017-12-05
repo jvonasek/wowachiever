@@ -1,3 +1,4 @@
+// @flow
 import React from 'react';
 
 import {
@@ -12,6 +13,5 @@ const NotFound = () => (
     </Col>
   </Row>
 );
-
 
 export default NotFound;

@@ -1,6 +1,6 @@
+// @flow
 import React from 'react';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import { connect, type Connector } from 'react-redux';
 import { ConnectedRouter } from 'react-router-redux';
 import { Container } from 'reactstrap';
 
@@ -14,7 +14,16 @@ import { getIsLoading, getRequestErrors } from '../reducers';
 
 import history from '../store/history';
 
-const Root = ({ isLoading, requestErrors }) => (
+import type { State } from '../types';
+
+type StateProps = {
+  isLoading: boolean,
+  requestErrors: Array<string>,
+}
+
+type Props = StateProps;
+
+const Root = ({ isLoading, requestErrors }: Props) => (
   <ConnectedRouter history={history}>
     <ScrollToTop>
       <Container>
@@ -31,14 +40,11 @@ Root.defaultProps = {
   requestErrors: [],
 };
 
-Root.propTypes = {
-  isLoading: PropTypes.bool,
-  requestErrors: PropTypes.arrayOf(PropTypes.string),
-};
-
-const mapStateToProps = (state) => ({
+const mapStateToProps = (state: State) => ({
   isLoading: getIsLoading(state),
   requestErrors: getRequestErrors(state),
 });
 
-export default connect(mapStateToProps)(Root);
+const connector: Connector<{}, Props> = connect(mapStateToProps);
+
+export default connector(Root);

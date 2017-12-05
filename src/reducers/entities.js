@@ -1,5 +1,17 @@
+// @flow
 import * as ActionTypes from '../constants/ActionTypes';
-import updateAchievements from '../utils/achievements';
+import updateAchievements from '../utils/entities';
+
+import type { Action } from '../types';
+
+export type EntityState = {
+  +achievements: Object,
+  +categories: Object,
+  +criteria: Object,
+  +routes: Object,
+  +realms: Array<Object>,
+  +groups: Object,
+};
 
 const initialState = {
   achievements: {},
@@ -10,7 +22,7 @@ const initialState = {
   groups: {},
 };
 
-const entities = (state = initialState, action) => {
+const entities = (state: EntityState = initialState, action: Action): EntityState => {
   switch (action.type) {
     case ActionTypes.FETCH_ACHIEVEMENTS_SUCCESS:
       return {
@@ -20,7 +32,7 @@ const entities = (state = initialState, action) => {
     case ActionTypes.FETCH_REALMS_SUCCESS:
       return {
         ...state,
-        realms: state.realms.length ? [...state.realms] : [...action.payload],
+        realms: action.payload,
       };
     case ActionTypes.FETCH_CRITERIA_SUCCESS:
       return {
@@ -42,9 +54,9 @@ const entities = (state = initialState, action) => {
 
 export default entities;
 
-export const getAchievements = (state) => state.achievements;
-export const getCategories = (state) => state.categories;
-export const getCriteria = (state) => state.criteria;
-export const getRoutes = (state) => state.routes;
-export const getRealms = (state) => state.realms;
-export const getGroups = (state) => state.groups;
+export const getAchievements = (state: EntityState) => state.achievements;
+export const getCategories = (state: EntityState) => state.categories;
+export const getCriteria = (state: EntityState) => state.criteria;
+export const getRoutes = (state: EntityState) => state.routes;
+export const getRealms = (state: EntityState) => state.realms;
+export const getGroups = (state: EntityState) => state.groups;

@@ -1,8 +1,12 @@
+// @flow
 import React from 'react';
-import PropTypes from 'prop-types';
 import { Alert } from 'reactstrap';
 
-const RequestErrors = ({ errors }) => (
+type Props = {
+  errors: Array<string>
+};
+
+const RequestErrors = ({ errors }: Props) => (
   <div>
     {errors.map((error, index) => (
       <Alert key={index.toString()} className="mt-2" color="danger">
@@ -14,10 +18,6 @@ const RequestErrors = ({ errors }) => (
 
 RequestErrors.defaultProps = {
   errors: [],
-};
-
-RequestErrors.propTypes = {
-  errors: PropTypes.arrayOf(PropTypes.string),
 };
 
 export default RequestErrors;

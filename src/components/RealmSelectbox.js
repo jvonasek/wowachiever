@@ -1,16 +1,29 @@
+// @flow
 import React from 'react';
-import PropTypes from 'prop-types';
 import Select from 'react-select-plus';
 
 import 'react-select-plus/dist/react-select-plus.css';
 
 import FieldValidationMessage from '../components/FieldValidationMessage';
 
+type Props = {
+  input: {
+    name: string,
+    value: {
+      value: string
+    },
+    onChange: (Object) => void,
+    onBlur: (Object) => void,
+  },
+  meta: Object,
+  options: Array<Object>,
+};
+
 const RealmSelectbox = ({
   input,
   options,
   meta,
-}) => (
+}: Props) => (
   <div>
     <Select
       {...input}
@@ -30,12 +43,6 @@ const RealmSelectbox = ({
 RealmSelectbox.defaultProps = {
   meta: null,
   options: [],
-};
-
-RealmSelectbox.propTypes = {
-  input: PropTypes.objectOf(PropTypes.any).isRequired,
-  meta: PropTypes.objectOf(PropTypes.any),
-  options: PropTypes.arrayOf(PropTypes.object),
 };
 
 export default RealmSelectbox;

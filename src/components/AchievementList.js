@@ -1,11 +1,16 @@
+// @flow
 import React from 'react';
-import PropTypes from 'prop-types';
 import { Table } from 'reactstrap';
 
 import Achievement from '../components/Achievement';
 import AchievementLite from '../components/AchievementLite';
 
-const AchievementList = ({ achievements, viewType }) => {
+type Props = {
+  achievements: Array<Object>,
+  viewType: 'full' | 'compact',
+};
+
+const AchievementList = ({ achievements, viewType }: Props) => {
   if (!achievements.length) {
     return <span className="h5">Looks like there is nothing here...</span>;
   }
@@ -25,14 +30,10 @@ const AchievementList = ({ achievements, viewType }) => {
   ));
 };
 
+
 AchievementList.defaultProps = {
   achievements: [],
   viewType: 'full',
-};
-
-AchievementList.propTypes = {
-  achievements: PropTypes.arrayOf(PropTypes.object),
-  viewType: PropTypes.oneOf(['full', 'compact']),
 };
 
 export default AchievementList;

@@ -1,8 +1,15 @@
+// @flow
 import React from 'react';
-import PropTypes from 'prop-types';
 import { NavLink } from 'react-router-dom';
 
-const CategoryMenu = ({ categoryMenuItems, fullGroupUrl }) => (
+import type { Category } from '../types';
+
+type Props = {
+  fullGroupUrl: string,
+  categoryMenuItems: Array<Category>,
+};
+
+const CategoryMenu = ({ categoryMenuItems, fullGroupUrl }: Props) => (
   <ul className="list-group">
     {categoryMenuItems.map(({
       id,
@@ -33,13 +40,6 @@ const CategoryMenu = ({ categoryMenuItems, fullGroupUrl }) => (
 
 CategoryMenu.defaultProps = {
   categoryMenuItems: [],
-  isLegacy: false,
-};
-
-CategoryMenu.propTypes = {
-  fullGroupUrl: PropTypes.string.isRequired,
-  categoryMenuItems: PropTypes.arrayOf(PropTypes.object),
-  isLegacy: PropTypes.bool,
 };
 
 export default CategoryMenu;

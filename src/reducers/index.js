@@ -1,3 +1,4 @@
+// @flow
 import { combineReducers } from 'redux';
 import { createSelector } from 'reselect';
 import { reducer as form } from 'redux-form';
@@ -10,9 +11,12 @@ import pick from 'lodash/pick';
 import character, * as fromCharacter from './character';
 import entities, * as fromEntities from './entities';
 import ui, * as fromUi from './ui';
+import requests, * as fromRequests from './requests';
 
 import { mapEntitiesToIds } from '../utils';
 import config from '../config';
+
+import type { State } from '../types';
 
 const {
   OVERVIEW_RECENT_ACHIEVEMENTS_COUNT,
@@ -24,6 +28,7 @@ const rootReducer = combineReducers({
   character,
   entities,
   ui,
+  requests,
   form,
   routing,
   search,
@@ -32,38 +37,40 @@ const rootReducer = combineReducers({
 export default rootReducer;
 
 // Basic ui selectors
-export const getGroupIds = (state) => fromUi.getGroupIds(state.ui);
-export const getRegion = (state) => fromUi.getRegion(state.ui);
-export const getActiveRequests = (state) => fromUi.getActiveRequests(state.ui);
-export const getRequestErrors = (state) => fromUi.getRequestErrors(state.ui);
+export const getGroupIds = (state: State) => fromUi.getGroupIds(state.ui);
+export const getRegion = (state: State) => fromUi.getRegion(state.ui);
+
+// Basic requests selector
+export const getActiveRequests = (state: State) => fromRequests.getActiveRequests(state.requests);
+export const getRequestErrors = (state: State) => fromRequests.getRequestErrors(state.requests);
 
 // Basic character selectors
-export const getCharacterInfo = (state) =>
+export const getCharacterInfo = (state: State) =>
   fromCharacter.getCharacterInfo(state.character);
-export const getRecentAchIds = (state) =>
+export const getRecentAchIds = (state: State) =>
   fromCharacter.getRecentAchIds(state.character);
-export const getCharacterCriteria = (state) =>
+export const getCharacterCriteria = (state: State) =>
   fromCharacter.getCharacterCriteria(state.character);
-export const getCompletedAchievements = (state) =>
+export const getCompletedAchievements = (state: State) =>
   fromCharacter.getCompletedAchievements(state.character);
-export const getIsCharacterFetched = (state) =>
+export const getIsCharacterFetched = (state: State) =>
   fromCharacter.getIsFetched(state.character);
-export const getCharacterUrl = (state) =>
+export const getCharacterUrl = (state: State) =>
   fromCharacter.getCharacterUrl(state.character);
 
 // Basic entities selectors
-export const getAchievements = (state) => fromEntities.getAchievements(state.entities);
-export const getCategories = (state) => fromEntities.getCategories(state.entities);
-export const getCriteria = (state) => fromEntities.getCriteria(state.entities);
-export const getRoutes = (state) => fromEntities.getRoutes(state.entities);
-export const getRealms = (state) => fromEntities.getRealms(state.entities);
-export const getGroups = (state) => fromEntities.getGroups(state.entities);
+export const getAchievements = (state: State) => fromEntities.getAchievements(state.entities);
+export const getCategories = (state: State) => fromEntities.getCategories(state.entities);
+export const getCriteria = (state: State) => fromEntities.getCriteria(state.entities);
+export const getRoutes = (state: State) => fromEntities.getRoutes(state.entities);
+export const getRealms = (state: State) => fromEntities.getRealms(state.entities);
+export const getGroups = (state: State) => fromEntities.getGroups(state.entities);
 
-export const getCategoryById = (state, id) => getCategories(state)[id];
+export const getCategoryById = (state: State, id) => getCategories(state)[id];
 
-export const getMatchFromProps = (state, props) => props.match || null;
-export const getProps = (state, props) => props;
-export const getIsLoading = (state) => getActiveRequests(state).length > 0;
+export const getMatchFromProps = (state: State, props) => props.match || null;
+export const getProps = (state: State, props) => props;
+export const getIsLoading = (state: State) => getActiveRequests(state).length > 0;
 
 export const getCategoriesWithCompleted = createSelector(
   getCategories,
@@ -71,7 +78,9 @@ export const getCategoriesWithCompleted = createSelector(
   getCharacterInfo,
   getCompletedAchievements,
   (categories, achievements, characterInfo, completedAchievements) => {
-    const cats = Object.values(categories).map((category) => {
+    const cats = Object.keys(categories).map((id) => {
+      const category = categories[id];
+
       // filter achievements only for current faction,
       // 0 = alliance
       // 1 = horde

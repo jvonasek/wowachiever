@@ -6,6 +6,11 @@
             "error",
             "always"
         ],
+        "react/default-props-match-prop-types": [
+          {
+            "allowRequiredDefaults": false
+          }
+        ],
         "react/jsx-filename-extension": [
             1,
             {

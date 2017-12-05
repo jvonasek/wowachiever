@@ -1,5 +1,5 @@
+// @flow
 import React from 'react';
-import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import {
   Row,
@@ -13,7 +13,14 @@ import { getTotalPropertyLength } from '../utils';
 
 import ProgressBar from '../components/ProgressBar';
 
-const GroupMenu = ({ menuItems, path }) => (
+import type { Group } from '../types';
+
+type Props = {
+  menuItems: Array<Group>,
+  path: string,
+};
+
+const GroupMenu = ({ menuItems, path }: Props) => (
   <Row>
     {menuItems.map(({
       id,
@@ -52,11 +59,6 @@ const GroupMenu = ({ menuItems, path }) => (
 
 GroupMenu.defaultProps = {
   menuItems: [],
-};
-
-GroupMenu.propTypes = {
-  menuItems: PropTypes.arrayOf(PropTypes.object),
-  path: PropTypes.string.isRequired,
 };
 
 export default GroupMenu;

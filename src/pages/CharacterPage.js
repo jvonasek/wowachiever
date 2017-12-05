@@ -1,6 +1,6 @@
+// @flow
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import { connect, type Connector } from 'react-redux';
 import { Route } from 'react-router-dom';
 
 import {
@@ -26,7 +26,26 @@ import CategoryRoutes from '../containers/CategoryRoutes';
 
 import AchievementsPage from './AchievementsPage';
 
-class CharacterPage extends Component {
+import type { State, BnetApiParams, Region } from '../types';
+
+type StateProps = {
+  match: Object,
+  isFetched: boolean,
+};
+
+type DispatchProps = {
+  fetchEverything: (params: BnetApiParams) => void,
+  setCharacterUrl: (url: string) => void,
+  setRegion: (region: Region) => void,
+};
+
+type Props = StateProps & DispatchProps;
+
+class CharacterPage extends Component<Props> {
+  static defaultProps = {
+    isFetched: false,
+  }
+
   componentDidMount() {
     const { params, url } = this.props.match;
     this.props.setCharacterUrl(url);
@@ -56,31 +75,20 @@ class CharacterPage extends Component {
   }
 }
 
-CharacterPage.defaultProps = {
-  isFetched: false,
-  match: {},
-};
-
-CharacterPage.propTypes = {
-  match: PropTypes.objectOf(PropTypes.any),
-  fetchEverything: PropTypes.func.isRequired,
-  isFetched: PropTypes.bool,
-  setCharacterUrl: PropTypes.func.isRequired,
-  setRegion: PropTypes.func.isRequired,
-};
-
-const mapStateToProps = (state) => ({
+const mapStateToProps = (state: State) => ({
   characterCriteria: getCharacterCriteria(state),
   characterInfo: getCharacterInfo(state),
   completedAchievements: getCompletedAchievements(state),
   isFetched: getIsCharacterFetched(state),
 });
 
-export default connect(
+const connector: Connector<{}, Props> = connect(
   mapStateToProps,
   {
     setCharacterUrl,
     setRegion,
     fetchEverything,
   },
-)(CharacterPage);
+);
+
+export default connector(CharacterPage);

@@ -1,10 +1,22 @@
+// @flow
 import round from 'lodash/round';
 import clamp from 'lodash/clamp';
-import { normalize } from 'normalizr';
 import moment from 'moment';
 import numeral from 'numeral';
+import fetch from 'isomorphic-fetch';
 
 import config from '../config';
+
+import type {
+  Id,
+  BnetApiParams,
+  CharFormParams,
+  Criterion,
+  Dispatch,
+  Action,
+} from '../types';
+
+type FetchTypes = [string, string|Action, string];
 
 const {
   REGIONS,
@@ -18,10 +30,10 @@ const {
  * @param {Array} ids
  * @return {Array.<Object>}
  */
-export const mapEntitiesToIds = (entity, ids) => {
+export const mapEntitiesToIds = (entity: { [number]: Object }, ids: Array<Id>): Array<Object> => {
   const isNotEmpty = Object.keys(entity).length > 0;
   return isNotEmpty
-    ? ids.map((id) => ({ ...entity[id] }))
+    ? ids.map((id: number): Object => ({ ...entity[id] }))
     : [];
 };
 
@@ -31,34 +43,45 @@ export const mapEntitiesToIds = (entity, ids) => {
  * @param {string} format
  * @return {string}
  */
-export const formatTimestamp = (timestamp, format = DATE_FORMAT) =>
+export const formatTimestamp = (timestamp: number, format?: string = DATE_FORMAT) =>
   moment(timestamp).format(format);
 
 /**
  * Basic percentage calculation with rounding
  * @param {number} min
  * @param {number} max
- * @param {number} decimals
+ * @param {number} precision
  * @return {number}
  */
-export const calculatePercent = (min, max, decimals = 1) =>
-  round((min / max) * 100, decimals);
+export const calculatePercent = (min: number, max: number, precision: number = 1) =>
+  round((min / max) * 100, precision);
+
+/**
+ * Wrapper above Lodash clamp for clamping number to max
+ * @param {number} value
+ * @param {number} max
+ * @return {number}
+ */
+export const clampToMax = (value: ?number, max: number): number =>
+  clamp(value || 0, 0, max);
 
 /**
  * Serializes object into a query string
  * @param {Object} params
  * @return {string}
  */
-export const serializeParams = (params) =>
-  Object.entries(params).map(([key, val]) =>
-    `${key}=${val}`).join('&');
+export const serializeParams = (params: { [string]: mixed }) =>
+  Object.entries(params).map(([key, val]) => {
+    const value = typeof val === 'string' ? val : '';
+    return `${key}=${value}`;
+  }).join('&');
 
 /**
  * Creates url string from an array of strings
  * @param {Array.<string>} chunks
  * @return {string}
  */
-export const createUrl = (chunks) =>
+export const createUrl = (chunks: Array<string>): string =>
   chunks.map((chunk) => `/${chunk}`).join('').toLowerCase();
 
 /**
@@ -73,11 +96,11 @@ export const createApiEndpoint = ({
   region,
   realm,
   character,
-}) => {
+}: BnetApiParams): string => {
   const domain = `https://${region}.api.battle.net`;
   const endpoint = `/wow/character/${realm}/${character}`;
   const params = {
-    fields: 'achievements,reputation',
+    fields: 'achievements',
     locale: REGIONS[region].locale,
     apikey: API_KEY,
   };
@@ -92,7 +115,10 @@ export const createApiEndpoint = ({
  * @param {String} params.character
  * @return {Object}
  */
-export const normalizeApiParams = ({ realm, character }) => ({
+export const normalizeApiParams = ({
+  realm,
+  character,
+}: CharFormParams): BnetApiParams => ({
   region: realm.region,
   realm: realm.value.split('/').pop(),
   character,
@@ -103,7 +129,7 @@ export const normalizeApiParams = ({ realm, character }) => ({
  * @param {Array} array
  * @return {Array.<Array>}
  */
-export const splitInHalf = (array) => {
+export const splitInHalf = (array: Array<any>): Array<Array<any>> => {
   const mid = Math.ceil(array.length / 2);
   const left = array.slice(0, mid);
   const right = array.slice(mid);
@@ -115,8 +141,8 @@ export const splitInHalf = (array) => {
  * @param {Array.<Object>} criteria
  * @return {number}
  */
-export const getCriteriaQuantityOccurence = (criteria) =>
-  criteria.reduce((acc, curr) => {
+export const getCriteriaQuantityOccurence = (criteria: Array<Object>): number =>
+  criteria.reduce((acc: number, curr: Criterion) => {
     const occurence = curr.quantity > 0 ? 1 : 0;
     return acc + occurence;
   }, 0);
@@ -127,8 +153,9 @@ export const getCriteriaQuantityOccurence = (criteria) =>
  * @param {string} property
  * @return {number}
  */
-export const getTotalPropertySum = (array, property) =>
-  array.reduce((acc, curr) => acc + (curr[property] || 0), 0);
+export const getTotalPropertySum = (array: Array<Object>, property: string): number =>
+  array.reduce((acc: number, curr: { [string]: number }): number =>
+    acc + (curr[property] || 0), 0);
 
 /**
  * Sums up total quantity values in an array,
@@ -136,8 +163,9 @@ export const getTotalPropertySum = (array, property) =>
  * @param {Array} criteria
  * @return {number}
  */
-export const getRealCriteriaQuantity = (criteria) =>
-  criteria.reduce((acc, curr) => acc + (clamp(curr.quantity, curr.max) || 0), 0);
+export const getRealCriteriaQuantity = (criteria: Array<Object>): number =>
+  criteria.reduce((acc: number, curr: Criterion) =>
+    acc + (clampToMax(curr.quantity, curr.max) || 0), 0);
 
 /**
  * Sums up the lengths of provided property in an array
@@ -145,8 +173,8 @@ export const getRealCriteriaQuantity = (criteria) =>
  * @param {string} property
  * @return {number}
  */
-export const getTotalPropertyLength = (array, property) =>
-  array.reduce((acc, curr) => {
+export const getTotalPropertyLength = (array: Array<Object>, property: string): number =>
+  array.reduce((acc: number, curr: { [string]: Array<any> }) => {
     if (!curr[property]) throw new Error('Undefined property');
     return acc + curr[property].length;
   }, 0);
@@ -157,7 +185,7 @@ export const getTotalPropertyLength = (array, property) =>
  * @param {number} number
  * @return {string}
  */
-export const formatNumberAsWoWCurrency = (number) => {
+export const formatNumberAsWoWCurrency = (number: number): string => {
   const gold = Math.floor(number / 10000);
   const silver = Math.floor((number % 10000) / 100);
   const copper = Math.floor(number % 100);
@@ -179,7 +207,7 @@ export const formatNumberAsWoWCurrency = (number) => {
  * @param {Object} response
  * @return {Object|Error}
  */
-const handleRequestErrors = (response) => {
+const handleRequestErrors = (response: Response) => {
   if (!response.ok) {
     throw Error(response.statusText);
   }
@@ -196,22 +224,33 @@ const handleRequestErrors = (response) => {
  * @param {Object} params.schema
  * @return {Promise}
  */
-export const createFetchAction = ({ endpoint, types, schema = null }) => {
+export const createFetchAction = ({
+  endpoint,
+  types,
+}: {
+  endpoint: string,
+  types: FetchTypes,
+}) => {
   const [requestType, successType, errorType] = types;
-  const isCustomSuccessAction = typeof successType === 'object';
 
-  return (dispatch, getState) => {
+
+  return (dispatch: Dispatch) => {
     dispatch({ type: requestType });
 
-    const successAction = (res) => (isCustomSuccessAction ? {
-      type: successType.type,
-      payload: successType.payload(res, getState),
-    } : {
-      type: successType,
-      payload: schema ? normalize(res, schema) : res,
-    });
+    let successAction;
+    if (successType && typeof successType === 'object') {
+      successAction = (res: Object): Action => ({
+        type: successType.type,
+        payload: successType.payload ? successType.payload(res) : null,
+      });
+    } else {
+      successAction = (res: Object): Action => ({
+        type: successType,
+        payload: res,
+      });
+    }
 
-    const errorAction = (error) => ({
+    const errorAction = (error: string): Action => ({
       type: errorType,
       error: true,
       payload: error,
@@ -219,9 +258,9 @@ export const createFetchAction = ({ endpoint, types, schema = null }) => {
 
     return fetch(endpoint)
       .then(handleRequestErrors)
-      .then((response) => response.json())
-      .then((res) => dispatch(successAction(res)))
-      .catch((error) => dispatch(errorAction(error.toString())));
+      .then((response: Response) => response.json())
+      .then((res: Promise<Object>) => dispatch(successAction(res)))
+      .catch((error: Error) => dispatch(errorAction(error.toString())));
   };
 };
 
@@ -235,12 +274,12 @@ export const createFetchAction = ({ endpoint, types, schema = null }) => {
  * @return {string}
  */
 export const getHslColorByPercent = (
-  percent = 0,
-  start = 0,
-  end = 100,
-  saturation = 65,
-  lightness = 50,
-) => {
+  percent: number = 0,
+  start: number = 0,
+  end: number = 100,
+  saturation: number = 65,
+  lightness: number = 50,
+): string => {
   const proportion = percent / 100;
   const hue = start + ((end - start) * proportion);
 

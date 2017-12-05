@@ -1,12 +1,18 @@
+// @flow
 import React from 'react';
-import PropTypes from 'prop-types';
 import { Alert } from 'reactstrap';
+
+type Props = {
+  error: string,
+  touched: boolean,
+  warning: string,
+};
 
 const FieldValidationMessage = ({
   error,
   touched,
   warning,
-}) => {
+}: Props) => {
   if (touched && error) {
     return <Alert className="small" color="danger">{error}</Alert>;
   }
@@ -22,12 +28,6 @@ FieldValidationMessage.defaultProps = {
   error: '',
   touched: false,
   warning: '',
-};
-
-FieldValidationMessage.propTypes = {
-  error: PropTypes.string,
-  touched: PropTypes.bool,
-  warning: PropTypes.string,
 };
 
 export default FieldValidationMessage;

@@ -1,6 +1,6 @@
+// @flow
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import { connect, type Connector } from 'react-redux';
 import {
   Row,
   Col,
@@ -13,7 +13,18 @@ import { fetchEverything, fetchRealms } from '../actions';
 
 import { normalizeApiParams } from '../utils';
 
-class CharacterSelectPage extends Component {
+import type {
+  CharFormParams,
+  Dispatch,
+} from '../types';
+
+type DispatchProps = {
+  fetchRealms: () => void
+};
+
+type Props = DispatchProps;
+
+class CharacterSelectPage extends Component<Props> {
   componentDidMount() {
     this.props.fetchRealms();
   }
@@ -24,7 +35,8 @@ class CharacterSelectPage extends Component {
           <Jumbotron className="my-5 py-5">
             <h1 className="display-5 text-center">WoWACHIEVER</h1>
             <CharacterSelectForm
-              onSubmit={(values, dispatch) => dispatch(fetchEverything(normalizeApiParams(values)))}
+              onSubmit={(values: CharFormParams, dispatch: Dispatch) =>
+                dispatch(fetchEverything(normalizeApiParams(values)))}
             />
           </Jumbotron>
         </Col>
@@ -33,12 +45,9 @@ class CharacterSelectPage extends Component {
   }
 }
 
-
-CharacterSelectPage.propTypes = {
-  fetchRealms: PropTypes.func.isRequired,
-};
-
-export default connect(
+const connector: Connector<{}, Props> = connect(
   null,
   { fetchRealms },
-)(CharacterSelectPage);
+);
+
+export default connector(CharacterSelectPage);

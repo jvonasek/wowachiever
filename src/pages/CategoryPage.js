@@ -1,6 +1,6 @@
+// @flow
 import React from 'react';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import { connect, type Connector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import {
   Row,
@@ -21,16 +21,33 @@ import AchievementList from '../components/AchievementList';
 import CategoryMenu from '../components/CategoryMenu';
 import ProgressBar from '../components/ProgressBar';
 
+import type {
+  State,
+  Achievement,
+  Category,
+  Group,
+} from '../types';
+
+type StateProps = {
+  achievements: Array<Achievement>,
+  categoryMenuItems: Array<Object>,
+  characterUrl: string,
+  currentCategory: Category,
+  currentGroup: Group,
+};
+
+type Props = StateProps;
+
 const CategoryPage = ({
   achievements,
   categoryMenuItems,
   characterUrl,
   currentCategory,
   currentGroup,
-}) => (
+}: Props) => (
   <Row>
     <Col xs={12}>
-      <h2 className="mb-4">{currentGroup.name} / {currentCategory.name}</h2>
+      <h2 className="mb-4">{currentGroup.name}{' / '}{currentCategory.name}</h2>
     </Col>
     <Col sm={3}>
       <ProgressBar
@@ -60,15 +77,7 @@ CategoryPage.defaultProps = {
   categoryMenuItems: [],
 };
 
-CategoryPage.propTypes = {
-  achievements: PropTypes.arrayOf(PropTypes.object),
-  categoryMenuItems: PropTypes.arrayOf(PropTypes.object),
-  characterUrl: PropTypes.string.isRequired,
-  currentCategory: PropTypes.objectOf(PropTypes.any).isRequired,
-  currentGroup: PropTypes.objectOf(PropTypes.any).isRequired,
-};
-
-const mapStateToProps = (state, props) => ({
+const mapStateToProps = (state: State, props: {}) => ({
   achievements: getVisibleAchievements(state, props),
   categoryMenuItems: getCategoryMenuItems(state, props),
   characterUrl: getCharacterUrl(state),
@@ -76,4 +85,6 @@ const mapStateToProps = (state, props) => ({
   currentGroup: getCurrentGroup(state, props),
 });
 
-export default connect(mapStateToProps)(CategoryPage);
+const connector: Connector<{}, Props> = connect(mapStateToProps);
+
+export default connector(CategoryPage);

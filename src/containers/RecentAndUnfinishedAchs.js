@@ -1,13 +1,22 @@
+// @flow
 import React from 'react';
-import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
+import { connect, type Connector } from 'react-redux';
 import { Row, Col } from 'reactstrap';
 
 import { getRecentAchievements, getUnfinishedAchievements } from '../reducers';
 
 import AchievementList from '../components/AchievementList';
 
-const RecentAndUnfinishedAchs = ({ recentAchievements, unfinishedAchievements }) => {
+import type { State } from '../types';
+
+type StateProps = {
+  recentAchievements: Array<Object>,
+  unfinishedAchievements: Array<Object>,
+}
+
+type Props = StateProps;
+
+const RecentAndUnfinishedAchs = ({ recentAchievements, unfinishedAchievements }: Props) => {
   if (!recentAchievements.length) {
     return null;
   }
@@ -33,14 +42,11 @@ RecentAndUnfinishedAchs.defaultProps = {
   unfinishedAchievements: [],
 };
 
-RecentAndUnfinishedAchs.propTypes = {
-  recentAchievements: PropTypes.arrayOf(PropTypes.object),
-  unfinishedAchievements: PropTypes.arrayOf(PropTypes.object),
-};
-
-const mapStateToProps = (state) => ({
+const mapStateToProps = (state: State) => ({
   recentAchievements: getRecentAchievements(state),
   unfinishedAchievements: getUnfinishedAchievements(state),
 });
 
-export default connect(mapStateToProps)(RecentAndUnfinishedAchs);
+const connector: Connector<{}, Props> = connect(mapStateToProps);
+
+export default connector(RecentAndUnfinishedAchs);

@@ -1,6 +1,6 @@
+// @flow
 import React from 'react';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import { connect, type Connector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { Row, Col } from 'reactstrap';
 
@@ -9,7 +9,15 @@ import { getCharacterInfo } from '../reducers';
 import CharacterCard from '../components/CharacterCard';
 import SearchField from './SearchField';
 
-const Header = ({ characterInfo }) => (
+import type { State } from '../types';
+
+type StateProps = {
+  characterInfo: Object,
+}
+
+type Props = StateProps;
+
+const Header = ({ characterInfo }: Props) => (
   <div className="my-3">
     <Row>
       <Col>
@@ -35,12 +43,10 @@ Header.defaultProps = {
   characterInfo: null,
 };
 
-Header.propTypes = {
-  characterInfo: PropTypes.objectOf(PropTypes.any),
-};
-
-const mapStateToProps = (state) => ({
+const mapStateToProps = (state: State) => ({
   characterInfo: getCharacterInfo(state),
 });
 
-export default connect(mapStateToProps)(Header);
+const connector: Connector<{}, Props> = connect(mapStateToProps);
+
+export default connector(Header);

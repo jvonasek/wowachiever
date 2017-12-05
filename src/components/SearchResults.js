@@ -1,11 +1,18 @@
+// @flow
 import React from 'react';
-import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import { Link } from 'react-router-dom';
 
 import BattlenetImage from '../containers/BattlenetImage';
 
-const SearchResults = ({ results, visible }) => {
+import type { SearchResult } from '../types';
+
+type Props = {
+  results: Array<SearchResult>,
+  visible: boolean,
+};
+
+const SearchResults = ({ results, visible }: Props) => {
   if (!results.length || !visible) {
     return null;
   }
@@ -42,11 +49,6 @@ const SearchResults = ({ results, visible }) => {
 SearchResults.defaultProps = {
   results: [],
   visible: false,
-};
-
-SearchResults.propTypes = {
-  results: PropTypes.arrayOf(PropTypes.object),
-  visible: PropTypes.bool,
 };
 
 export default SearchResults;

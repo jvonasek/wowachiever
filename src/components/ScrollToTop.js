@@ -1,8 +1,19 @@
+// @flow
 import { Component } from 'react';
-import PropTypes from 'prop-types';
+import type { Node } from 'react';
 import { withRouter } from 'react-router-dom';
 
-class ScrollToTop extends Component {
+type Props = {
+  children: Node,
+  location: Object,
+};
+
+class ScrollToTop extends Component<Props> {
+  static defaultProps = {
+    children: null,
+    location: {},
+  }
+
   componentDidUpdate(prevProps) {
     if (this.props.location !== prevProps.location) {
       window.scrollTo(0, 0);
@@ -13,15 +24,5 @@ class ScrollToTop extends Component {
     return this.props.children;
   }
 }
-
-ScrollToTop.defaultProps = {
-  children: null,
-  location: {},
-};
-
-ScrollToTop.propTypes = {
-  children: PropTypes.node,
-  location: PropTypes.objectOf(PropTypes.any),
-};
 
 export default withRouter(ScrollToTop);
