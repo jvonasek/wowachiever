@@ -56,5 +56,39 @@
     "10": "#00FF96",
     "11": "#FF7D0A",
     "12": "#A330C9"
-  }
+  },
+  "FILTERS": [{
+    "title": "Status",
+    "value": null,
+    "prop": "completed",
+    "toggles": [{
+      "title": "Complete",
+      "value": true
+    }, {
+      "title": "Incomplete",
+      "value": false
+    }]
+  }, {
+    "title": "Account wide",
+    "value": null,
+    "prop": "accountWide",
+    "toggles": [{
+      "title": "Yes",
+      "value": true
+    }, {
+      "title": "No",
+      "value": false
+    }]
+  }, {
+    "title": "Has reward",
+    "value": null,
+    "prop": "hasReward",
+    "toggles": [{
+      "title": "Yes",
+      "value": true
+    }, {
+      "title": "No",
+      "value": false
+    }]
+  }]
 }

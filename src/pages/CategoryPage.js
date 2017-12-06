@@ -8,7 +8,7 @@ import {
 } from 'reactstrap';
 
 import {
-  getVisibleAchievements,
+  getFilteredAndSortedAchievements,
   getCategoryMenuItems,
   getCharacterUrl,
   getCurrentCategory,
@@ -20,6 +20,7 @@ import { getTotalPropertyLength } from '../utils';
 import AchievementList from '../components/AchievementList';
 import CategoryMenu from '../components/CategoryMenu';
 import ProgressBar from '../components/ProgressBar';
+import FilterSorter from '../containers/FilterSorter';
 
 import type {
   State,
@@ -67,6 +68,7 @@ const CategoryPage = ({
       />
     </Col>
     <Col sm={9}>
+      <FilterSorter />
       <AchievementList achievements={achievements} />
     </Col>
   </Row>
@@ -77,8 +79,8 @@ CategoryPage.defaultProps = {
   categoryMenuItems: [],
 };
 
-const mapStateToProps = (state: State, props: {}) => ({
-  achievements: getVisibleAchievements(state, props),
+const mapStateToProps = (state: State, props) => ({
+  achievements: getFilteredAndSortedAchievements(state, props),
   categoryMenuItems: getCategoryMenuItems(state, props),
   characterUrl: getCharacterUrl(state),
   currentCategory: getCurrentCategory(state, props),

@@ -2,6 +2,7 @@
 import { schema } from 'normalizr';
 import kebabCase from 'lodash/kebabCase';
 import includes from 'lodash/includes';
+import has from 'lodash/has';
 
 import config from '../config';
 import { createUrl } from '../utils';
@@ -14,6 +15,7 @@ const achievementProcessStrategy = (entity: Achievement, parent: Category): Achi
   ...entity,
   parent: parent.id,
   isLegacy: parent.isLegacy,
+  hasReward: has(entity, 'reward'),
   timestamp: 0,
 });
 

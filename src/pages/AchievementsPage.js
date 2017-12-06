@@ -5,9 +5,9 @@ import { connect, type Connector } from 'react-redux';
 import { getGroupMenuItems } from '../reducers';
 
 import GroupMenu from '../components/GroupMenu';
-import RecentAndUnfinishedAchs from '../containers/RecentAndUnfinishedAchs';
+import RecentAndIncompleteAchs from '../containers/RecentAndIncompleteAchs';
 
-import { State } from '../types';
+import type { State } from '../types';
 
 type StateProps = {
   groupMenuItems: Array<Object>,
@@ -18,7 +18,7 @@ type Props = StateProps;
 
 const AchievementsPage = ({ groupMenuItems, match }: Props) => (
   <div>
-    <RecentAndUnfinishedAchs />
+    <RecentAndIncompleteAchs />
     <GroupMenu menuItems={groupMenuItems} path={match.path} />
   </div>
 );

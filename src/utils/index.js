@@ -285,3 +285,14 @@ export const getHslColorByPercent = (
 
   return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
 };
+
+/**
+ * PUBLIC_URL wrapper to ensure the return value is always string
+ * PUBLIC_URL is used for gh-pages where app is not sitting on server root
+ */
+export const getProcessEnvPublicUrl = () => {
+  if (process && process.env.PUBLIC_URL) {
+    return process.env.PUBLIC_URL;
+  }
+  return '';
+};

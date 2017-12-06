@@ -43,31 +43,44 @@ export type AbstractCategory = {
 };
 
 export type Group = {
-  +categories: Array<Object>
+  +categories: Array<Category>
 } & AbstractCategory;
 
 export type Category = {
-  +achievements: Array<Object>,
-  +completedAchievements: Array<Object>,
+  +achievements: Array<Achievement>,
+  +completedAchievements: Array<Achievement>,
 } & AbstractCategory;
 
-export type Achievement = {
-  id: Id,
+export type FilterToggle = {
   title: string,
-  points: number,
-  description: string,
-  rewardItems: Array<Object>,
-  icon: string,
-  criteria: Array<Criterion>,
-  accountWide: boolean,
-  factionId: number,
-  parent: Id,
-  isLegacy: boolean,
-  timestamp: Timestamp,
-  completed: boolean,
-  visibleCriteria: Array<Criterion>,
-  progressText: string,
-  progress: number,
+  value: ?mixed,
+}
+
+export type Filter = {
+  title: string,
+  value: ?mixed,
+  prop: string,
+  toggles: Array<FilterToggle>,
+};
+
+export type Achievement = {
+  +id: Id,
+  +title: string,
+  +points: number,
+  +description: string,
+  +reward: string,
+  +rewardItems: ?Array<Object>,
+  +icon: string,
+  +criteria: Array<Criterion>,
+  +accountWide: boolean,
+  +factionId: number,
+  +parent: Id,
+  +isLegacy: boolean,
+  +timestamp: Timestamp,
+  +completed: boolean,
+  +visibleCriteria: Array<Criterion>,
+  +progressText: string,
+  +progress: number,
 };
 
 export type Criterion = {

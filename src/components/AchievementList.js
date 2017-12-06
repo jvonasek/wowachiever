@@ -2,11 +2,13 @@
 import React from 'react';
 import { Table } from 'reactstrap';
 
-import Achievement from '../components/Achievement';
-import AchievementLite from '../components/AchievementLite';
+import Achievement from './Achievement';
+import AchievementLite from './AchievementLite';
+
+import type { Achievement as A } from '../types';
 
 type Props = {
-  achievements: Array<Object>,
+  achievements: Array<A>,
   viewType: 'full' | 'compact',
 };
 

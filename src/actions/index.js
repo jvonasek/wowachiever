@@ -4,7 +4,7 @@ import { createSearchAction } from 'redux-search';
 
 import * as ActionTypes from '../constants/ActionTypes';
 import { groupSchema, routeSchema } from '../actions/schema';
-import { createApiEndpoint, createFetchAction } from '../utils';
+import { createApiEndpoint, createFetchAction, getProcessEnvPublicUrl } from '../utils';
 
 import type {
   Action,
@@ -48,7 +48,7 @@ export const fetchCharacter = (values: BnetApiParams): ThunkAction => createFetc
 });
 
 export const fetchAchievements = (): ThunkAction => createFetchAction({
-  endpoint: `${process.env.PUBLIC_URL}/data/achievements.json`,
+  endpoint: `${getProcessEnvPublicUrl()}/data/achievements.json`,
   types: [
     ActionTypes.FETCH_ACHIEVEMENTS_REQUEST,
     {
@@ -60,7 +60,7 @@ export const fetchAchievements = (): ThunkAction => createFetchAction({
 });
 
 export const fetchCriteria = (): ThunkAction => createFetchAction({
-  endpoint: `${process.env.PUBLIC_URL}/data/criteria.json`,
+  endpoint: `${getProcessEnvPublicUrl()}/data/criteria.json`,
   types: [
     ActionTypes.FETCH_CRITERIA_REQUEST,
     ActionTypes.FETCH_CRITERIA_SUCCESS,
@@ -69,7 +69,7 @@ export const fetchCriteria = (): ThunkAction => createFetchAction({
 });
 
 export const fetchRealms = (): ThunkAction => createFetchAction({
-  endpoint: `${process.env.PUBLIC_URL}/data/realms.json`,
+  endpoint: `${getProcessEnvPublicUrl()}/data/realms.json`,
   types: [
     ActionTypes.FETCH_REALMS_REQUEST,
     ActionTypes.FETCH_REALMS_SUCCESS,
@@ -105,7 +105,7 @@ export const fetchEverything = (values: BnetApiParams): ThunkAction =>
           resolve(action);
         }
       });
-    }).then(() => dispatch(fetchAchievementsAndCriteria(values)))
+    }).then(() => dispatch(fetchAchievementsAndCriteria()))
       .then(() => {
         const { character } = getState();
         dispatch(hydrateAchievements(
@@ -124,3 +124,16 @@ export const setRegion = (region: Region): Action => ({
   type: ActionTypes.SET_REGION,
   payload: region,
 });
+
+export const setFilter = (value: string, index: number): Action => ({
+  type: ActionTypes.SET_FILTER,
+  payload: {
+    value,
+    index,
+  },
+});
+
+export const resetFilter = (): Action => ({
+  type: ActionTypes.RESET_FILTER,
+});
+

@@ -19,3 +19,6 @@ export const SET_CHARACTER_URL = 'SET_CHARACTER_URL';
 export const SET_REGION = 'SET_REGION';
 export const HYDRATE_ACHIEVEMENTS = 'HYDRATE_ACHIEVEMENTS';
 export const CLEAR_ERRORS = 'CLEAR_ERRORS';
+export const SET_FILTER = 'SET_FILTER';
+export const RESET_FILTER = 'RESET_FILTER';
+export const SET_SORT = 'SET_SORT';

@@ -15,27 +15,15 @@ import DateText from './DateText';
 import ColoredPercentageText from './ColoredPercentageText';
 import BattlenetImage from '../containers/BattlenetImage';
 
-type Props = {
-  accountWide?: boolean,
-  completed?: boolean,
-  criteria?: Array<any>,
-  description: string,
-  icon: string,
-  id: number,
-  points?: number,
-  progress?: number,
-  progressText?: string,
-  reward?: string,
-  timestamp?: number,
-  title: string,
-  visibleCriteria: Array<Object>,
-};
+import type { Achievement as A } from '../types';
 
-type State = {
+type Props = A;
+
+type OwnState = {
   criteriaPaneHidden: boolean
 };
 
-class Achievement extends Component<Props, State> {
+class Achievement extends Component<Props, OwnState> {
   static defaultProps = {
     accountWide: false,
     completed: false,

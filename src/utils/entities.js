@@ -35,8 +35,8 @@ const getSpecialPropertyByType = (
   }
 };
 
-const addProgressToAchievements = (achievements: Array<Achievement>): Array<Achievement> => {
-  return achievements.map((ach: Achievement): Achievement => {
+const addProgressToAchievements = (achievements: Array<Achievement>): Array<Achievement> =>
+  achievements.map((ach: Achievement): Achievement => {
     // adding progress percentage of each criteria
     const visibleCriteria = ach.visibleCriteria.map((criterion) => ({
       ...criterion,
@@ -80,50 +80,47 @@ const addProgressToAchievements = (achievements: Array<Achievement>): Array<Achi
       progress: round(progress, 1),
     };
   });
-}
 
 const hydrateAchievements = (
   achievements: { [string]: Achievement },
   completedAchievements: { [string]: Achievement },
   allCriteria: { [string]: Criterion },
   characterCriteria: { [string]: Criterion },
-) => {
-  return Object.keys(achievements).map((id) => {
-    const ach = achievements[id];
-    // merge raw achiev data with completed achievs data
-    const achievement = {
-      ...ach,
-      ...completedAchievements[id],
-    };
+) => Object.keys(achievements).map((id) => {
+  const ach = achievements[id];
+  // merge raw achiev data with completed achievs data
+  const achievement = {
+    ...ach,
+    ...completedAchievements[id],
+  };
 
-    // merge raw criteria with character criteria
-    const criteria = achievement.criteria.map((criterion: Criterion): Criterion => ({
+  // merge raw criteria with character criteria
+  const criteria = achievement.criteria.map((criterion: Criterion): Criterion => ({
+    ...criterion,
+    ...characterCriteria[criterion.id],
+  }));
+
+  // new property visibleCriteria comes from WoW client
+  // exported with a custom addon
+  const visibleCriteria = has(allCriteria[id], 'criteria') ?
+    allCriteria[id].criteria.map((criterion) => ({
       ...criterion,
       ...characterCriteria[criterion.id],
-    }));
+      ...getSpecialPropertyByType(criterion, achievements),
+    })) : [];
 
-    // new property visibleCriteria comes from WoW client
-    // exported with a custom addon
-    const visibleCriteria = has(allCriteria[id], 'criteria') ?
-      allCriteria[id].criteria.map((criterion) => ({
-        ...criterion,
-        ...characterCriteria[criterion.id],
-        ...getSpecialPropertyByType(criterion, achievements),
-      })) : [];
+  // set timestamp and completed properties
+  const timestamp = achievement.timestamp || 0;
+  const completed = timestamp > 0;
 
-    // set timestamp and completed properties
-    const timestamp = achievement.timestamp || 0;
-    const completed = timestamp > 0;
-
-    return {
-      ...achievement,
-      timestamp,
-      completed,
-      criteria,
-      visibleCriteria,
-    };
-  });
-};
+  return {
+    ...achievement,
+    timestamp,
+    completed,
+    criteria,
+    visibleCriteria,
+  };
+});
 
 
 const updateAchievements = (

@@ -7,14 +7,9 @@ import { formatTimestamp } from '../utils';
 import ColoredPercentageText from './ColoredPercentageText';
 import BattlenetImage from '../containers/BattlenetImage';
 
-type Props = {
-  completed: boolean,
-  icon: string,
-  progress: number,
-  progressText: string,
-  timestamp: number,
-  title: string,
-};
+import type { Achievement as A } from '../types';
+
+type Props = A;
 
 const AchievementLite = ({
   completed,
@@ -59,7 +54,7 @@ AchievementLite.defaultProps = {
   completed: false,
   progress: 0,
   progressText: '',
-  timestamp: null,
+  timestamp: 0,
 };
 
 export default AchievementLite;

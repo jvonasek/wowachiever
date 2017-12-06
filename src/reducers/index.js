@@ -7,6 +7,8 @@ import { reducer as search, getSearchSelectors } from 'redux-search';
 import has from 'lodash/has';
 import keyBy from 'lodash/keyBy';
 import pick from 'lodash/pick';
+import allPass from 'ramda/src/allPass';
+import propEq from 'ramda/src/propEq';
 
 import character, * as fromCharacter from './character';
 import entities, * as fromEntities from './entities';
@@ -16,7 +18,7 @@ import requests, * as fromRequests from './requests';
 import { mapEntitiesToIds } from '../utils';
 import config from '../config';
 
-import type { State } from '../types';
+import type { State, Id } from '../types';
 
 const {
   OVERVIEW_RECENT_ACHIEVEMENTS_COUNT,
@@ -39,6 +41,7 @@ export default rootReducer;
 // Basic ui selectors
 export const getGroupIds = (state: State) => fromUi.getGroupIds(state.ui);
 export const getRegion = (state: State) => fromUi.getRegion(state.ui);
+export const getFilters = (state: State) => fromUi.getFilters(state.ui);
 
 // Basic requests selector
 export const getActiveRequests = (state: State) => fromRequests.getActiveRequests(state.requests);
@@ -66,7 +69,7 @@ export const getRoutes = (state: State) => fromEntities.getRoutes(state.entities
 export const getRealms = (state: State) => fromEntities.getRealms(state.entities);
 export const getGroups = (state: State) => fromEntities.getGroups(state.entities);
 
-export const getCategoryById = (state: State, id) => getCategories(state)[id];
+export const getCategoryById = (state: State, id: Id) => getCategories(state)[id];
 
 export const getMatchFromProps = (state: State, props) => props.match || null;
 export const getProps = (state: State, props) => props;
@@ -85,13 +88,13 @@ export const getCategoriesWithCompleted = createSelector(
       // 0 = alliance
       // 1 = horde
       // 2 = both
-      const filteredAchievementsIds = category.achievements.filter((id) =>
-        (achievements[id].factionId === characterInfo.faction)
-        || achievements[id].factionId === 2);
+      const filteredAchievementsIds = category.achievements.filter((achId) =>
+        (achievements[achId].factionId === characterInfo.faction)
+        || achievements[achId].factionId === 2);
 
       // array of achievements that were completed
-      const completedAchievementsIds = category.achievements.filter((id) =>
-        has(completedAchievements, id));
+      const completedAchievementsIds = category.achievements.filter((achId) =>
+        has(completedAchievements, achId));
 
       return {
         ...category,
@@ -152,8 +155,24 @@ export const getVisibleAchievements = createSelector(
   getAchievements,
   getCurrentCategory,
   (achievements, category) =>
-    mapEntitiesToIds(achievements, category.achievements)
-      .sort((a, b) => b.timestamp - a.timestamp),
+    mapEntitiesToIds(achievements, category.achievements),
+);
+
+export const getFilteredAndSortedAchievements = createSelector(
+  getVisibleAchievements,
+  getCurrentCategory,
+  getFilters,
+  (achievements, category, filters) => {
+    const filterProps = filters.map(({ prop, value }) => {
+      if (value !== null) {
+        return propEq(prop, value);
+      }
+
+      return null;
+    }).filter((p) => p);
+
+    return achievements.filter((ach) => allPass(filterProps)(ach));
+  },
 );
 
 export const getRecentAchievements = createSelector(

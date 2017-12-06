@@ -16,7 +16,7 @@ type StateProps = {
 
 type Props = StateProps;
 
-const RecentAndUnfinishedAchs = ({ recentAchievements, unfinishedAchievements }: Props) => {
+const RecentAndIncompleteAchs = ({ recentAchievements, unfinishedAchievements }: Props) => {
   if (!recentAchievements.length) {
     return null;
   }
@@ -37,7 +37,7 @@ const RecentAndUnfinishedAchs = ({ recentAchievements, unfinishedAchievements }:
   );
 };
 
-RecentAndUnfinishedAchs.defaultProps = {
+RecentAndIncompleteAchs.defaultProps = {
   recentAchievements: [],
   unfinishedAchievements: [],
 };
@@ -49,4 +49,4 @@ const mapStateToProps = (state: State) => ({
 
 const connector: Connector<{}, Props> = connect(mapStateToProps);
 
-export default connector(RecentAndUnfinishedAchs);
+export default connector(RecentAndIncompleteAchs);
