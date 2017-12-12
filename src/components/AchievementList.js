@@ -5,11 +5,11 @@ import { Table } from 'reactstrap';
 import Achievement from './Achievement';
 import AchievementLite from './AchievementLite';
 
-import type { Achievement as A } from '../types';
+import type { Achievement as A, ViewTypes } from '../types';
 
 type Props = {
   achievements: Array<A>,
-  viewType: 'full' | 'compact',
+  viewType: ViewTypes,
 };
 
 const AchievementList = ({ achievements, viewType }: Props) => {

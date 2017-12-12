@@ -6,6 +6,7 @@ import { Route } from 'react-router-dom';
 import {
   Row,
   Col,
+  Container,
 } from 'reactstrap';
 
 import {
@@ -61,15 +62,17 @@ class CharacterPage extends Component<Props> {
   render() {
     const { match } = this.props;
     return (
-      <div>
+      <div className="character-page">
         <Header />
-        <Row>
-          <Col>
-            <h2>{match.params.category}</h2>
-            <Route path={`${match.url}/achievements/`} exact component={AchievementsPage} />
-            <CategoryRoutes />
-          </Col>
-        </Row>
+        <Container>
+          <Row>
+            <Col>
+              <h2>{match.params.category}</h2>
+              <Route path={`${match.url}/achievements/`} exact component={AchievementsPage} />
+              <CategoryRoutes />
+            </Col>
+          </Row>
+        </Container>
       </div>
     );
   }

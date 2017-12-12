@@ -21,4 +21,5 @@ export const HYDRATE_ACHIEVEMENTS = 'HYDRATE_ACHIEVEMENTS';
 export const CLEAR_ERRORS = 'CLEAR_ERRORS';
 export const SET_FILTER = 'SET_FILTER';
 export const RESET_FILTER = 'RESET_FILTER';
-export const SET_SORT = 'SET_SORT';
+export const SET_SORTING = 'SET_SORTING';
+export const SET_VIEW_TYPE = 'SET_VIEW_TYPE';

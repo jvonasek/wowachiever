@@ -60,7 +60,7 @@
   "FILTERS": [{
     "title": "Status",
     "value": null,
-    "prop": "completed",
+    "property": "completed",
     "toggles": [{
       "title": "Complete",
       "value": true
@@ -71,7 +71,7 @@
   }, {
     "title": "Account wide",
     "value": null,
-    "prop": "accountWide",
+    "property": "accountWide",
     "toggles": [{
       "title": "Yes",
       "value": true
@@ -82,13 +82,39 @@
   }, {
     "title": "Has reward",
     "value": null,
-    "prop": "hasReward",
+    "property": "hasReward",
     "toggles": [{
       "title": "Yes",
       "value": true
     }, {
       "title": "No",
       "value": false
+    }]
+  }],
+  "SORTING": {
+    "title": "Sort by",
+    "value": "progress",
+    "options": [{
+      "title": "Progress",
+      "value": "progress"
+    }, {
+      "title": "Title",
+      "value": "title"
+    }, {
+      "title": "Points",
+      "value": "points"
+    }]
+  },
+  "VIEW_TYPES": [{
+    "title": "View type",
+    "value": "full",
+    "property": "viewType",
+    "toggles": [{
+      "title": "Full",
+      "value": "full"
+    }, {
+      "title": "Compact",
+      "value": "compact"
     }]
   }]
 }

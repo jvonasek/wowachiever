@@ -1,28 +1,51 @@
 // @flow
 import * as ActionTypes from '../constants/ActionTypes';
 
-import type { Id, Action, Region, Filter } from '../types';
+import type { Id, Action, Region, ToggleGroup, Dropdown } from '../types';
 
 import config from '../config';
 
 export type UiState = {
+  +filters: Array<ToggleGroup>,
   +groupIds: Array<Id>,
   +region: ?Region,
-  +filters: Array<Filter>,
-  +sort: ?string,
+  +sorting: Dropdown,
+  +viewTypes: Array<ToggleGroup>,
 };
 
-const { FILTERS } = config;
+const { FILTERS, SORTING, VIEW_TYPES } = config;
 
 const initialState = {
+  filters: FILTERS,
   groupIds: [],
   region: null,
-  filters: FILTERS,
-  sort: null,
+  sorting: SORTING,
+  viewTypes: VIEW_TYPES,
 };
+
+const updateObjectInArray = (array: Array<Object>, action: Action) =>
+  array.map((item, index) => {
+    if (index !== action.payload.index) {
+      return item;
+    }
+    return {
+      ...item,
+      value: action.payload.value,
+    };
+  });
 
 const ui = (state: UiState = initialState, action: Action): UiState => {
   switch (action.type) {
+    case ActionTypes.SET_FILTER:
+      return {
+        ...state,
+        filters: updateObjectInArray(state.filters, action),
+      };
+    case ActionTypes.RESET_FILTER:
+      return {
+        ...state,
+        filters: initialState.filters,
+      };
     case ActionTypes.FETCH_ACHIEVEMENTS_SUCCESS:
       return {
         ...state,
@@ -33,28 +56,18 @@ const ui = (state: UiState = initialState, action: Action): UiState => {
         ...state,
         region: action.payload,
       };
-    case ActionTypes.SET_FILTER:
+    case ActionTypes.SET_SORTING:
       return {
         ...state,
-        filters: state.filters.map((item, index) => {
-          if (index !== action.payload.index) {
-            return item;
-          }
-          return {
-            ...item,
-            value: action.payload.value,
-          };
-        }),
+        sorting: {
+          ...state.sorting,
+          value: action.payload,
+        },
       };
-    case ActionTypes.RESET_FILTER:
+    case ActionTypes.SET_VIEW_TYPE:
       return {
         ...state,
-        filters: initialState.filters,
-      };
-    case ActionTypes.SET_SORT:
-      return {
-        ...state,
-        sort: action.payload,
+        viewTypes: updateObjectInArray(state.viewTypes, action),
       };
     default:
       return state;
@@ -63,6 +76,8 @@ const ui = (state: UiState = initialState, action: Action): UiState => {
 
 export default ui;
 
+export const getFilters = (state: UiState) => state.filters;
 export const getGroupIds = (state: UiState) => state.groupIds;
 export const getRegion = (state: UiState) => state.region;
-export const getFilters = (state: UiState) => state.filters;
+export const getSorting = (state: UiState) => state.sorting;
+export const getViewTypes = (state: UiState) => state.viewTypes;

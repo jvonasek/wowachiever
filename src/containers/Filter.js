@@ -5,12 +5,12 @@ import { Row, Col, Button } from 'reactstrap';
 import { setFilter, resetFilter } from '../actions';
 import { getFilters } from '../reducers';
 
-import ButtonToggles from '../components/ButtonToggles';
+import ToggleGroup from '../components/ToggleGroup';
 
-import type { State, Filter } from '../types';
+import type { State, ToggleGroup as TG } from '../types';
 
 type StateProps = {
-  filters: Array<Filter>
+  filters: Array<TG>,
 };
 
 type DispatchProps = {
@@ -20,29 +20,25 @@ type DispatchProps = {
 
 type Props = DispatchProps & StateProps;
 
-const FilterSorter = ({
+const Filter = ({
   filters,
   onFilterChange,
   handleFilterReset,
 }: Props) => (
   <div className="mb-3">
     <Row>
-      {filters.map((filter, index) => (
-        <Col sm={3} key={filter.prop} className="mb-3">
-          <h5>{filter.title}</h5>
-          <ButtonToggles
-            toggles={filter.toggles}
-            value={filter.value}
-            onChange={(value) => onFilterChange(value, index)}
-          />
-        </Col>
-      ))}
-    </Row>
-    <Row>
-      <Col>
+      <Col sm={9}>
+        <ToggleGroup
+          resetable
+          options={filters}
+          onChangeHandler={onFilterChange}
+        />
+      </Col>
+      <Col sm={3}>
+        <h5 className="invisible">Reset filter</h5>
         <Button
           onClick={() => handleFilterReset()}
-          className="btn btn-link"
+          className="btn btn-link btn-block"
         >
           reset filter
         </Button>
@@ -63,4 +59,4 @@ const connector: Connector<{}, Props> = connect(
   },
 );
 
-export default connector(FilterSorter);
+export default connector(Filter);

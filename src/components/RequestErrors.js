@@ -6,7 +6,7 @@ type Props = {
   errors: Array<string>
 };
 
-const RequestErrors = ({ errors }: Props) => (
+const RequestErrors = ({ errors }: Props) => errors.length > 0 && (
   <div>
     {errors.map((error, index) => (
       <Alert key={index.toString()} className="mt-2" color="danger">

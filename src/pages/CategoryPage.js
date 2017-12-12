@@ -13,6 +13,7 @@ import {
   getCharacterUrl,
   getCurrentCategory,
   getCurrentGroup,
+  getViewType,
 } from '../reducers';
 
 import { getTotalPropertyLength } from '../utils';
@@ -20,13 +21,16 @@ import { getTotalPropertyLength } from '../utils';
 import AchievementList from '../components/AchievementList';
 import CategoryMenu from '../components/CategoryMenu';
 import ProgressBar from '../components/ProgressBar';
-import FilterSorter from '../containers/FilterSorter';
+import Filter from '../containers/Filter';
+import Sorter from '../containers/Sorter';
+import ViewSwitcher from '../containers/ViewSwitcher';
 
 import type {
   State,
   Achievement,
   Category,
   Group,
+  ViewTypes,
 } from '../types';
 
 type StateProps = {
@@ -35,6 +39,7 @@ type StateProps = {
   characterUrl: string,
   currentCategory: Category,
   currentGroup: Group,
+  viewType: ViewTypes,
 };
 
 type Props = StateProps;
@@ -45,6 +50,7 @@ const CategoryPage = ({
   characterUrl,
   currentCategory,
   currentGroup,
+  viewType,
 }: Props) => (
   <Row>
     <Col xs={12}>
@@ -68,8 +74,20 @@ const CategoryPage = ({
       />
     </Col>
     <Col sm={9}>
-      <FilterSorter />
-      <AchievementList achievements={achievements} />
+      <Row>
+        <Col>
+          <Filter />
+        </Col>
+      </Row>
+      <Row>
+        <Col>
+          <ViewSwitcher />
+        </Col>
+        <Col>
+          <Sorter />
+        </Col>
+      </Row>
+      <AchievementList achievements={achievements} viewType={viewType} />
     </Col>
   </Row>
 );
@@ -85,6 +103,7 @@ const mapStateToProps = (state: State, props) => ({
   characterUrl: getCharacterUrl(state),
   currentCategory: getCurrentCategory(state, props),
   currentGroup: getCurrentGroup(state, props),
+  viewType: getViewType(state),
 });
 
 const connector: Connector<{}, Props> = connect(mapStateToProps);

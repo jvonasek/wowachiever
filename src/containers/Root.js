@@ -2,7 +2,6 @@
 import React from 'react';
 import { connect, type Connector } from 'react-redux';
 import { ConnectedRouter } from 'react-router-redux';
-import { Container } from 'reactstrap';
 
 import App from '../components/App';
 import ScrollToTop from '../components/ScrollToTop';
@@ -26,11 +25,11 @@ type Props = StateProps;
 const Root = ({ isLoading, requestErrors }: Props) => (
   <ConnectedRouter history={history}>
     <ScrollToTop>
-      <Container>
+      <div className="page-wrapper">
         <RequestErrors errors={requestErrors} />
         <App />
         {isLoading && <Loader />}
-      </Container>
+      </div>
     </ScrollToTop>
   </ConnectedRouter>
 );

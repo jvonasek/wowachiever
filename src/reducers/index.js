@@ -9,6 +9,10 @@ import keyBy from 'lodash/keyBy';
 import pick from 'lodash/pick';
 import allPass from 'ramda/src/allPass';
 import propEq from 'ramda/src/propEq';
+import sortWith from 'ramda/src/sortWith';
+import prop from 'ramda/src/prop';
+import descend from 'ramda/src/descend';
+import ascend from 'ramda/src/ascend';
 
 import character, * as fromCharacter from './character';
 import entities, * as fromEntities from './entities';
@@ -39,9 +43,11 @@ const rootReducer = combineReducers({
 export default rootReducer;
 
 // Basic ui selectors
+export const getFilters = (state: State) => fromUi.getFilters(state.ui);
 export const getGroupIds = (state: State) => fromUi.getGroupIds(state.ui);
 export const getRegion = (state: State) => fromUi.getRegion(state.ui);
-export const getFilters = (state: State) => fromUi.getFilters(state.ui);
+export const getSorting = (state: State) => fromUi.getSorting(state.ui);
+export const getViewTypes = (state: State) => fromUi.getViewTypes(state.ui);
 
 // Basic requests selector
 export const getActiveRequests = (state: State) => fromRequests.getActiveRequests(state.requests);
@@ -74,6 +80,16 @@ export const getCategoryById = (state: State, id: Id) => getCategories(state)[id
 export const getMatchFromProps = (state: State, props) => props.match || null;
 export const getProps = (state: State, props) => props;
 export const getIsLoading = (state: State) => getActiveRequests(state).length > 0;
+
+export const getViewType = createSelector(
+  getViewTypes,
+  (viewTypes) => viewTypes[0].value,
+);
+
+export const getSortingValue = createSelector(
+  getSorting,
+  (sorting) => sorting.value,
+);
 
 export const getCategoriesWithCompleted = createSelector(
   getCategories,
@@ -162,16 +178,32 @@ export const getFilteredAndSortedAchievements = createSelector(
   getVisibleAchievements,
   getCurrentCategory,
   getFilters,
-  (achievements, category, filters) => {
-    const filterProps = filters.map(({ prop, value }) => {
+  getSortingValue,
+  (achievements, category, filters, sortingValue) => {
+    const filterProps = filters.map(({ property, value }) => {
       if (value !== null) {
-        return propEq(prop, value);
+        return propEq(property, value);
       }
 
       return null;
-    }).filter((p) => p);
+    }).filter((p) => p); // filter out null elements
 
-    return achievements.filter((ach) => allPass(filterProps)(ach));
+    // filter out achievements with allPass
+    const filtered = achievements.filter((ach) => allPass(filterProps)(ach));
+
+    const sortingProp = prop(sortingValue);
+
+    // primary sort comes from user input,
+    // title is sorted in ascending order,
+    // rest is in descending order
+    const primarySort = sortingValue === 'title' ? ascend(sortingProp) : descend(sortingProp);
+
+    // secondary sort is set to progress,
+    // if user is sorting by progress, secondary sort is timestamp
+    const secondarySort = sortingValue === 'progress' ? descend(prop('timestamp')) : descend(prop('progress'));
+
+    // sort filtered achievements
+    return sortWith([primarySort, secondarySort])(filtered);
   },
 );
 

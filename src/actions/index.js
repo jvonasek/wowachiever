@@ -133,7 +133,20 @@ export const setFilter = (value: string, index: number): Action => ({
   },
 });
 
+export const setSorting = (value: string): Action => ({
+  type: ActionTypes.SET_SORTING,
+  payload: value,
+});
+
 export const resetFilter = (): Action => ({
   type: ActionTypes.RESET_FILTER,
+});
+
+export const setViewType = (value: string, index: number): Action => ({
+  type: ActionTypes.SET_VIEW_TYPE,
+  payload: {
+    value,
+    index,
+  },
 });
 

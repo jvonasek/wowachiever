@@ -5,6 +5,7 @@ import {
   Row,
   Col,
   Jumbotron,
+  Container,
 } from 'reactstrap';
 
 import CharacterSelectForm from '../containers/CharacterSelectForm';
@@ -30,17 +31,19 @@ class CharacterSelectPage extends Component<Props> {
   }
   render() {
     return (
-      <Row className="justify-content-center">
-        <Col md={12} lg={6}>
-          <Jumbotron className="my-5 py-5">
-            <h1 className="display-5 text-center">WoWACHIEVER</h1>
-            <CharacterSelectForm
-              onSubmit={(values: CharFormParams, dispatch: Dispatch) =>
-                dispatch(fetchEverything(normalizeApiParams(values)))}
-            />
-          </Jumbotron>
-        </Col>
-      </Row>
+      <Container>
+        <Row className="justify-content-center">
+          <Col md={12} lg={6}>
+            <Jumbotron className="my-5 py-5">
+              <h1 className="display-5 text-center">WoWACHIEVER</h1>
+              <CharacterSelectForm
+                onSubmit={(values: CharFormParams, dispatch: Dispatch) =>
+                  dispatch(fetchEverything(normalizeApiParams(values)))}
+              />
+            </Jumbotron>
+          </Col>
+        </Row>
+      </Container>
     );
   }
 }

@@ -14,6 +14,7 @@ type Props = A;
 const AchievementLite = ({
   completed,
   icon,
+  points,
   progress,
   timestamp,
   title,
@@ -35,6 +36,7 @@ const AchievementLite = ({
           <strong>{Math.round(progress)}%</strong>
         </ColoredPercentageText>
       </td>
+      <td>{points}pts</td>
       <td><strong>{title}</strong></td>
       <td className="text-right">
         {completed ?

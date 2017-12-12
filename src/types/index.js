@@ -51,17 +51,25 @@ export type Category = {
   +completedAchievements: Array<Achievement>,
 } & AbstractCategory;
 
-export type FilterToggle = {
+export type ControlButton = {
   title: string,
-  value: ?mixed,
+  value: ?any,
 }
 
-export type Filter = {
+export type ToggleGroup = {
   title: string,
-  value: ?mixed,
-  prop: string,
-  toggles: Array<FilterToggle>,
+  value: ?any,
+  property: string,
+  toggles: Array<ControlButton>,
 };
+
+export type Dropdown = {
+  title: string,
+  value: ?any,
+  options: Array<ControlButton>,
+};
+
+export type ViewTypes = 'full' | 'compact';
 
 export type Achievement = {
   +id: Id,

@@ -1,6 +1,7 @@
 // @flow
 import round from 'lodash/round';
 import clamp from 'lodash/clamp';
+import isFinite from 'lodash/isFinite';
 import moment from 'moment';
 import numeral from 'numeral';
 import fetch from 'isomorphic-fetch';
@@ -143,7 +144,7 @@ export const splitInHalf = (array: Array<any>): Array<Array<any>> => {
  */
 export const getCriteriaQuantityOccurence = (criteria: Array<Object>): number =>
   criteria.reduce((acc: number, curr: Criterion) => {
-    const occurence = curr.quantity > 0 ? 1 : 0;
+    const occurence = isFinite(curr.quantity) && curr.quantity > 0 ? 1 : 0;
     return acc + occurence;
   }, 0);
 
@@ -154,8 +155,10 @@ export const getCriteriaQuantityOccurence = (criteria: Array<Object>): number =>
  * @return {number}
  */
 export const getTotalPropertySum = (array: Array<Object>, property: string): number =>
-  array.reduce((acc: number, curr: { [string]: number }): number =>
-    acc + (curr[property] || 0), 0);
+  array.reduce((acc: number, curr: { [string]: number }): number => {
+    const value = isFinite(curr[property]) ? curr[property] : 0;
+    return acc + value;
+  }, 0);
 
 /**
  * Sums up total quantity values in an array,
@@ -193,13 +196,16 @@ export const formatNumberAsWoWCurrency = (number: number): string => {
   const money = [];
   const suffixes = ['g', 's', 'c'];
 
-  if (gold > 0) money.push(gold);
-  if (silver > 0) money.push(silver);
-  if (copper > 0) money.push(copper);
+  money.push(gold);
+  money.push(silver);
+  money.push(copper);
 
-  return money.map((m, i) =>
-    numeral(m).format() + suffixes[i])
-    .join('\u00a0');
+  return money.map((m, i) => {
+    if (m > 0) {
+      return numeral(m).format() + suffixes[i];
+    }
+    return null;
+  }).filter((m) => m).join('\u00a0');
 };
 
 /**
