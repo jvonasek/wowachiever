@@ -1,14 +1,18 @@
 // @flow
 import React from 'react';
 import type { Node } from 'react';
-import { Progress } from 'reactstrap';
 import { Circle } from 'rc-progress';
+import classnames from 'classnames';
 
-import { calculatePercent } from '../utils';
+import { calculatePercent, getHslColorByPercent } from '../utils';
 
 type Props = {
   children: Node,
-  height?: ?number,
+  className: string,
+  color: ?string,
+  dynamicColor: boolean,
+  height: ?number,
+  hiddenLabel: boolean,
   max: number,
   type: 'line' | 'circle',
   value: number,
@@ -16,21 +20,25 @@ type Props = {
 
 const ProgressBar = ({
   children,
+  className,
+  color,
+  dynamicColor,
   height,
+  hiddenLabel,
   max,
   type,
   value,
-  ...rest
 }: Props) => {
-  const percent: number = calculatePercent(value, max);
+  const percent: Number = value && max ? calculatePercent(value, max) : value;
 
   if (type === 'circle') {
+    const circleClassName = classnames('progress-bar-circle', className);
     return (
-      <div className="progress-bar-circle">
+      <div className={circleClassName}>
         <Circle
           percent={percent}
           strokeWidth="10"
-          strokeColor="#3498DB"
+          strokeColor={color || '#3498DB'}
           trailWidth="10"
           strokeLinecap="butt"
           trailColor="#555"
@@ -47,23 +55,39 @@ const ProgressBar = ({
     );
   }
 
+  const barStyle = {
+    width: `${percent}%`,
+    backgroundColor: (dynamicColor ? getHslColorByPercent(percent) : undefined) || color,
+  };
+
+  const progressClassName = classnames('progress', className);
+  const barClassName = classnames('progress-bar', {
+    'bg-info': typeof barStyle.backgroundColor === 'undefined',
+  });
+
   return (
-    <Progress
-      color="info"
-      style={height && { height }}
-      value={value}
-      max={max}
-      {...rest}
-    >
-      {value > 0 && `${value} / ${max}`}
-    </Progress>
+    <div className={progressClassName} style={height && { height }}>
+      <div
+        style={barStyle}
+        className={barClassName}
+        role="progressbar"
+      />
+      {!hiddenLabel && value > 0 && (
+        <div className="progress-value text-center text-stroke text-white">
+          {children || `${value} / ${max}`}
+        </div>
+      )}
+    </div>
   );
 };
 
 ProgressBar.defaultProps = {
   children: null,
+  className: '',
+  color: undefined,
+  dynamicColor: false,
   height: null,
-  max: 1,
+  hiddenLabel: false,
   type: 'line',
   value: 0,
 };

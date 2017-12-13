@@ -1,15 +1,71 @@
 body {
   font-family: 'Roboto Condensed', sans-serif;
-  background-image: url('./bg.jpg');
+  background-image: url('./images/bg.jpg');
   background-position: top center;
   background-repeat: no-repeat;
   background-attachment: fixed;
   background-size: cover;
 }
 
+.card {
+  background-color: #222;
+}
+
 .character-page {
-  background: rgba(0,0,0,0.85);
+  position: relative;
   min-height: 100vh;
+  background-position: top center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
+}
+.character-page:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.5);
+}
+
+.bg-warrior {
+  background-image: url('./images/bg-warrior.jpg');
+}
+.bg-paladin {
+  background-image: url('./images/bg-paladin.jpg');
+}
+.bg-hunter {
+  background-image: url('./images/bg-hunter.jpg');
+}
+.bg-rogue {
+  background-image: url('./images/bg-rogue.jpg');
+}
+.bg-priest {
+  background-image: url('./images/bg-priest.jpg');
+}
+.bg-death-knight {
+  background-image: url('./images/bg-death-knight.jpg');
+}
+.bg-shaman {
+  background-image: url('./images/bg-shaman.jpg');
+}
+.bg-mage {
+  background-image: url('./images/bg-mage.jpg');
+}
+.bg-warlock {
+  background-image: url('./images/bg-warlock.jpg');
+}
+.bg-monk {
+  background-image: url('./images/bg-monk.jpg');
+}
+.bg-druid {
+  background-image: url('./images/bg-druid.jpg');
+}
+.bg-demon-hunter {
+  background-image: url('./images/bg-demon-hunter.jpg');
 }
 
 a {
@@ -43,6 +99,12 @@ a:hover {
   font-size: 12px;
   font-family: "Arial", sans-serif;
   font-weight: 700;
+  text-align:center;
+}
+.progress-value {
+  position:absolute;
+  right:0;
+  left:0;
 }
 
 .progress-bar-circle {
@@ -64,6 +126,24 @@ a:hover {
 }
 .progress-bar-percent {
   font-size: 1.6rem;
+}
+
+.position-top-left {
+  top: 0;
+  left: 0;
+}
+
+.position-bottom-left {
+  bottom: 0;
+  left: 0;
+}
+
+.text-stroke {
+  text-shadow:
+  -1px -1px 0 #000,
+   1px -1px 0 #000,
+   -1px 1px 0 #000,
+    1px 1px 0 #000;
 }
 
 .search-field {

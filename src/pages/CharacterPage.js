@@ -2,6 +2,8 @@
 import React, { Component } from 'react';
 import { connect, type Connector } from 'react-redux';
 import { Route } from 'react-router-dom';
+import classnames from 'classnames';
+import kebabCase from 'lodash/kebabCase';
 
 import {
   Row,
@@ -11,9 +13,6 @@ import {
 
 import {
   getCharacterInfo,
-  getCharacterCriteria,
-  getCompletedAchievements,
-  getIsCharacterFetched,
 } from '../reducers';
 
 import {
@@ -28,10 +27,11 @@ import CategoryRoutes from '../containers/CategoryRoutes';
 import AchievementsPage from './AchievementsPage';
 
 import type { State, BnetApiParams, Region } from '../types';
+import type { CharacterState } from '../reducers/character';
 
 type StateProps = {
   match: Object,
-  isFetched: boolean,
+  characterInfo: CharacterState,
 };
 
 type DispatchProps = {
@@ -43,16 +43,12 @@ type DispatchProps = {
 type Props = StateProps & DispatchProps;
 
 class CharacterPage extends Component<Props> {
-  static defaultProps = {
-    isFetched: false,
-  }
-
   componentDidMount() {
     const { params, url } = this.props.match;
     this.props.setCharacterUrl(url);
     this.props.setRegion(params.region);
 
-    const { isFetched } = this.props;
+    const { characterInfo: { isFetched } } = this.props;
 
     if (!isFetched) {
       this.props.fetchEverything(params);
@@ -60,9 +56,9 @@ class CharacterPage extends Component<Props> {
   }
 
   render() {
-    const { match } = this.props;
+    const { match, characterInfo: { charClass } } = this.props;
     return (
-      <div className="character-page">
+      <div className={classnames('character-page', `bg-${kebabCase(charClass)}`)}>
         <Header />
         <Container>
           <Row>
@@ -79,10 +75,7 @@ class CharacterPage extends Component<Props> {
 }
 
 const mapStateToProps = (state: State) => ({
-  characterCriteria: getCharacterCriteria(state),
   characterInfo: getCharacterInfo(state),
-  completedAchievements: getCompletedAchievements(state),
-  isFetched: getIsCharacterFetched(state),
 });
 
 const connector: Connector<{}, Props> = connect(

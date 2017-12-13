@@ -193,12 +193,8 @@ export const formatNumberAsWoWCurrency = (number: number): string => {
   const silver = Math.floor((number % 10000) / 100);
   const copper = Math.floor(number % 100);
 
-  const money = [];
+  const money = [gold, silver, copper];
   const suffixes = ['g', 's', 'c'];
-
-  money.push(gold);
-  money.push(silver);
-  money.push(copper);
 
   return money.map((m, i) => {
     if (m > 0) {

@@ -40,16 +40,18 @@ const CriterionProgressBar = ({
   // clamp the value to max possible value
   progress.value = clampToMax(progress.value, progress.max);
 
-  const color = progress.value === progress.max ? 'success' : 'info';
-
   return (
     <div>
-      {format === 'currency' &&
-        <span>
-          {formatNumberAsWoWCurrency(progress.value)} / {formatNumberAsWoWCurrency(progress.max)}
-        </span>
-      }
-      <ProgressBar color={color} {...progress} />
+
+      <ProgressBar {...progress}>
+        {format === 'currency' &&
+          <span>
+            {formatNumberAsWoWCurrency(progress.value)}
+            {' / '}
+            {formatNumberAsWoWCurrency(progress.max)}
+          </span>
+        }
+      </ProgressBar>
     </div>
   );
 };

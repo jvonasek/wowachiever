@@ -16,11 +16,12 @@ import ProgressBar from '../components/ProgressBar';
 import type { Group } from '../types';
 
 type Props = {
+  classColor: string,
   menuItems: Array<Group>,
   path: string,
 };
 
-const GroupMenu = ({ menuItems, path }: Props) => (
+const GroupMenu = ({ classColor, menuItems, path }: Props) => (
   <Row>
     {menuItems.map(({
       id,
@@ -42,6 +43,7 @@ const GroupMenu = ({ menuItems, path }: Props) => (
                 type="circle"
                 value={getTotalPropertyLength(categories, 'completedAchievements')}
                 max={getTotalPropertyLength(categories, 'achievements')}
+                color={classColor}
               >
                 {isLegacy &&
                   <div className="h3">

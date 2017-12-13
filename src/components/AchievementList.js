@@ -1,6 +1,5 @@
 // @flow
 import React from 'react';
-import { Table } from 'reactstrap';
 
 import Achievement from './Achievement';
 import AchievementLite from './AchievementLite';
@@ -18,13 +17,9 @@ const AchievementList = ({ achievements, viewType }: Props) => {
   }
 
   if (viewType === 'compact') {
-    return (
-      <Table>
-        {achievements.map((achievement) => (
-          <AchievementLite key={achievement.id} {...achievement} />
-        ))}
-      </Table>
-    );
+    return achievements.map((achievement) => (
+      <AchievementLite key={achievement.id} {...achievement} />
+    ));
   }
 
   return achievements.map((achievement) => (

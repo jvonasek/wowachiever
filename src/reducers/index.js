@@ -91,6 +91,11 @@ export const getSortingValue = createSelector(
   (sorting) => sorting.value,
 );
 
+export const getClassColor = createSelector(
+  getCharacterInfo,
+  (characterInfo) => characterInfo.classColor,
+);
+
 export const getCategoriesWithCompleted = createSelector(
   getCategories,
   getAchievements,
