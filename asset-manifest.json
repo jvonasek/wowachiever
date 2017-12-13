@@ -1,7 +1,19 @@
 {
-  "main.css": "static/css/main.4ee0d353.css",
-  "main.css.map": "static/css/main.4ee0d353.css.map",
-  "main.js": "static/js/main.0a5e7df2.js",
-  "main.js.map": "static/js/main.0a5e7df2.js.map",
+  "main.css": "static/css/main.304dad6a.css",
+  "main.css.map": "static/css/main.304dad6a.css.map",
+  "main.js": "static/js/main.6a64991c.js",
+  "main.js.map": "static/js/main.6a64991c.js.map",
+  "static/media/bg-death-knight.jpg": "static/media/bg-death-knight.99cad2f2.jpg",
+  "static/media/bg-demon-hunter.jpg": "static/media/bg-demon-hunter.5139b205.jpg",
+  "static/media/bg-druid.jpg": "static/media/bg-druid.694a9f03.jpg",
+  "static/media/bg-hunter.jpg": "static/media/bg-hunter.0435bf26.jpg",
+  "static/media/bg-mage.jpg": "static/media/bg-mage.bbfde14c.jpg",
+  "static/media/bg-monk.jpg": "static/media/bg-monk.a3889432.jpg",
+  "static/media/bg-paladin.jpg": "static/media/bg-paladin.9897c895.jpg",
+  "static/media/bg-priest.jpg": "static/media/bg-priest.06cda673.jpg",
+  "static/media/bg-rogue.jpg": "static/media/bg-rogue.c6485b57.jpg",
+  "static/media/bg-shaman.jpg": "static/media/bg-shaman.4ba993de.jpg",
+  "static/media/bg-warlock.jpg": "static/media/bg-warlock.0bdd3040.jpg",
+  "static/media/bg-warrior.jpg": "static/media/bg-warrior.92a6de2e.jpg",
   "static/media/bg.jpg": "static/media/bg.700718c5.jpg"
 }
