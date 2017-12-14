@@ -87,6 +87,13 @@ const CategoryPage = ({
           <Sorter />
         </Col>
       </Row>
+      <Row>
+        <Col>
+          <p>
+            Showing {achievements.length} out of {currentCategory.achievements.length} achievements
+          </p>
+        </Col>
+      </Row>
       <AchievementList achievements={achievements} viewType={viewType} />
     </Col>
   </Row>

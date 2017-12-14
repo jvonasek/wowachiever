@@ -2,7 +2,7 @@
 import * as ActionTypes from '../constants/ActionTypes';
 import updateAchievements from '../utils/entities';
 
-import type { Action } from '../types';
+import type { Action, Id } from '../types';
 
 export type EntityState = {
   +achievements: Object,
@@ -11,6 +11,7 @@ export type EntityState = {
   +routes: Object,
   +realms: Array<Object>,
   +groups: Object,
+  +groupIds: Array<Id>,
 };
 
 const initialState = {
@@ -20,6 +21,7 @@ const initialState = {
   routes: {},
   realms: [],
   groups: {},
+  groupIds: [],
 };
 
 const entities = (state: EntityState = initialState, action: Action): EntityState => {
@@ -28,6 +30,7 @@ const entities = (state: EntityState = initialState, action: Action): EntityStat
       return {
         ...state,
         ...action.payload.entities,
+        groupIds: action.payload.result,
       };
     case ActionTypes.FETCH_REALMS_SUCCESS:
       return {
@@ -60,3 +63,4 @@ export const getCriteria = (state: EntityState) => state.criteria;
 export const getRoutes = (state: EntityState) => state.routes;
 export const getRealms = (state: EntityState) => state.realms;
 export const getGroups = (state: EntityState) => state.groups;
+export const getGroupIds = (state: EntityState) => state.groupIds;

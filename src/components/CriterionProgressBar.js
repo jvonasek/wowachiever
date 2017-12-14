@@ -42,7 +42,6 @@ const CriterionProgressBar = ({
 
   return (
     <div>
-
       <ProgressBar {...progress}>
         {format === 'currency' &&
           <span>

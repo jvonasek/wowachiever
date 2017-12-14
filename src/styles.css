@@ -11,6 +11,13 @@ body {
   background-color: #222;
 }
 
+.text-success {
+  color: #64d32c !important;
+}
+.text-success-muted {
+  color: #429019 !important;
+}
+
 .character-page {
   position: relative;
   min-height: 100vh;

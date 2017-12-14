@@ -13,7 +13,7 @@ type Props = {
   dynamicColor: boolean,
   height: ?number,
   hiddenLabel: boolean,
-  max: number,
+  max?: ?number,
   type: 'line' | 'circle',
   value: number,
 };
@@ -29,7 +29,7 @@ const ProgressBar = ({
   type,
   value,
 }: Props) => {
-  const percent: Number = value && max ? calculatePercent(value, max) : value;
+  const percent: number = value && max ? calculatePercent(value, max) : value;
 
   if (type === 'circle') {
     const circleClassName = classnames('progress-bar-circle', className);
@@ -72,9 +72,9 @@ const ProgressBar = ({
         className={barClassName}
         role="progressbar"
       />
-      {!hiddenLabel && value > 0 && (
+      {!hiddenLabel && (
         <div className="progress-value text-center text-stroke text-white">
-          {children || `${value} / ${max}`}
+          {children || (max ? `${value} / ${max}` : value)}
         </div>
       )}
     </div>
@@ -88,6 +88,7 @@ ProgressBar.defaultProps = {
   dynamicColor: false,
   height: null,
   hiddenLabel: false,
+  max: null,
   type: 'line',
   value: 0,
 };

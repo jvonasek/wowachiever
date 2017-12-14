@@ -44,7 +44,6 @@ export default rootReducer;
 
 // Basic ui selectors
 export const getFilters = (state: State) => fromUi.getFilters(state.ui);
-export const getGroupIds = (state: State) => fromUi.getGroupIds(state.ui);
 export const getRegion = (state: State) => fromUi.getRegion(state.ui);
 export const getSorting = (state: State) => fromUi.getSorting(state.ui);
 export const getViewTypes = (state: State) => fromUi.getViewTypes(state.ui);
@@ -74,6 +73,7 @@ export const getCriteria = (state: State) => fromEntities.getCriteria(state.enti
 export const getRoutes = (state: State) => fromEntities.getRoutes(state.entities);
 export const getRealms = (state: State) => fromEntities.getRealms(state.entities);
 export const getGroups = (state: State) => fromEntities.getGroups(state.entities);
+export const getGroupIds = (state: State) => fromEntities.getGroupIds(state.entities);
 
 export const getCategoryById = (state: State, id: Id) => getCategories(state)[id];
 
@@ -207,8 +207,11 @@ export const getFilteredAndSortedAchievements = createSelector(
     // if user is sorting by progress, secondary sort is timestamp
     const secondarySort = sortingValue === 'progress' ? descend(prop('timestamp')) : descend(prop('progress'));
 
+    // tertiary sort is by title
+    const tertiarySort = ascend(prop('title'));
+
     // sort filtered achievements
-    return sortWith([primarySort, secondarySort])(filtered);
+    return sortWith([primarySort, secondarySort, tertiarySort])(filtered);
   },
 );
 

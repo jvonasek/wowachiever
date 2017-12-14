@@ -1,13 +1,12 @@
 // @flow
 import * as ActionTypes from '../constants/ActionTypes';
 
-import type { Id, Action, Region, ToggleGroup, Dropdown } from '../types';
+import type { Action, Region, ToggleGroup, Dropdown } from '../types';
 
 import config from '../config';
 
 export type UiState = {
   +filters: Array<ToggleGroup>,
-  +groupIds: Array<Id>,
   +region: ?Region,
   +sorting: Dropdown,
   +viewTypes: Array<ToggleGroup>,
@@ -17,7 +16,6 @@ const { FILTERS, SORTING, VIEW_TYPES } = config;
 
 const initialState = {
   filters: FILTERS,
-  groupIds: [],
   region: null,
   sorting: SORTING,
   viewTypes: VIEW_TYPES,
@@ -46,11 +44,6 @@ const ui = (state: UiState = initialState, action: Action): UiState => {
         ...state,
         filters: initialState.filters,
       };
-    case ActionTypes.FETCH_ACHIEVEMENTS_SUCCESS:
-      return {
-        ...state,
-        groupIds: action.payload.result,
-      };
     case ActionTypes.SET_REGION:
       return {
         ...state,
@@ -77,7 +70,6 @@ const ui = (state: UiState = initialState, action: Action): UiState => {
 export default ui;
 
 export const getFilters = (state: UiState) => state.filters;
-export const getGroupIds = (state: UiState) => state.groupIds;
 export const getRegion = (state: UiState) => state.region;
 export const getSorting = (state: UiState) => state.sorting;
 export const getViewTypes = (state: UiState) => state.viewTypes;
