@@ -9,16 +9,16 @@ export type UiState = {
   +filters: Array<ToggleGroup>,
   +region: ?Region,
   +sorting: Dropdown,
-  +viewTypes: Array<ToggleGroup>,
+  +viewType: ToggleGroup,
 };
 
-const { FILTERS, SORTING, VIEW_TYPES } = config;
+const { FILTERS, SORTING, VIEW_TYPE } = config;
 
 const initialState = {
   filters: FILTERS,
   region: null,
   sorting: SORTING,
-  viewTypes: VIEW_TYPES,
+  viewType: VIEW_TYPE,
 };
 
 const updateObjectInArray = (array: Array<Object>, action: Action) =>
@@ -60,7 +60,10 @@ const ui = (state: UiState = initialState, action: Action): UiState => {
     case ActionTypes.SET_VIEW_TYPE:
       return {
         ...state,
-        viewTypes: updateObjectInArray(state.viewTypes, action),
+        viewType: {
+          ...state.viewType,
+          value: action.payload,
+        },
       };
     default:
       return state;
@@ -72,4 +75,4 @@ export default ui;
 export const getFilters = (state: UiState) => state.filters;
 export const getRegion = (state: UiState) => state.region;
 export const getSorting = (state: UiState) => state.sorting;
-export const getViewTypes = (state: UiState) => state.viewTypes;
+export const getViewType = (state: UiState) => state.viewType;

@@ -91,7 +91,6 @@ class AchievementLite extends Component<Props, OwnState> {
           </Row>
           <div hidden={this.state.criteriaPaneHidden}>
             <CriteriaList
-              achievementComplete={completed}
               criteria={criteria}
               visibleCriteria={visibleCriteria}
               className="mt-2"

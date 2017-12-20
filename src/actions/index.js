@@ -142,11 +142,8 @@ export const resetFilter = (): Action => ({
   type: ActionTypes.RESET_FILTER,
 });
 
-export const setViewType = (value: string, index: number): Action => ({
+export const setViewType = (value: string): Action => ({
   type: ActionTypes.SET_VIEW_TYPE,
-  payload: {
-    value,
-    index,
-  },
+  payload: value,
 });
 

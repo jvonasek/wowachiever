@@ -1,7 +1,7 @@
 import { connect, type Connector } from 'react-redux';
 
 import { setViewType } from '../actions';
-import { getViewTypes } from '../reducers';
+import { getViewType } from '../reducers';
 
 import ToggleGroup from '../components/ToggleGroup';
 
@@ -18,7 +18,7 @@ type DispatchProps = {
 type Props = DispatchProps & StateProps;
 
 const mapStateToProps = (state: State) => ({
-  options: getViewTypes(state),
+  options: [getViewType(state)],
 });
 
 const connector: Connector<{}, Props> = connect(

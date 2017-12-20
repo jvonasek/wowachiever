@@ -100,7 +100,7 @@ export type Criterion = {
   +timestamp: Timestamp,
   +created: Timestamp,
   +assetId?: Id,
-  +asset?: mixed|Achievement,
+  +asset?: Achievement,
   +format?: string,
   +type?: number,
   +progressBar?: boolean,

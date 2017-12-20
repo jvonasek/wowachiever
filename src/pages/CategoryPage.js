@@ -13,7 +13,7 @@ import {
   getCharacterUrl,
   getCurrentCategory,
   getCurrentGroup,
-  getViewType,
+  getViewTypeValue,
 } from '../reducers';
 
 import { getTotalPropertyLength } from '../utils';
@@ -110,7 +110,7 @@ const mapStateToProps = (state: State, props) => ({
   characterUrl: getCharacterUrl(state),
   currentCategory: getCurrentCategory(state, props),
   currentGroup: getCurrentGroup(state, props),
-  viewType: getViewType(state),
+  viewType: getViewTypeValue(state),
 });
 
 const connector: Connector<{}, Props> = connect(mapStateToProps);

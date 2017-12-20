@@ -46,7 +46,7 @@ export default rootReducer;
 export const getFilters = (state: State) => fromUi.getFilters(state.ui);
 export const getRegion = (state: State) => fromUi.getRegion(state.ui);
 export const getSorting = (state: State) => fromUi.getSorting(state.ui);
-export const getViewTypes = (state: State) => fromUi.getViewTypes(state.ui);
+export const getViewType = (state: State) => fromUi.getViewType(state.ui);
 
 // Basic requests selector
 export const getActiveRequests = (state: State) => fromRequests.getActiveRequests(state.requests);
@@ -81,9 +81,9 @@ export const getMatchFromProps = (state: State, props) => props.match || null;
 export const getProps = (state: State, props) => props;
 export const getIsLoading = (state: State) => getActiveRequests(state).length > 0;
 
-export const getViewType = createSelector(
-  getViewTypes,
-  (viewTypes) => viewTypes[0].value,
+export const getViewTypeValue = createSelector(
+  getViewType,
+  (viewType) => viewType.value,
 );
 
 export const getSortingValue = createSelector(

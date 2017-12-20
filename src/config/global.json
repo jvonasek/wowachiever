@@ -105,16 +105,16 @@
       "value": "points"
     }]
   },
-  "VIEW_TYPES": [{
-    "title": "View type",
-    "value": "full",
+  "VIEW_TYPE": {
+    "title": "View",
+    "value": "compact",
     "property": "viewType",
     "toggles": [{
-      "title": "Full",
-      "value": "full"
-    }, {
       "title": "Compact",
       "value": "compact"
+    }, {
+      "title": "Full",
+      "value": "full"
     }]
-  }]
+  }
 }

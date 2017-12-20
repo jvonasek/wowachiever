@@ -47,10 +47,9 @@ const Achievement = ({
           />
         </Col>
         <Col sm={11}>
-          <CardTitle className="mb-1">{title}</CardTitle>
+          <CardTitle className="mb-1"><strong>{title}</strong></CardTitle>
           <CardText>{description}</CardText>
           <CriteriaList
-            achievementComplete={completed}
             criteria={criteria}
             visibleCriteria={visibleCriteria}
           />
