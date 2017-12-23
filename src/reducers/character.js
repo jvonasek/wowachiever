@@ -50,12 +50,16 @@ const character = (state: CharacterState = initialState, action: Action): Charac
     case ActionTypes.FETCH_CHARACTER_SUCCESS:
       return {
         ...state,
-        isFetched: true,
         characterInfo: createCharacterInfo(state.characterInfo, action),
         recentAchIds: pickRecentAchievements(state.recentAchIds, action),
         characterCriteria: keyBy(zipCharacterCriteria(state.characterCriteria, action), 'id'),
         completedAchievements: keyBy(zipCompletedAchievements(state.completedAchievements, action), 'id'),
         completedAchievementsCount: action.payload.achievements.achievementsCompleted.length,
+      };
+    case ActionTypes.HYDRATE_ACHIEVEMENTS:
+      return {
+        ...state,
+        isFetched: true,
       };
     case ActionTypes.SET_CHARACTER_URL:
       return {
