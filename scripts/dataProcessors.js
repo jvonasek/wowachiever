@@ -1,4 +1,6 @@
-const { omit, keyBy } = require('lodash');
+const { omit } = require('lodash');
+const { normalize } = require('normalizr');
+const { groupSchema, routeSchema } = require('./schema');
 
 const LOCALE_TO_REGION_MAP = {
   'en-US': 'us',
@@ -6,13 +8,13 @@ const LOCALE_TO_REGION_MAP = {
 };
 
 /**
- * Processor for achievement data.
  * Shifts global category on the same level as other categories.
- * @param {Object} data
+ * @param {Object} achievementData
  */
-const processAchData = ({ body }) =>
-  Object.keys(body.achievements).map((index) => {
-    const category = body.achievements[index];
+const processGroups = (achievementData) =>
+  Object.keys(achievementData).map((index) => {
+    const category = achievementData[index];
+
     const subcategories = category.categories;
     const { achievements, id } = category;
 
@@ -32,6 +34,29 @@ const processAchData = ({ body }) =>
   });
 
 /**
+ * Processor for achievement data.
+ * @param {Object} data
+ */
+const processAchData = ({ body }) => {
+  const groups = processGroups(body.achievements);
+  const normalized = normalize(groups, groupSchema);
+
+  const { routes } = normalize(
+    normalized.entities.categories,
+    routeSchema,
+  ).entities;
+
+  return {
+    ...normalized,
+    entities: {
+      ...normalized.entities,
+      routes,
+    },
+  };
+};
+
+
+/**
  * Processor for realm data.
  * Omits unwanted realm properties.
  * @param {Object} data
@@ -49,10 +74,7 @@ const processRealmData = ({ body, caseless: { dict } }) => {
   };
 };
 
-const processCriteriaData = (data) => keyBy(JSON.parse(data), 'id');
-
 module.exports = {
   processAchData,
   processRealmData,
-  processCriteriaData,
 };

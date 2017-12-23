@@ -18,6 +18,23 @@ body {
   color: #429019 !important;
 }
 
+.iconsmall {
+  width: 18px;
+  height: 18px;
+  margin-right: 0.25rem;
+}
+
+.iconsmall ins {
+  top: 0;
+  left: 0;
+  border-radius: 0.25rem;
+  border: 1px solid #444;
+}
+
+.iconsmall del {
+  display: none;
+}
+
 .character-page {
   position: relative;
   min-height: 100vh;

@@ -28,7 +28,6 @@ const Achievement = ({
   id,
   points,
   progress,
-  progressText,
   reward,
   timestamp,
   title,
@@ -60,7 +59,6 @@ const Achievement = ({
       <Row>
         <Col sm={8}>
           <ColoredPercentageText percent={progress}>{progress}%</ColoredPercentageText>{' | '}
-          <span>status: <strong>{progressText}</strong></span>{' | '}
           <span>id: <strong>{id}</strong></span>{' | '}
           <span>Points: <strong>{points}</strong></span>{' | '}
           <span>Account wide: <strong>{accountWide ? 'yes' : 'no'}</strong></span>

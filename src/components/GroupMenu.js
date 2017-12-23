@@ -36,7 +36,7 @@ const GroupMenu = ({ classColor, menuItems, path }: Props) => (
             <CardTitle
               className="group-menu-item-title d-flex align-items-center justify-content-center"
             >
-              <Link to={`${path}${slug}/global`}>{name}</Link>
+              <Link to={`${path}/achievements/${slug}/global`}>{name}</Link>
             </CardTitle>
             <div className="pl-5 pr-5 pl-sm-4 pr-sm-4">
               <ProgressBar
@@ -52,7 +52,7 @@ const GroupMenu = ({ classColor, menuItems, path }: Props) => (
               </ProgressBar>
             </div>
           </CardBody>
-          <Link to={`${path}${slug}/global`} className="full-cover-link" />
+          <Link to={`${path}/achievements/${slug}/global`} className="full-cover-link" />
         </Card>
       </Col>
     ))}

@@ -1,6 +1,8 @@
 // @flow
+/* global $WowheadPower */
 import round from 'lodash/round';
 import clamp from 'lodash/clamp';
+import includes from 'lodash/includes';
 import isFinite from 'lodash/isFinite';
 import moment from 'moment';
 import numeral from 'numeral';
@@ -298,3 +300,15 @@ export const getProcessEnvPublicUrl = () => {
   }
   return '';
 };
+
+export const refreshWowheadLinks = () => {
+  const wowheadLinks = Array.prototype.slice.call(document.links)
+    .filter((link) =>
+      includes(link.className, 'wowhead') && !includes(link.className, 'q'));
+
+  if (wowheadLinks.length > 0) {
+    $WowheadPower.refreshLinks();
+  }
+};
+
+global.refreshWowLinks = refreshWowheadLinks;

@@ -1,9 +1,7 @@
 // @flow
-import { normalize } from 'normalizr';
 import { createSearchAction } from 'redux-search';
 
 import * as ActionTypes from '../constants/ActionTypes';
-import { groupSchema, routeSchema } from '../actions/schema';
 import { createApiEndpoint, createFetchAction, getProcessEnvPublicUrl } from '../utils';
 
 import type {
@@ -14,23 +12,6 @@ import type {
   Region,
   GetState,
 } from '../types';
-
-const normalizeAchievementsResponse = (res: Response): Object => {
-  const normalizedRes = normalize(res, groupSchema);
-  // create url -> id map from all categories
-  const { routes } = normalize(
-    normalizedRes.entities.categories,
-    routeSchema,
-  ).entities;
-
-  return {
-    ...normalizedRes,
-    entities: {
-      ...normalizedRes.entities,
-      routes,
-    },
-  };
-};
 
 export const searchAchievements = createSearchAction('achievements');
 
@@ -51,20 +32,8 @@ export const fetchAchievements = (): ThunkAction => createFetchAction({
   endpoint: `${getProcessEnvPublicUrl()}/data/achievements.json`,
   types: [
     ActionTypes.FETCH_ACHIEVEMENTS_REQUEST,
-    {
-      type: ActionTypes.FETCH_ACHIEVEMENTS_SUCCESS,
-      payload: (res: Response) => normalizeAchievementsResponse(res),
-    },
+    ActionTypes.FETCH_ACHIEVEMENTS_SUCCESS,
     ActionTypes.FETCH_ACHIEVEMENTS_FAILURE,
-  ],
-});
-
-export const fetchCriteria = (): ThunkAction => createFetchAction({
-  endpoint: `${getProcessEnvPublicUrl()}/data/criteria.json`,
-  types: [
-    ActionTypes.FETCH_CRITERIA_REQUEST,
-    ActionTypes.FETCH_CRITERIA_SUCCESS,
-    ActionTypes.FETCH_CRITERIA_FAILURE,
   ],
 });
 
@@ -76,12 +45,6 @@ export const fetchRealms = (): ThunkAction => createFetchAction({
     ActionTypes.FETCH_REALMS_FAILURE,
   ],
 });
-
-export const fetchAchievementsAndCriteria = () => (dispatch: Dispatch) =>
-  Promise.all([
-    dispatch(fetchAchievements()),
-    dispatch(fetchCriteria()),
-  ]);
 
 export const hydrateAchievements = (
   completedAchievements: Object,
@@ -105,7 +68,7 @@ export const fetchEverything = (values: BnetApiParams): ThunkAction =>
           resolve(action);
         }
       });
-    }).then(() => dispatch(fetchAchievementsAndCriteria()))
+    }).then(() => dispatch(fetchAchievements()))
       .then(() => {
         const { character } = getState();
         dispatch(hydrateAchievements(
@@ -147,3 +110,6 @@ export const setViewType = (value: string): Action => ({
   payload: value,
 });
 
+export const resetCharacter = (): Action => ({
+  type: ActionTypes.RESET_CHARACTER,
+});

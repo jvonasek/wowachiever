@@ -27,8 +27,7 @@ const Root = ({ isLoading, requestErrors }: Props) => (
     <ScrollToTop>
       <div className="page-wrapper">
         <RequestErrors errors={requestErrors} />
-        <App />
-        {isLoading && <Loader />}
+        {isLoading ? <Loader /> : <App />}
       </div>
     </ScrollToTop>
   </ConnectedRouter>

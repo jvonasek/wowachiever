@@ -10,11 +10,11 @@ import {
 import ProgressBar from './ProgressBar';
 
 type Props = {
-  format: string,
   id: number,
   max: number,
   quantity: number,
   criteria: Array<Object>,
+  type: string|number,
 };
 
 const CriterionProgressBar = ({
@@ -22,7 +22,7 @@ const CriterionProgressBar = ({
   max,
   quantity,
   criteria,
-  format,
+  type,
 }: Props) => {
   const progress = {
     value: 0,
@@ -43,7 +43,7 @@ const CriterionProgressBar = ({
   return (
     <div>
       <ProgressBar {...progress}>
-        {format === 'currency' &&
+        {type === 'currency' &&
           <span>
             {formatNumberAsWoWCurrency(progress.value)}
             {' / '}
@@ -53,13 +53,6 @@ const CriterionProgressBar = ({
       </ProgressBar>
     </div>
   );
-};
-
-CriterionProgressBar.defaultProps = {
-  format: null,
-  max: 1,
-  quantity: 0,
-  criteria: [],
 };
 
 export default CriterionProgressBar;

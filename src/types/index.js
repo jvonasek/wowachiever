@@ -71,23 +71,25 @@ export type Dropdown = {
 
 export type ViewTypes = 'full' | 'compact';
 
+export type FactionId = 0 | 1 | 2;
+
 export type Achievement = {
   +id: Id,
   +title: string,
   +points: number,
   +description: string,
   +reward: string,
-  +rewardItems: ?Array<Object>,
+  +rewardItems: Array<Object>,
   +icon: string,
   +criteria: Array<Criterion>,
   +accountWide: boolean,
-  +factionId: number,
+  +factionId: FactionId,
   +parent: Id,
   +isLegacy: boolean,
+  +hasReward: boolean,
   +timestamp: Timestamp,
   +completed: boolean,
   +visibleCriteria: Array<Criterion>,
-  +progressText: string,
   +progress: number,
 };
 

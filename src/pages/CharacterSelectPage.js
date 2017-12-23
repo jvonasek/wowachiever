@@ -10,7 +10,7 @@ import {
 
 import CharacterSelectForm from '../containers/CharacterSelectForm';
 
-import { fetchEverything, fetchRealms } from '../actions';
+import { fetchEverything, fetchRealms, resetCharacter } from '../actions';
 
 import { normalizeApiParams } from '../utils';
 
@@ -20,7 +20,8 @@ import type {
 } from '../types';
 
 type DispatchProps = {
-  fetchRealms: () => void
+  fetchRealms: () => void,
+  resetCharacter: () => void,
 };
 
 type Props = DispatchProps;
@@ -28,6 +29,7 @@ type Props = DispatchProps;
 class CharacterSelectPage extends Component<Props> {
   componentDidMount() {
     this.props.fetchRealms();
+    this.props.resetCharacter();
   }
   render() {
     return (
@@ -50,7 +52,7 @@ class CharacterSelectPage extends Component<Props> {
 
 const connector: Connector<{}, Props> = connect(
   null,
-  { fetchRealms },
+  { fetchRealms, resetCharacter },
 );
 
 export default connector(CharacterSelectPage);

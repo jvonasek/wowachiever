@@ -26,7 +26,7 @@ import type { State, Id } from '../types';
 
 const {
   OVERVIEW_RECENT_ACHIEVEMENTS_COUNT,
-  OVERVIEW_UNFINISHED_ACHIEVEMENTS_COUNT,
+  OVERVIEW_INCOMPLETE_ACHIEVEMENTS_COUNT,
   SEARCH_RESULTS_LIMIT,
 } = config;
 
@@ -69,7 +69,6 @@ export const getCharacterUrl = (state: State) =>
 // Basic entities selectors
 export const getAchievements = (state: State) => fromEntities.getAchievements(state.entities);
 export const getCategories = (state: State) => fromEntities.getCategories(state.entities);
-export const getCriteria = (state: State) => fromEntities.getCriteria(state.entities);
 export const getRoutes = (state: State) => fromEntities.getRoutes(state.entities);
 export const getRealms = (state: State) => fromEntities.getRealms(state.entities);
 export const getGroups = (state: State) => fromEntities.getGroups(state.entities);
@@ -102,6 +101,10 @@ export const getCategoriesWithCompleted = createSelector(
   getCharacterInfo,
   getCompletedAchievements,
   (categories, achievements, characterInfo, completedAchievements) => {
+    if (!Object.keys(achievements).length) {
+      return categories;
+    }
+
     const cats = Object.keys(categories).map((id) => {
       const category = categories[id];
 
@@ -223,14 +226,15 @@ export const getRecentAchievements = createSelector(
       .slice(0, OVERVIEW_RECENT_ACHIEVEMENTS_COUNT),
 );
 
-export const getUnfinishedAchievements = createSelector(
+export const getIncompleteAchievements = createSelector(
   getAchievements,
   getCharacterInfo,
-  (achievements, characterInfo) => Object.values(achievements)
+  getProps,
+  (achievements, characterInfo, props) => Object.values(achievements)
     .filter((ach) => ach.progress < 100 && ach.isLegacy === false)
     .filter((ach) => (ach.factionId === characterInfo.faction) || ach.factionId === 2)
     .sort((a, b) => b.progress - a.progress)
-    .slice(0, OVERVIEW_UNFINISHED_ACHIEVEMENTS_COUNT),
+    .slice(0, props.limit || OVERVIEW_INCOMPLETE_ACHIEVEMENTS_COUNT),
 );
 
 

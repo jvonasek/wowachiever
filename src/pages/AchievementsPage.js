@@ -2,28 +2,24 @@
 import React from 'react';
 import { connect, type Connector } from 'react-redux';
 
-import { getGroupMenuItems, getClassColor } from '../reducers';
+import { getGroupMenuItems, getClassColor, getCharacterUrl } from '../reducers';
 
 import GroupMenu from '../components/GroupMenu';
-import RecentAndIncompleteAchs from '../containers/RecentAndIncompleteAchs';
 
 import type { State } from '../types';
 
 type StateProps = {
+  characterUrl: string,
   classColor: string,
   groupMenuItems: Array<Object>,
-  match: Object,
 };
 
 type Props = StateProps;
 
-const AchievementsPage = ({ classColor, groupMenuItems, match }: Props) => (
+const AchievementsPage = ({ classColor, groupMenuItems, characterUrl }: Props) => (
   <div>
-    <div className="mb-5">
-      <RecentAndIncompleteAchs />
-    </div>
-    <h3 className="mb-4">Browse by category</h3>
-    <GroupMenu menuItems={groupMenuItems} path={match.path} classColor={classColor} />
+    <h2 className="mb-4">Achievements</h2>
+    <GroupMenu menuItems={groupMenuItems} path={characterUrl} classColor={classColor} />
   </div>
 );
 
@@ -33,6 +29,7 @@ AchievementsPage.defaultProps = {
 };
 
 const mapStateToProps = (state: State) => ({
+  characterUrl: getCharacterUrl(state),
   classColor: getClassColor(state),
   groupMenuItems: getGroupMenuItems(state),
 });

@@ -76,7 +76,6 @@ export default flowRight(
           region,
           realm,
           character,
-          'achievements',
         ]);
         dispatch(push(redirectUrl));
       }

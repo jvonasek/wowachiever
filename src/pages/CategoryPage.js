@@ -25,6 +25,8 @@ import Filter from '../containers/Filter';
 import Sorter from '../containers/Sorter';
 import ViewSwitcher from '../containers/ViewSwitcher';
 
+import withWowhead from '../hocs/withWowhead';
+
 import type {
   State,
   Achievement,
@@ -115,4 +117,4 @@ const mapStateToProps = (state: State, props) => ({
 
 const connector: Connector<{}, Props> = connect(mapStateToProps);
 
-export default connector(CategoryPage);
+export default connector(withWowhead(CategoryPage));

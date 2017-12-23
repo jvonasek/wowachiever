@@ -31,6 +31,7 @@ export type CharacterState = {
   +recentAchIds: Array<number>,
   +characterCriteria: Object,
   +completedAchievements: Object,
+  +completedAchievementsCount: number,
   +characterUrl: string
 };
 
@@ -40,6 +41,7 @@ const initialState = {
   recentAchIds: [],
   characterCriteria: {},
   completedAchievements: {},
+  completedAchievementsCount: 0,
   characterUrl: '/',
 };
 
@@ -53,12 +55,15 @@ const character = (state: CharacterState = initialState, action: Action): Charac
         recentAchIds: pickRecentAchievements(state.recentAchIds, action),
         characterCriteria: keyBy(zipCharacterCriteria(state.characterCriteria, action), 'id'),
         completedAchievements: keyBy(zipCompletedAchievements(state.completedAchievements, action), 'id'),
+        completedAchievementsCount: action.payload.achievements.achievementsCompleted.length,
       };
     case ActionTypes.SET_CHARACTER_URL:
       return {
         ...state,
-        characterUrl: action.payload,
+        characterUrl: action.payload.replace(/\/+$/, ''),
       };
+    case ActionTypes.RESET_CHARACTER:
+      return initialState;
     default:
       return state;
   }
