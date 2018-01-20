@@ -28,6 +28,8 @@ const specifyCriterionType = (type) => {
     case 62:
     case 67:
       return 'currency';
+    case 96:
+      return 'npc';
     default:
       return type;
   }

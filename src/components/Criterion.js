@@ -22,9 +22,9 @@ const getCriterionContent = (criterion, criteria) => {
     return <CriterionProgressBar {...criterion} criteria={criteria} />;
   }
 
-  if (criterion.type === 'item') {
+  if (['item', 'npc'].includes(criterion.type) && criterion.assetId) {
     return (
-      <WowheadLink type="item" id={criterion.assetId}>
+      <WowheadLink type={criterion.type} id={criterion.assetId}>
         {criterion.description}
       </WowheadLink>
     );
